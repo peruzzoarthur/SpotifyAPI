@@ -1,11 +1,11 @@
 import { formatDuration } from "../utils";
 import { StyledTrackList } from "../styles";
 
-const TrackList = ({ tracks }: any) => (
+const PlaylistTrackList = ({ tracks }: any) => (
   <>
     {tracks && tracks.length ? (
       <StyledTrackList>
-        {tracks.map((track: any, i: any) => (
+        {tracks.track.map((track: any, i: any) => (
           <li className="track__item" key={i}>
             <div className="track__item__num">{i + 1}</div>
             <div className="track__item__title-group">
@@ -43,4 +43,4 @@ const TrackList = ({ tracks }: any) => (
   </>
 );
 
-export default TrackList;
+export default PlaylistTrackList;
