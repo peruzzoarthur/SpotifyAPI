@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { getCurrentUserPlaylists } from "../spotify";
 import { catchErrors } from "../utils";
-import { SectionWrapper, PlaylistsGrid } from "../components";
+import { SectionWrapper, PlaylistsGrid, Loader } from "../components";
 import { GlobalStyle } from "../styles";
 
 const Playlists = () => {
@@ -50,7 +50,7 @@ const Playlists = () => {
     <main>
       <GlobalStyle />
       <SectionWrapper title="Public Playlists" breadcrumb={true}>
-        {playlists && <PlaylistsGrid playlists={playlists} />}
+        {playlists ? <PlaylistsGrid playlists={playlists} /> : <Loader />}
       </SectionWrapper>
     </main>
   );
