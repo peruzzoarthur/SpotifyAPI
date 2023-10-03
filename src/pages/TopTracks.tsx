@@ -11,8 +11,6 @@ import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 
 const TopTracks = () => {
-  const client_id = import.meta.env.VITE_CLIENT_ID;
-  console.log(client_id);
   const [topTracks, setTopTracks] = useState<any>(null);
   const [activeRange, setActiveRange] = useState<
     "short_term" | "medium_term" | "long_term"

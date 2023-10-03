@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { getTopArtists } from "../spotify";
 import { catchErrors } from "../utils";
 import {
   ArtistsGrid,

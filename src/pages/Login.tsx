@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { client_id, redirect_url, scopes } from "../spotify";
 
 const StyledLoginContainer = styled.main`
   display: flex;
@@ -26,13 +28,22 @@ const StyledLoginButton = styled.a`
 
 const Login = () => {
   return (
-    <>
-      <StyledLoginContainer>
-        <StyledLoginButton href="http://localhost:3000/login">
-          Log in to Spotify
-        </StyledLoginButton>
-      </StyledLoginContainer>
-    </>
+    <button
+      onClick={() => {
+        SpotifyApi.performUserAuthorization(
+          "97933b9989f64dbf99d1edffd9c91f0f",
+          "http://localhost:5173/",
+          [
+            "user-library-read",
+            "playlist-read-private",
+            "user-read-private user-read-email user-top-read",
+          ],
+          "http://localhost:3000/callback"
+        );
+      }}
+    >
+      Login
+    </button>
   );
 };
 

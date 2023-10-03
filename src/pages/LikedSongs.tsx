@@ -1,65 +1,77 @@
-// import { SavedTrack, Page, Track } from "@spotify/web-api-ts-sdk";
-// import { useState, useEffect, useMemo } from "react";
-// import { useParams } from "react-router-dom";
-// import axios from "axios";
-// import { catchErrors } from "../utils";
-// import { TrackList, SectionWrapper, Loader } from "../components";
-// import { GlobalStyle, StyledHeader, StyledDropdown } from "../styles";
+import { SavedTrack, Page, Track, SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { useState, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { catchErrors } from "../utils";
+import { TrackList, SectionWrapper, Loader } from "../components";
+import { GlobalStyle, StyledHeader, StyledDropdown } from "../styles";
+import { useSpotify } from "../hooks/useSpotify";
+import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
 
-// const LikedSongs = () => {
-//   const [likedSongsPage, setLikedSongsPage] = useState<Page<SavedTrack>>();
-//   const [tracksData, setTracksData] = useState<Track[]>([]);
-//   const [tracks, setTracks] = useState<Track[]>([]);
+const LikedSongs = () => {
+  const [likedSongsPage, setLikedSongsPage] = useState<Page<SavedTrack>>();
+  const [tracksData, setTracksData] = useState<Track[]>([]);
+  const [tracks, setTracks] = useState<Track[]>([]);
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const { data } = await getLikedSongs();
-//       setLikedSongsPage(data);
-//       setTracksData(data.items.map(({ track }) => track));
-//     };
-//     catchErrors(fetchData());
-//   }),
-//     [];
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
-//   // useEffect(() => {
-//   //   if (!likedSongsPage) {
-//   //     return;
-//   //   }
+  useEffect(() => {
+    if (!sdk) {
+      return;
+    }
+    const fetchData = async () => {
+      const data = await sdk.currentUser.tracks.savedTracks();
+      setLikedSongsPage(data);
+      setTracksData(data.items.map(({ track }) => track));
+    };
+    catchErrors(fetchData());
+  }),
+    [sdk];
 
-//   //   const fetchMoreData = async () => {
-//   //     if (likedSongsPage.next) {
-//   //       const data: Page<SavedTrack> = await axios.get(likedSongsPage.next);
-//   //       setTracksData(data.items.map(({ track }) => track));
-//   //     }
-//   //   };
+  useEffect(() => {
+    if (!likedSongsPage) {
+      return;
+    }
 
-//   //   const newTracks: Track[] = tracksData.filter((track): track is Track => {
-//   //     return track.type === "track";
-//   //   });
+    const fetchMoreData = async () => {
+      if (likedSongsPage.next) {
+        const urlParts = likedSongsPage.next.split(
+          "https://api.spotify.com/v1/"
+        );
+        if (urlParts.length === 2) {
+          const apiUrl = urlParts[1];
+          const data: Page<SavedTrack> = await sdk.makeRequest("GET", apiUrl);
+          setTracksData(data.items.map(({ track }) => track));
+        }
+      }
+    };
 
-//   //   setTracks((prevTracks): Track[] => {
-//   //     const trackIds = prevTracks.map((track) => track.id);
-//   //     const uniqueNewTracks = newTracks.filter(
-//   //       (track) => !trackIds.includes(track.id)
-//   //     );
-//   //     return [...prevTracks, ...uniqueNewTracks];
-//   //   });
-//   //   catchErrors(fetchMoreData());
-//   // }),
-//   //   [tracksData];
+    const newTracks: Track[] = tracksData.filter((track): track is Track => {
+      return track.type === "track";
+    });
 
-//   return (
-//     <>
-//       {likedSongsPage && (
-//         <>
-//           <GlobalStyle />
-//           <main>
-//             <h1>Testing Page</h1>
-//           </main>
-//         </>
-//       )}
-//     </>
-//   );
-// };
+    setTracks((prevTracks): Track[] => {
+      const trackIds = prevTracks.map((track) => track.id);
+      const uniqueNewTracks = newTracks.filter(
+        (track) => !trackIds.includes(track.id)
+      );
+      return [...prevTracks, ...uniqueNewTracks];
+    });
+    catchErrors(fetchMoreData());
+  }),
+    [tracksData];
 
-// export default LikedSongs;
+  return (
+    <>
+      {likedSongsPage && (
+        <>
+          <GlobalStyle />
+          <main>
+            <h1>Testing Page</h1>
+          </main>
+        </>
+      )}
+    </>
+  );
+};
+
+export default LikedSongs;
