@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { catchErrors } from "../utils/error";
+import { useSpotify } from "../hooks/useSpotify";
 import {
-  getCurrentUserProfile,
-  getCurrentUserPlaylists,
-  getTopArtists,
-  getTopTracks,
-} from "../spotify";
-import { StyledHeader } from "../styles";
+  Artist,
+  SpotifyApi,
+  Track,
+  UserProfile,
+  SimplifiedPlaylist,
+  Page,
+} from "@spotify/web-api-ts-sdk";
+import { GlobalStyle, StyledHeader } from "../styles";
 import {
   SectionWrapper,
   ArtistsGrid,
@@ -14,33 +17,65 @@ import {
   PlaylistsGrid,
   Loader,
 } from "../components";
+import { client_id, redirect_url, scopes } from "../spotify";
 
 const Profile = () => {
-  const [profile, setProfile] = useState<any>(null);
-  const [playlists, setPlaylists] = useState<any>(null);
-  const [topArtists, setTopArtists] = useState<any>(null);
-  const [topTracks, setTopTracks] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfile>();
+  const [pagePlaylist, setPagePlaylist] = useState<Page<SimplifiedPlaylist>>();
+  const [playlists, setPlaylists] = useState<SimplifiedPlaylist[]>([]);
+  const [topArtists, setTopArtists] = useState<Artist[]>([]);
+  const [topTracks, setTopTracks] = useState<Track[]>([]);
+
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   useEffect(() => {
     const fetchData = async () => {
-      const userProfile = await getCurrentUserProfile();
-      setProfile(userProfile.data);
+      if (sdk) {
+        const userProfile = await sdk.currentUser.profile();
+        setProfile(userProfile);
 
-      const userPlaylists = await getCurrentUserPlaylists();
-      setPlaylists(userPlaylists.data);
+        const userPlaylistsPage = await sdk.currentUser.playlists.playlists();
+        setPagePlaylist(userPlaylistsPage);
 
-      const userTopArtists = await getTopArtists();
-      setTopArtists(userTopArtists.data);
+        const userPlaylists = (await sdk.currentUser.playlists.playlists(50))
+          .items;
+        setPlaylists(userPlaylists);
 
-      const userTopTracks = await getTopTracks();
-      setTopTracks(userTopTracks.data);
+        const userTopArtists = (await sdk.currentUser.topItems("artists"))
+          .items;
+        setTopArtists(userTopArtists);
+
+        const userTopTracks = (await sdk.currentUser.topItems("tracks")).items;
+        setTopTracks(userTopTracks);
+      }
     };
 
     catchErrors(fetchData());
-  }, []);
+  }, [sdk]);
+
+  useEffect(() => {
+    if (!pagePlaylist) {
+      return;
+    }
+    const fetchMoreData = async () => {
+      if (pagePlaylist.next) {
+        const urlParts = pagePlaylist.next.split("https://api.spotify.com/v1/");
+        if (urlParts.length === 2) {
+          const apiUrl = urlParts[1];
+          const data: Page<SimplifiedPlaylist> = await sdk.makeRequest(
+            "GET",
+            apiUrl
+          );
+          setPlaylists(data.items);
+        }
+      }
+    };
+    catchErrors(fetchMoreData());
+  }, [topTracks]);
 
   return (
     <>
+      <GlobalStyle />
       {profile && (
         <>
           <StyledHeader type="user">
@@ -58,8 +93,8 @@ const Profile = () => {
                 <p className="header__meta">
                   {playlists && (
                     <span>
-                      {playlists.total} Playlist
-                      {playlists.total !== 1 ? "s" : " "}
+                      {playlists.length} Playlist
+                      {playlists.length !== 1 ? "s" : " "}
                     </span>
                   )}
 
@@ -79,21 +114,21 @@ const Profile = () => {
                   title="Top artists this month"
                   seeAllLink="/top-artists"
                 >
-                  <ArtistsGrid artists={topArtists.items.slice(0, 10)} />
+                  <ArtistsGrid artists={topArtists.slice(0, 10)} />
                 </SectionWrapper>
 
                 <SectionWrapper
                   title="Top tracks this month"
                   seeAllLink="/top-tracks"
                 >
-                  <TrackList tracks={topTracks.items.slice(0, 10)} />
+                  <TrackList tracks={topTracks.slice(0, 10)} />
                 </SectionWrapper>
 
                 <SectionWrapper
                   title="Public Playlists"
                   seeAllLink="/playlists"
                 >
-                  <PlaylistsGrid playlists={playlists.items.slice(0, 10)} />
+                  <PlaylistsGrid playlists={playlists.slice(0, 10)} />
                 </SectionWrapper>
               </>
             ) : (

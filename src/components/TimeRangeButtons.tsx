@@ -6,7 +6,7 @@ const TimeRangeButtons = ({ activeRange, setActiveRange }: any) => {
       <li>
         <button
           className={activeRange === "short" ? "active" : ""}
-          onClick={() => setActiveRange("short")}
+          onClick={() => setActiveRange("short_term")}
         >
           This Month
         </button>
@@ -14,7 +14,7 @@ const TimeRangeButtons = ({ activeRange, setActiveRange }: any) => {
       <li>
         <button
           className={activeRange === "medium" ? "active" : ""}
-          onClick={() => setActiveRange("medium")}
+          onClick={() => setActiveRange("medium_term")}
         >
           Last 6 Months
         </button>
@@ -22,7 +22,7 @@ const TimeRangeButtons = ({ activeRange, setActiveRange }: any) => {
       <li>
         <button
           className={activeRange === "long" ? "active" : ""}
-          onClick={() => setActiveRange("long")}
+          onClick={() => setActiveRange("long_term")}
         >
           All Time
         </button>

@@ -1,49 +1,37 @@
 import { useState, useEffect } from "react";
-import { accessToken, logout, getCurrentUserProfile } from "../spotify";
-import { catchErrors } from "../utils/error";
 import { GlobalStyle } from "../styles";
 import { Login, Profile } from ".";
-import styled from "styled-components";
-
-const StyledLogoutButton = styled.button`
-  position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-md);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: var(--white);
-  font-size: var(--fz-sm);
-  font-weight: 700;
-  border-radius: var(--border-radius-pill);
-  z-index: 10;
-  @media (min-width: 768px) {
-    right: var(--spacing-lg);
-  }
-`;
+import { useSpotify } from "../hooks/useSpotify";
+import { UserProfile } from "@spotify/web-api-ts-sdk";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { catchErrors } from "../utils";
+import { client_id, redirect_url, scopes } from "../spotify";
 
 const Home = () => {
-  const [token, setToken] = useState<string>("");
-  const [_, setProfile] = useState<any>("");
+  const [profile, setProfile] = useState<UserProfile>();
+
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   useEffect(() => {
-    setToken(accessToken as string);
-    const fetchData = async () => {
-      const { data } = await getCurrentUserProfile();
-      setProfile(data);
+    const fetchProfileData = async () => {
+      if (sdk) {
+        const data = await sdk.currentUser.profile();
+        setProfile(data);
+      }
     };
-    catchErrors(fetchData());
-  }, []);
+    catchErrors(fetchProfileData());
+  }, [sdk]);
+
   return (
     <div>
       <div className="App">
         <GlobalStyle />
         <header className="App-header">
-          {!token ? (
+          {!profile ? (
             <Login />
           ) : (
             <>
               <Profile />
-              <StyledLogoutButton onClick={logout}>Log out</StyledLogoutButton>
             </>
           )}
         </header>

@@ -5,3 +5,4 @@ export { default as StyledHeader } from "./StyledHeader";
 export { default as StyledRangeButtons } from "./StyledRangeButtons";
 export { default as StyledSection } from "./StyledSection";
 export { default as StyledTrackList } from "./StyledTrackList";
+export { default as StyledLogoutButton } from "./StyledLogoutButton";

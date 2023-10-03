@@ -1,48 +1,53 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { getCurrentUserPlaylists } from "../spotify";
 import { catchErrors } from "../utils";
 import { SectionWrapper, PlaylistsGrid, Loader } from "../components";
 import { GlobalStyle } from "../styles";
+import { useSpotify } from "../hooks/useSpotify";
+import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
+import { Page, SimplifiedPlaylist, SpotifyApi } from "@spotify/web-api-ts-sdk";
 
 const Playlists = () => {
-  const [playlistsData, setPlaylistsData] = useState<any>(null);
-  const [playlists, setPlaylists] = useState<any>(null);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+  const [playlistsData, setPlaylistsData] =
+    useState<Page<SimplifiedPlaylist>>();
+  const [playlists, setPlaylists] = useState<SimplifiedPlaylist[]>([]);
 
   useEffect(() => {
+    if (!sdk) {
+      return;
+    }
     const fetchData = async () => {
-      const { data } = await getCurrentUserPlaylists();
+      const data = await sdk.currentUser.playlists.playlists();
       setPlaylistsData(data);
     };
 
     catchErrors(fetchData());
-  }, []);
+  }, [sdk]);
 
-  // When playlistsData updates, check if there are more playlists to fetch
-  // then update the state variable
   useEffect(() => {
     if (!playlistsData) {
       return;
     }
 
-    // Playlist endpoint only returns 20 playlists at a time, so we need to
-    // make sure we get ALL playlists by fetching the next set of playlists
     const fetchMoreData = async () => {
       if (playlistsData.next) {
-        const { data } = await axios.get(playlistsData.next);
-        setPlaylistsData(data);
+        const urlParts = playlistsData.next.split(spotify_url);
+        if (urlParts.length === 2) {
+          const apiUrl = urlParts[1];
+          const data: Page<SimplifiedPlaylist> = await sdk.makeRequest(
+            "GET",
+            apiUrl
+          );
+          setPlaylistsData(data);
+        }
       }
     };
 
-    // Use functional update to update playlists state variable
-    // to avoid including playlists as a dependency for this hook
-    // and creating an infinite loop
-    setPlaylists((playlists: any) => [
+    setPlaylists((playlists) => [
       ...(playlists ? playlists : []),
       ...playlistsData.items,
     ]);
 
-    // Fetch next set of playlists as needed
     catchErrors(fetchMoreData());
   }, [playlistsData]);
 

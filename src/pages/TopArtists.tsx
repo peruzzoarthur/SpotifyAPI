@@ -8,19 +8,29 @@ import {
   Loader,
 } from "../components";
 import { GlobalStyle } from "../styles";
+import { useSpotify } from "../hooks/useSpotify";
+import { client_id, redirect_url, scopes } from "../spotify";
+import { Artist, Page, SpotifyApi } from "@spotify/web-api-ts-sdk";
 
 const TopArtists = () => {
-  const [topArtists, setTopArtists] = useState<any>(null);
-  const [activeRange, setActiveRange] = useState<string>("short");
+  const [topArtists, setTopArtists] = useState<Page<Artist>>();
+  const [activeRange, setActiveRange] = useState<
+    "short_term" | "medium_term" | "long_term"
+  >("short_term");
+
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await getTopArtists(`${activeRange}_term`);
+      if (!sdk) {
+        return;
+      }
+      const data = await sdk.currentUser.topItems("artists", activeRange);
       setTopArtists(data);
     };
 
     catchErrors(fetchData());
-  }, [activeRange]);
+  }, [sdk, activeRange]);
 
   return (
     <main>

@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.env
+
+src/old_spotify.ts
+src/old_spotify2.ts
