@@ -1,7 +1,7 @@
 import { formatDuration } from "../utils";
 import { StyledTrackList } from "../styles";
 
-const TrackList = ({ tracks }: any) => (
+const TrackList = ({ tracks, sortValue }: any) => (
   <>
     {tracks && tracks.length ? (
       <StyledTrackList>
@@ -31,8 +31,15 @@ const TrackList = ({ tracks }: any) => (
             <div className="track__item__album overflow-ellipsis">
               {track.album.name}
             </div>
-            <div className="track__item__duration">
-              {formatDuration(track.duration_ms)}
+            <div>
+              <div className="track__item__duration">
+                {sortValue && track.audio_features
+                  ? track.audio_features[sortValue]
+                  : " "}
+              </div>
+              <div className="track__item__duration">
+                {formatDuration(track.duration_ms)}
+              </div>
             </div>
           </li>
         ))}

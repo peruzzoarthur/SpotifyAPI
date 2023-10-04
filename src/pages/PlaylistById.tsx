@@ -34,6 +34,9 @@ const PlaylistById = () => {
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   useEffect(() => {
+    if (!sdk) {
+      return;
+    }
     const fetchData = async () => {
       if (sdk) {
         const data = (await sdk.playlists.getPlaylist(
