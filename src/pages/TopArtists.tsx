@@ -6,7 +6,7 @@ import {
   TimeRangeButtons,
   Loader,
 } from "../components";
-import { GlobalStyle } from "../styles";
+
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { Artist, Page, SpotifyApi } from "@spotify/web-api-ts-sdk";
@@ -33,7 +33,6 @@ const TopArtists = () => {
 
   return (
     <main>
-      <GlobalStyle />
       <SectionWrapper title="Top Artists" breadcrumb={true}>
         <TimeRangeButtons
           activeRange={activeRange}

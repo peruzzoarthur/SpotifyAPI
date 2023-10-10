@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { GlobalStyle } from "../styles";
 import { Login, Profile } from ".";
 import { useSpotify } from "../hooks/useSpotify";
 import { UserProfile } from "@spotify/web-api-ts-sdk";
@@ -25,7 +24,6 @@ const Home = () => {
   return (
     <div>
       <div className="App">
-        <GlobalStyle />
         <header className="App-header">
           {!profile ? (
             <Login />

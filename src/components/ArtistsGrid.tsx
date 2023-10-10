@@ -1,9 +1,9 @@
-import { StyledGrid } from "../styles";
+import { Artist } from "@spotify/web-api-ts-sdk";
 
-const ArtistsGrid = ({ artists }: any) => (
+const ArtistsGrid = (artists: Artist[]) => (
   <>
     {artists && artists.length ? (
-      <StyledGrid type="artist">
+      <>
         {artists.map((artist: any, i: any) => (
           <li className="grid__item" key={i}>
             <div className="grid__item__inner">
@@ -19,7 +19,7 @@ const ArtistsGrid = ({ artists }: any) => (
             </div>
           </li>
         ))}
-      </StyledGrid>
+      </>
     ) : (
       <p className="empty-notice">No artists available</p>
     )}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { catchErrors } from "../utils";
 import { SectionWrapper, PlaylistsGrid, Loader } from "../components";
-import { GlobalStyle } from "../styles";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
 import { Page, SimplifiedPlaylist, SpotifyApi } from "@spotify/web-api-ts-sdk";
@@ -53,7 +52,6 @@ const Playlists = () => {
 
   return (
     <main>
-      <GlobalStyle />
       <SectionWrapper title="Public Playlists" breadcrumb={true}>
         {playlists ? <PlaylistsGrid playlists={playlists} /> : <Loader />}
       </SectionWrapper>

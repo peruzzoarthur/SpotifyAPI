@@ -6,6 +6,7 @@ import {
   TopTracks,
   LikedSongs,
   PlaylistById,
+  TrackById,
 } from "./pages";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Route path="/playlists" element={<Playlists />} />
       <Route path="/top-artists" element={<TopArtists />} />
       <Route path="/top-tracks" element={<TopTracks />} />
+      <Route path="/track/:id" element={<TrackById />} />
     </Routes>
   );
 }

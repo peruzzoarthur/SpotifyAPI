@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import { StyledSection } from "../styles";
 
 const SectionWrapper = ({ children, title, seeAllLink, breadcrumb }: any) => (
-  <StyledSection>
+  <>
     <div className="section__inner">
       <div className="section__top">
         <h2 className="section__heading">
@@ -30,7 +29,7 @@ const SectionWrapper = ({ children, title, seeAllLink, breadcrumb }: any) => (
 
       {children}
     </div>
-  </StyledSection>
+  </>
 );
 
 export default SectionWrapper;

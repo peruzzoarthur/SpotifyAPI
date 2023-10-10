@@ -6,7 +6,7 @@ import {
   TimeRangeButtons,
   Loader,
 } from "../components";
-import { GlobalStyle } from "../styles";
+
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 
@@ -32,7 +32,6 @@ const TopTracks = () => {
 
   return (
     <main>
-      <GlobalStyle />
       <SectionWrapper title="Top Tracks" breadcrumb={true}>
         <TimeRangeButtons
           activeRange={activeRange}

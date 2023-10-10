@@ -6,15 +6,13 @@ import {
   AudioFeatures,
 } from "@spotify/web-api-ts-sdk";
 import { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
 import { catchErrors } from "../utils";
 import { TrackList, SectionWrapper, Loader } from "../components";
-import { GlobalStyle, StyledHeader, StyledDropdown } from "../styles";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
 
 interface AudioFeaturesWithListOrder extends AudioFeatures {
-  list_order?: string;
+  default_list_order?: string;
 }
 
 interface TrackWithAudioFeatures extends Track {
@@ -28,7 +26,7 @@ const LikedSongs = () => {
   const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [audioFeatures, setAudioFeatures] = useState<AudioFeatures[]>([]);
   const [sortValue, setSortValue] =
-    useState<keyof AudioFeaturesWithListOrder>("list_order");
+    useState<keyof AudioFeaturesWithListOrder>("default_list_order");
   const sortOptions = [
     "danceability",
     "energy",
@@ -66,7 +64,7 @@ const LikedSongs = () => {
 
     const fetchMoreData = async () => {
       if (nextUrl) {
-        const urlParts = nextUrl.split("https://api.spotify.com/v1/");
+        const urlParts = nextUrl.split(spotify_url);
         if (urlParts.length === 2) {
           const apiUrl = urlParts[1];
           const data: Page<SavedTrack> = await sdk.makeRequest("GET", apiUrl);
@@ -147,40 +145,34 @@ const LikedSongs = () => {
     <>
       {likedSongsPage && (
         <>
-          <GlobalStyle />
-          <StyledHeader>
-            <div className="header__inner">
-              <h1>Liked Songs</h1>
-              <div>
-                <div className="header__overline">Your liked songs</div>
-              </div>
+          <div className="header__inner">
+            <h1>Liked Songs</h1>
+            <div>
+              <div className="header__overline">Your liked songs</div>
             </div>
-          </StyledHeader>
+          </div>
 
           <main>
-            <GlobalStyle />
             <SectionWrapper title="LikedSongs" breadcrumb={true}>
-              <StyledDropdown active={!!sortValue}>
-                <label className="sr-only" htmlFor="order-select">
-                  Sort tracks
-                </label>
-                <select
-                  name="track-order"
-                  id="order-select"
-                  onChange={(e) =>
-                    setSortValue(
-                      e.target.value as keyof AudioFeaturesWithListOrder
-                    )
-                  }
-                >
-                  <option value="">Sort tracks</option>
-                  {sortOptions.map((option, i) => (
-                    <option value={option} key={i}>
-                      {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
-                    </option>
-                  ))}
-                </select>
-              </StyledDropdown>
+              <label className="sr-only" htmlFor="order-select">
+                Sort tracks
+              </label>
+              <select
+                name="track-order"
+                id="order-select"
+                onChange={(e) =>
+                  setSortValue(
+                    e.target.value as keyof AudioFeaturesWithListOrder
+                  )
+                }
+              >
+                <option value="">Sort tracks</option>
+                {sortOptions.map((option, i) => (
+                  <option value={option} key={i}>
+                    {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
+                  </option>
+                ))}
+              </select>
 
               {sortedTracks ? (
                 <TrackList tracks={sortedTracks} sortValue={sortValue} />

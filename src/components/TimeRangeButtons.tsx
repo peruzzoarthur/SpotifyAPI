@@ -1,11 +1,21 @@
-import { StyledRangeButtons } from "../styles";
+import React from "react";
 
-const TimeRangeButtons = ({ activeRange, setActiveRange }: any) => {
+interface TimeRangeButtonProps {
+  activeRange: "short_term" | "medium_term" | "long_term";
+  setActiveRange: React.Dispatch<
+    React.SetStateAction<"short_term" | "medium_term" | "long_term">
+  >;
+}
+
+const TimeRangeButtons: React.FC<TimeRangeButtonProps> = ({
+  activeRange,
+  setActiveRange,
+}) => {
   return (
-    <StyledRangeButtons>
+    <>
       <li>
         <button
-          className={activeRange === "short" ? "active" : ""}
+          className={activeRange === "short_term" ? "active" : ""}
           onClick={() => setActiveRange("short_term")}
         >
           This Month
@@ -13,7 +23,7 @@ const TimeRangeButtons = ({ activeRange, setActiveRange }: any) => {
       </li>
       <li>
         <button
-          className={activeRange === "medium" ? "active" : ""}
+          className={activeRange === "medium_term" ? "active" : ""}
           onClick={() => setActiveRange("medium_term")}
         >
           Last 6 Months
@@ -21,14 +31,17 @@ const TimeRangeButtons = ({ activeRange, setActiveRange }: any) => {
       </li>
       <li>
         <button
-          className={activeRange === "long" ? "active" : ""}
+          className={activeRange === "long_term" ? "active" : ""}
           onClick={() => setActiveRange("long_term")}
         >
           All Time
         </button>
       </li>
-    </StyledRangeButtons>
+    </>
   );
 };
 
 export default TimeRangeButtons;
+
+// my props are settled to a type any. what if i want to say that activeRange is of type <"short_term" | "medium_term" | "long_term"> and setActiveRange is of type
+// React.Dispatch<React.SetStateAction<"short_term" | "medium_term" | "long_term">>

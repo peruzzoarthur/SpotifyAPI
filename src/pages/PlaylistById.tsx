@@ -10,12 +10,11 @@ import {
   Track,
 } from "@spotify/web-api-ts-sdk";
 import { catchErrors } from "../utils";
-import { GlobalStyle, StyledHeader, StyledDropdown } from "../styles";
 import { TrackList, SectionWrapper, Loader } from "../components";
 import { client_id, redirect_url, scopes } from "../spotify";
 
 interface AudioFeaturesWithListOrder extends AudioFeatures {
-  list_order?: string;
+  default_list_order?: string;
 }
 interface TrackWithAudioFeatures extends Track {
   audio_features?: AudioFeaturesWithListOrder;
@@ -28,8 +27,21 @@ const PlaylistById = () => {
   const [tracks, setTracks] = useState<TrackWithAudioFeatures[]>([]);
   const [audioFeatures, setAudioFeatures] = useState<AudioFeatures[]>([]);
   const [sortValue, setSortValue] =
-    useState<keyof AudioFeaturesWithListOrder>("list_order");
-  const sortOptions = ["danceability", "tempo", "energy"];
+    useState<keyof AudioFeaturesWithListOrder>("default_list_order");
+  const sortOptions = [
+    "danceability",
+    "energy",
+    "key",
+    "loudness",
+    "mode",
+    "speechiness",
+    "acousticness",
+    "instrumentalness",
+    "liveness",
+    "valence",
+    "tempo",
+    "time_signature",
+  ];
 
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
@@ -150,63 +162,59 @@ const PlaylistById = () => {
     <>
       {playlistPage && (
         <>
-          <GlobalStyle />
-          <StyledHeader>
-            <div className="header__inner">
-              {playlistPage.images.length && playlistPage.images[0].url && (
-                <img
-                  className="header__img"
-                  src={playlistPage.images[0].url}
-                  alt="Playlist Artwork"
-                />
-              )}
-              <div>
-                <div className="header__overline">Playlist</div>
-                <h1 className="header__name">{playlistPage.name}</h1>
-                <p className="header__meta">
-                  {playlistPage.followers.total ? (
-                    <span>
-                      {playlistPage.followers.total}{" "}
-                      {`follower${
-                        playlistPage.followers.total !== 1 ? "s" : ""
-                      }`}
-                    </span>
-                  ) : null}
+          <div className="header__inner">
+            {playlistPage.images.length && playlistPage.images[0].url && (
+              <img
+                className="header__img"
+                src={playlistPage.images[0].url}
+                alt="Playlist Artwork"
+              />
+            )}
+            <div>
+              <div className="header__overline">Playlist</div>
+              <h1 className="header__name">{playlistPage.name}</h1>
+              <p className="header__meta">
+                {playlistPage.followers.total ? (
                   <span>
-                    {playlistPage.tracks.total}{" "}
-                    {`song${playlistPage.tracks.total !== 1 ? "s" : ""}`}
+                    {playlistPage.followers.total}{" "}
+                    {`follower${playlistPage.followers.total !== 1 ? "s" : ""}`}
                   </span>
-                </p>
-              </div>
+                ) : null}
+                <span>
+                  {playlistPage.tracks.total}{" "}
+                  {`song${playlistPage.tracks.total !== 1 ? "s" : ""}`}
+                </span>
+              </p>
             </div>
-          </StyledHeader>
+          </div>
 
           <main>
-            <GlobalStyle />
             <SectionWrapper title="Playlist" breadcrumb={true}>
-              <StyledDropdown active={!!sortValue}>
-                <label className="sr-only" htmlFor="order-select">
-                  Sort tracks
-                </label>
-                <select
-                  name="track-order"
-                  id="order-select"
-                  onChange={(e) =>
-                    setSortValue(
-                      e.target.value as keyof AudioFeaturesWithListOrder
-                    )
-                  }
-                >
-                  <option value="">Sort tracks</option>
-                  {sortOptions.map((option, i) => (
-                    <option value={option} key={i}>
-                      {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
-                    </option>
-                  ))}
-                </select>
-              </StyledDropdown>
+              <label className="sr-only" htmlFor="order-select">
+                Sort tracks
+              </label>
+              <select
+                name="track-order"
+                id="order-select"
+                onChange={(e) =>
+                  setSortValue(
+                    e.target.value as keyof AudioFeaturesWithListOrder
+                  )
+                }
+              >
+                <option value="">Sort tracks</option>
+                {sortOptions.map((option, i) => (
+                  <option value={option} key={i}>
+                    {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
+                  </option>
+                ))}
+              </select>
 
-              {sortedTracks ? <TrackList tracks={sortedTracks} /> : <Loader />}
+              {sortedTracks ? (
+                <TrackList tracks={sortedTracks} sortValue={sortValue} />
+              ) : (
+                <Loader />
+              )}
             </SectionWrapper>
           </main>
         </>

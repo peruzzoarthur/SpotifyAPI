@@ -1,10 +1,9 @@
 import { formatDuration } from "../utils";
-import { StyledTrackList } from "../styles";
 
 const PlaylistTrackList = ({ tracks }: any) => (
   <>
     {tracks && tracks.length ? (
-      <StyledTrackList>
+      <>
         {tracks.track.map((track: any, i: any) => (
           <li className="track__item" key={i}>
             <div className="track__item__num">{i + 1}</div>
@@ -36,7 +35,7 @@ const PlaylistTrackList = ({ tracks }: any) => (
             </div>
           </li>
         ))}
-      </StyledTrackList>
+      </>
     ) : (
       <p className="empty-notice">No tracks available</p>
     )}
