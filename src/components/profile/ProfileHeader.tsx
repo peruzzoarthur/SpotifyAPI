@@ -7,7 +7,7 @@ interface ProfileHeaderProps {
 
 function ProfileHeader({ profile, playlists }: ProfileHeaderProps) {
   return (
-    <section className="flex w-full max-h-80 bg-white bg-opacity-20 rounded-md">
+    <section className="flex w-full max-h-80 bg-white bg-opacity-10">
       <div className="my-8 flex justify-start">
         <div className="flex items-center ml-4">
           {profile.images.length && profile.images[1].url && (

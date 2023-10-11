@@ -9,10 +9,12 @@ import {
   SimplifiedPlaylist,
   Page,
 } from "@spotify/web-api-ts-sdk";
-import { MainWithBackground } from "../components";
+// import { MainWithBackground } from "../components";
 import ProfilePlaylistsSection from "../components/profile/ProfilePlaylistsSection";
 import { client_id, redirect_url, scopes } from "../spotify";
 import ProfileHeader from "../components/profile/ProfileHeader";
+import ProfileTopTracksSection from "../components/profile/ProfileTopTracksSection";
+import ProfileTopArtistsSection from "../components/profile/ProfileTopArtistsSection";
 
 // ... (previous code)
 
@@ -96,17 +98,16 @@ const Profile = () => {
   }, [pagePlaylist, profile]);
 
   return (
-    <MainWithBackground>
+    <main className="bg-black">
       {profile && (
         <div className="flex-col w-full">
           <ProfileHeader profile={profile} playlists={userCreatedPlaylists} />
+          <ProfileTopArtistsSection topArtists={topArtists} />
+          <ProfileTopTracksSection topTracks={topTracks} />
           <ProfilePlaylistsSection playlists={userCreatedPlaylists} />
-
-          {/* Render top artists and tracks here */}
-          {/* You can create separate components for top artists and tracks */}
         </div>
       )}
-    </MainWithBackground>
+    </main>
   );
 };
 

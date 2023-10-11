@@ -8,7 +8,12 @@ export default {
     fontFamily: {
       sans: ["CircularStd", "sans-serif", "serif"],
     },
-    extend: {},
+    extend: {
+      minWidth: {
+        640: "640px",
+        200: "200px",
+      },
+    },
   },
   plugins: [],
 };

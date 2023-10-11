@@ -1,7 +1,6 @@
 import { AudioFeatures } from "@spotify/web-api-ts-sdk";
 import DancingSVG from "../../styles/svg/DancingSVG";
 import LoudSVG from "../../styles/svg/LoudSVG";
-import { MainWithBackground } from "../";
 
 interface TrackInfoCardProps {
   imageUrl: string;
@@ -38,7 +37,7 @@ function TrackInfoCard({
     : {};
 
   return (
-    <MainWithBackground>
+    <main className="bg-black">
       <div className="flex flex-col items-center  text-slate-100 bg-white bg-opacity-20  drop-shadow-lg rounded-lg p-4">
         <img src={imageUrl} alt={trackName} className="mb-4 w-96 " />
 
@@ -60,7 +59,7 @@ function TrackInfoCard({
           </div>
         )}
       </div>
-    </MainWithBackground>
+    </main>
   );
 }
 
