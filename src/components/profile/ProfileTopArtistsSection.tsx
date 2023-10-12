@@ -1,6 +1,7 @@
 import { Artist } from "@spotify/web-api-ts-sdk";
 import { Link } from "react-router-dom";
 import ProfileTopArtistsCard from "./ProfileTopArtistsCard";
+import ProfileShowAllButton from "./ProfileShowAllButton";
 
 interface ProfileTopArtistsSectionProps {
   topArtists: Artist[];
@@ -9,15 +10,21 @@ interface ProfileTopArtistsSectionProps {
 function ProfileTopArtistsSection({
   topArtists,
 }: ProfileTopArtistsSectionProps) {
-  const top12Artists = topArtists.slice(0, 12);
+  const top666Artists = topArtists.slice(0, 6);
 
   return (
     <>
       <section className="bg-white bg-opacity-60 w-full h-auto">
-        <h1 className="text-white text-8xl pt-4 pl-2 ml-4 pb-2">Top Artists</h1>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6   mt-5 ">
-          {top12Artists.map((artist, index) => (
-            <div className="min-w-1/2 md:min-w-1/3 lg:min-w-1/4 xl:min-w-1/6">
+        <div className="flex items-center justify-between pl-4 pr-4 pt-4 pb-2">
+          <h1 className="text-slate-800 text-8xl">Top Artists</h1>
+          <ProfileShowAllButton url={`/artists/`} />
+        </div>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3
+         xl:grid-cols-5 2xl:grid-cols-6 grid-flow-row ml-5 mr-5 mt-5 "
+        >
+          {top666Artists.map((artist, index) => (
+            <div className="min-w-1/2 sm:min-w-1/2 md:min-w-1/3 lg:min-w-1/4 xl:min-w-1/5 2xl:min-w-1/5">
               <ProfileTopArtistsCard
                 key={index}
                 name={artist.name}
@@ -30,5 +37,4 @@ function ProfileTopArtistsSection({
     </>
   );
 }
-
 export default ProfileTopArtistsSection;

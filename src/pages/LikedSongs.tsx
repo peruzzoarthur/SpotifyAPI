@@ -10,12 +10,13 @@ import { catchErrors } from "../utils";
 import { TrackList, SectionWrapper, Loader } from "../components";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
+import LikedSongsTracksSection from "../components/liked-songs/LikedSongsTracksSection";
 
 interface AudioFeaturesWithListOrder extends AudioFeatures {
   default_list_order?: string;
 }
 
-interface TrackWithAudioFeatures extends Track {
+export interface TrackWithAudioFeatures extends Track {
   audio_features?: AudioFeaturesWithListOrder;
 }
 
@@ -145,42 +146,15 @@ const LikedSongs = () => {
     <>
       {likedSongsPage && (
         <>
-          <div className="header__inner">
-            <h1>Liked Songs</h1>
+          <div className="bg-black h-64">
+            <h1 className="text-6xl text-white ml-6 pt-6">Liked Songs</h1>
             <div>
-              <div className="header__overline">Your liked songs</div>
+              <div className="text-xl ml-6 text-white">Your liked songs</div>
             </div>
           </div>
-
-          <main>
-            <SectionWrapper title="LikedSongs" breadcrumb={true}>
-              <label className="sr-only" htmlFor="order-select">
-                Sort tracks
-              </label>
-              <select
-                name="track-order"
-                id="order-select"
-                onChange={(e) =>
-                  setSortValue(
-                    e.target.value as keyof AudioFeaturesWithListOrder
-                  )
-                }
-              >
-                <option value="">Sort tracks</option>
-                {sortOptions.map((option, i) => (
-                  <option value={option} key={i}>
-                    {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
-                  </option>
-                ))}
-              </select>
-
-              {sortedTracks ? (
-                <TrackList tracks={sortedTracks} sortValue={sortValue} />
-              ) : (
-                <Loader />
-              )}
-            </SectionWrapper>
-          </main>
+          <div className="bg-slate-950 bg-opacity-80">
+            <LikedSongsTracksSection tracks={tracks} />
+          </div>
         </>
       )}
     </>
@@ -188,3 +162,35 @@ const LikedSongs = () => {
 };
 
 export default LikedSongs;
+
+{
+  /* <main>
+<SectionWrapper title="LikedSongs" breadcrumb={true}>
+  <label className="sr-only" htmlFor="order-select">
+    Sort tracks
+  </label>
+  <select
+    name="track-order"
+    id="order-select"
+    onChange={(e) =>
+      setSortValue(
+        e.target.value as keyof AudioFeaturesWithListOrder
+      )
+    }
+  >
+    <option value="">Sort tracks</option>
+    {sortOptions.map((option, i) => (
+      <option value={option} key={i}>
+        {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
+      </option>
+    ))}
+  </select>
+
+  {sortedTracks ? (
+    <TrackList tracks={sortedTracks} sortValue={sortValue} />
+  ) : (
+    <Loader />
+  )}
+</SectionWrapper>
+</main> */
+}

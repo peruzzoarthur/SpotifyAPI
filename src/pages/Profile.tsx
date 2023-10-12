@@ -15,8 +15,7 @@ import { client_id, redirect_url, scopes } from "../spotify";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import ProfileTopTracksSection from "../components/profile/ProfileTopTracksSection";
 import ProfileTopArtistsSection from "../components/profile/ProfileTopArtistsSection";
-
-// ... (previous code)
+import logo from "../styles/img/spotify_logologo.jpg";
 
 const Profile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -101,6 +100,10 @@ const Profile = () => {
     <main className="bg-black">
       {profile && (
         <div className="flex-col w-full">
+          <img
+            className="fixed top-4 right-4 z-10 w-24 h-24 rounded-full"
+            src={logo}
+          />
           <ProfileHeader profile={profile} playlists={userCreatedPlaylists} />
           <ProfileTopArtistsSection topArtists={topArtists} />
           <ProfileTopTracksSection topTracks={topTracks} />

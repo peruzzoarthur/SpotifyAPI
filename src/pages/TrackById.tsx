@@ -42,13 +42,18 @@ const TrackById = () => {
 
   return (
     <>
-      <TrackInfoCard
-        imageUrl={imageUrl}
-        audioFeatures={audioFeatures}
-        album={trackData?.album.name}
-        trackName={trackData?.name}
-        artists={trackData?.artists[0].name}
-      />
+      <div className="bg-black h-screen pt-2 flex flex-row justify-center">
+        <TrackInfoCard
+          imageUrl={imageUrl}
+          audioFeatures={audioFeatures}
+          album={trackData?.album.name}
+          trackName={trackData?.name}
+          artists={trackData?.artists[0].name}
+        />
+        <button className="text-white bg-purple-950 bg-opacity-60 h-16 w-32 rounded-full ml-6">
+          Suggest Track
+        </button>
+      </div>
     </>
   );
 };

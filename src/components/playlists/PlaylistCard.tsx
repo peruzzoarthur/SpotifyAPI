@@ -1,8 +1,6 @@
 import { AudioFeatures } from "@spotify/web-api-ts-sdk";
-import DancingSVG from "../../styles/svg/DancingSVG";
-import LoudSVG from "../../styles/svg/LoudSVG";
 
-interface TrackInfoCardProps {
+interface PlaylistCardProps {
   imageUrl: string;
   audioFeatures: AudioFeatures | undefined;
   trackName: string | undefined;
@@ -10,13 +8,13 @@ interface TrackInfoCardProps {
   album: string | undefined;
 }
 
-function TrackInfoCard({
+function PlaylistCard({
   imageUrl,
   audioFeatures,
   trackName,
   artists,
   album,
-}: TrackInfoCardProps) {
+}: PlaylistCardProps) {
   const sortOptions = [
     { key: "danceability", icon: "💃🕺" },
     { key: "energy", icon: "🧨" },
@@ -66,5 +64,3 @@ function TrackInfoCard({
     </div>
   );
 }
-
-export default TrackInfoCard;
