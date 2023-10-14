@@ -12,6 +12,7 @@ export default {
       minWidth: {
         640: "640px",
         200: "200px",
+        1280: "1280px",
       },
     },
   },

@@ -1,6 +1,4 @@
 import { AudioFeatures } from "@spotify/web-api-ts-sdk";
-import DancingSVG from "../../styles/svg/DancingSVG";
-import LoudSVG from "../../styles/svg/LoudSVG";
 
 interface TrackInfoCardProps {
   imageUrl: string;

@@ -7,12 +7,15 @@ import {
 } from "@spotify/web-api-ts-sdk";
 import { useState, useEffect, useMemo } from "react";
 import { catchErrors } from "../utils";
-import { TrackList, SectionWrapper, Loader } from "../components";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
 import LikedSongsTracksSection from "../components/liked-songs/LikedSongsTracksSection";
+import SelectAudioFeature from "../components/liked-songs/SelectAudioFeature";
+import SelectListSize from "../components/liked-songs/SelectListSize";
+import LikedSongsHeader from "../components/liked-songs/LikedSongsHeader";
+import Logo from "../components/Logo";
 
-interface AudioFeaturesWithListOrder extends AudioFeatures {
+export interface AudioFeaturesWithListOrder extends AudioFeatures {
   default_list_order?: string;
 }
 
@@ -20,7 +23,17 @@ export interface TrackWithAudioFeatures extends Track {
   audio_features?: AudioFeaturesWithListOrder;
 }
 
-const LikedSongs = () => {
+export interface LikedSongsProps {
+  setSeedArtists?: any;
+  setSeedAlbums?: any;
+  setSeedTracks?: any;
+}
+
+const LikedSongs = ({
+  setSeedArtists,
+  setSeedAlbums,
+  setSeedTracks,
+}: LikedSongsProps) => {
   const [likedSongsPage, setLikedSongsPage] = useState<Page<SavedTrack>>();
   const [tracksData, setTracksData] = useState<Track[]>([]);
   const [tracks, setTracks] = useState<TrackWithAudioFeatures[]>([]);
@@ -42,6 +55,11 @@ const LikedSongs = () => {
     "tempo",
     "time_signature",
   ];
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+  };
 
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
@@ -50,16 +68,16 @@ const LikedSongs = () => {
       return;
     }
     const fetchData = async () => {
-      const data = await sdk.currentUser.tracks.savedTracks(50);
+      const data = await sdk.currentUser.tracks.savedTracks(10);
       setLikedSongsPage(data);
       setNextUrl(data.next);
       setTracksData(data.items.map(({ track }) => track));
     };
     catchErrors(fetchData());
-  }, [sdk]);
+  }, [sdk, pageSize]);
 
   useEffect(() => {
-    if (!likedSongsPage) {
+    if (!likedSongsPage || tracks.length >= pageSize) {
       return;
     }
 
@@ -99,7 +117,7 @@ const LikedSongs = () => {
       ]);
     };
     catchErrors(fetchAudioFeatures());
-  }, [tracksData]);
+  }, [tracksData, pageSize]);
 
   const tracksWithAudioFeatures = useMemo(() => {
     if (!tracks || !audioFeatures) {
@@ -146,15 +164,24 @@ const LikedSongs = () => {
     <>
       {likedSongsPage && (
         <>
-          <div className="bg-black h-64">
-            <h1 className="text-6xl text-white ml-6 pt-6">Liked Songs</h1>
-            <div>
-              <div className="text-xl ml-6 text-white">Your liked songs</div>
-            </div>
+          <Logo />
+          <LikedSongsHeader />
+          <div className="bg-slate-700 bg-opacity-20 pt-10 pb-10 flex flex-col items-center">
+            <SelectAudioFeature
+              sortOptions={sortOptions}
+              setSortValue={setSortValue}
+            />
+            <SelectListSize
+              handlePageSizeChange={handlePageSizeChange}
+              tracks={tracks}
+            />
           </div>
-          <div className="bg-slate-950 bg-opacity-80">
-            <LikedSongsTracksSection tracks={tracks} />
-          </div>
+          <LikedSongsTracksSection
+            tracks={sortedTracks}
+            // setSeedArtists={setSeedArtists}
+            // setSeedAlbums={setSeedAlbums}
+            setSeedTracks={setSeedTracks}
+          />
         </>
       )}
     </>
@@ -162,35 +189,3 @@ const LikedSongs = () => {
 };
 
 export default LikedSongs;
-
-{
-  /* <main>
-<SectionWrapper title="LikedSongs" breadcrumb={true}>
-  <label className="sr-only" htmlFor="order-select">
-    Sort tracks
-  </label>
-  <select
-    name="track-order"
-    id="order-select"
-    onChange={(e) =>
-      setSortValue(
-        e.target.value as keyof AudioFeaturesWithListOrder
-      )
-    }
-  >
-    <option value="">Sort tracks</option>
-    {sortOptions.map((option, i) => (
-      <option value={option} key={i}>
-        {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
-      </option>
-    ))}
-  </select>
-
-  {sortedTracks ? (
-    <TrackList tracks={sortedTracks} sortValue={sortValue} />
-  ) : (
-    <Loader />
-  )}
-</SectionWrapper>
-</main> */
-}

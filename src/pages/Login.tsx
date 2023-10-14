@@ -8,7 +8,9 @@ const Login = () => {
         SpotifyApi.performUserAuthorization(
           client_id,
           redirect_url,
-          scopes,
+          [
+            "user-library-read playlist-read-private user-read-private user-read-email user-top-read",
+          ],
           "http://localhost:3000/callback"
         );
       }}
