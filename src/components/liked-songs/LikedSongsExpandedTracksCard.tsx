@@ -1,15 +1,16 @@
 import { AudioFeatures } from "@spotify/web-api-ts-sdk";
 import { formatDuration } from "../../utils";
 
-interface TrackInfoCardProps {
+export interface TrackInfoCardProps {
   imageUrl: string;
   audioFeatures: AudioFeatures | undefined;
   name: string | undefined;
   artists: string | undefined;
-  //   album: string | undefined;
   duration: number;
   order: number;
   popularity: number;
+  id: string;
+  handleAddToCart: () => void;
 }
 
 function LikedSongsExpandedTracksCard({
@@ -17,10 +18,10 @@ function LikedSongsExpandedTracksCard({
   audioFeatures,
   name,
   artists,
-  //   album,
   duration,
   order,
   popularity,
+  handleAddToCart,
 }: TrackInfoCardProps) {
   const sortOptions = [
     { key: "danceability", icon: "💃🕺" },
@@ -60,8 +61,15 @@ function LikedSongsExpandedTracksCard({
 
       <div className="flex flex-grow justify-end">
         {Object.entries(filteredAudioFeatures).length > 0 && (
-          <div className="grid grid-cols-9 mt-4">
+          <div className="grid grid-cols-10 mt-4">
+            <button
+              className="bg-green-400 bg-opacity-10 rounded-full"
+              onClick={handleAddToCart}
+            >
+              Add to cart
+            </button>
             <p>{popularity}</p>
+
             {sortOptions.map(({ key, icon }) => (
               <div
                 key={key}

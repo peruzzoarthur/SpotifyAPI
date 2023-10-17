@@ -23,17 +23,7 @@ export interface TrackWithAudioFeatures extends Track {
   audio_features?: AudioFeaturesWithListOrder;
 }
 
-export interface LikedSongsProps {
-  setSeedArtists?: any;
-  setSeedAlbums?: any;
-  setSeedTracks?: any;
-}
-
-const LikedSongs = ({
-  setSeedArtists,
-  setSeedAlbums,
-  setSeedTracks,
-}: LikedSongsProps) => {
+const LikedSongs = () => {
   const [likedSongsPage, setLikedSongsPage] = useState<Page<SavedTrack>>();
   const [tracksData, setTracksData] = useState<Track[]>([]);
   const [tracks, setTracks] = useState<TrackWithAudioFeatures[]>([]);
@@ -176,12 +166,7 @@ const LikedSongs = ({
               tracks={tracks}
             />
           </div>
-          <LikedSongsTracksSection
-            tracks={sortedTracks}
-            // setSeedArtists={setSeedArtists}
-            // setSeedAlbums={setSeedAlbums}
-            setSeedTracks={setSeedTracks}
-          />
+          <LikedSongsTracksSection tracks={sortedTracks} />
         </>
       )}
     </>

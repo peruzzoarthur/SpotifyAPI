@@ -1,12 +1,14 @@
 import { Image } from "@spotify/web-api-ts-sdk";
 import { formatDuration } from "../../utils";
 
-interface LikedSongsTracksCardProps {
+export interface LikedSongsTracksCardProps {
   image: Image[];
   name: string;
   duration: number;
-  order: number;
+  order?: number;
   artists: string;
+  id: string;
+  handleAddToCart?: () => void;
 }
 
 function LikedSongsTracksCard({
@@ -15,6 +17,8 @@ function LikedSongsTracksCard({
   order,
   duration,
   artists,
+  id,
+  handleAddToCart,
 }: LikedSongsTracksCardProps) {
   return (
     <>
@@ -31,6 +35,9 @@ function LikedSongsTracksCard({
         </div>
         <div className="flex-grow"></div>
         <p className="text-end mt-3 ml-2">{formatDuration(duration)}</p>
+        <button className="ml-2" onClick={handleAddToCart}>
+          Add to cart
+        </button>
       </div>
     </>
   );
