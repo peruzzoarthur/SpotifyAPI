@@ -4,11 +4,10 @@ import RecommendationHeader from "../components/recommendation/RecommendationHea
 import RecommendationSection from "../components/recommendation/RecommendationSection";
 import { CartContext } from "../components/recommendation/Recommendation";
 import { useSpotify } from "../hooks/useSpotify";
-import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
+import { client_id, redirect_url, scopes } from "../spotify";
 import { SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 import { catchErrors } from "../utils";
 import LikedSongsTracksCard from "../components/liked-songs/LikedSongsTracksCard";
-import { Link } from "react-router-dom";
 
 export interface RecommendationsRequestRequiredArguments {
   seed_artists?: string[];
@@ -76,22 +75,23 @@ export interface RecommendationSeed {
 }
 
 function RecommendationList() {
-  const { cart } = useContext(CartContext);
-  const ids = { seed_tracks: cart.map((item) => item.id) };
-  const [recRequest, setRecRequest] = useState<RecommendationsRequest>(ids);
+  const { requestForRec } = useContext(CartContext);
   const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
   const [getResponse, setGetResponse] = useState<boolean>(false);
 
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
+  const handleRequest = () => {
+    setGetResponse(!getResponse);
+  };
+
   useEffect(() => {
     if (!sdk) {
       return;
     }
-    const ids = { seed_tracks: cart.map((item) => item.id) };
-    setRecRequest(ids);
+
     const fetchData = async () => {
-      const data = await sdk.recommendations.get(recRequest);
+      const data = await sdk.recommendations.get(requestForRec);
       setRecResponse(data);
     };
     catchErrors(fetchData());
@@ -101,19 +101,27 @@ function RecommendationList() {
     <>
       <Logo />
       <RecommendationHeader />
+      <div className="flex bg-slate-900 justify-center pt-4 pb-4">
+        <button
+          className="bg-purple-400 text-white bg-opacity-20 rounded-full w-32 h-32 text-xs "
+          onClick={handleRequest}
+        >
+          Request Recommendations
+        </button>
+      </div>
+
       <RecommendationSection />
       {recResponse && (
-        <div className="bg-slate-900 grid grid-cols-1 ml-5">
-          {recResponse.tracks.map((track) => (
-            <Link to={`/track/${track.id}`}>
-              <LikedSongsTracksCard
-                id={track.id}
-                image={track.album.images}
-                name={track.name}
-                duration={track.duration_ms}
-                artists={track.artists.map((artist) => artist.name).join(", ")}
-              />
-            </Link>
+        <div className="bg-slate-900 grid grid-cols-1 ml-5 ">
+          {recResponse.tracks.map((track, index) => (
+            <LikedSongsTracksCard
+              index={index}
+              id={track.id}
+              image={track.album.images}
+              name={track.name}
+              duration={track.duration_ms}
+              artists={track.artists.map((artist) => artist.name).join(", ")}
+            />
           ))}
         </div>
       )}

@@ -42,6 +42,7 @@ function LikedSongsTracksSection({ tracks }: LikedSongsTracksSectionProps) {
                 {tracks?.map((track, index) => (
                   // <Link to={`/track/${track.id}`} key={index}>
                   <LikedSongsTracksCard
+                    index={index}
                     id={track.id}
                     image={track.album.images}
                     name={track.name}

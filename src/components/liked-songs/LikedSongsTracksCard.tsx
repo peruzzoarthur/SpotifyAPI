@@ -2,6 +2,7 @@ import { Image } from "@spotify/web-api-ts-sdk";
 import { formatDuration } from "../../utils";
 
 export interface LikedSongsTracksCardProps {
+  index: number;
   image: Image[];
   name: string;
   duration: number;
@@ -17,7 +18,6 @@ function LikedSongsTracksCard({
   order,
   duration,
   artists,
-  id,
   handleAddToCart,
 }: LikedSongsTracksCardProps) {
   return (
