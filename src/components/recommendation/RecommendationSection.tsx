@@ -16,15 +16,14 @@ function RecommendationSection() {
         <h2 className="text-white text-3xl ml-4">
           Input Data for Recommendations
         </h2>
-        <div className="grid grid-cols-6 grid-rows auto">
+        <div className="grid grid-cols-5 grid-flow-row-dense ml-6 mr-6">
           {cart.map((item, index) => (
             <div key={index}>
               {isTrack(item) && (
                 <RecommendationTracksCard
+                  index={index}
                   imageUrl={item.album.images[0].url}
                   name={item.name}
-                  duration={item.duration_ms}
-                  order={index + 1}
                   artists={item.artists.map((artist) => artist.name).join(", ")}
                   handleRemoveFromCart={() => handleRemoveFromCart(item.id)}
                 />

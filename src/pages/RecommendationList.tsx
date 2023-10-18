@@ -109,20 +109,21 @@ function RecommendationList() {
           Request Recommendations
         </button>
       </div>
-
       <RecommendationSection />
       {recResponse && (
-        <div className="bg-slate-900 grid grid-cols-1 ml-5 ">
-          {recResponse.tracks.map((track, index) => (
-            <LikedSongsTracksCard
-              index={index}
-              id={track.id}
-              image={track.album.images}
-              name={track.name}
-              duration={track.duration_ms}
-              artists={track.artists.map((artist) => artist.name).join(", ")}
-            />
-          ))}
+        <div className="bg-slate-800 ">
+          <div className="bg-slate-300 bg-opacity-20 grid grid-cols-1 ml-6 mr-6 pt-2 ">
+            {recResponse.tracks.map((track, index) => (
+              <LikedSongsTracksCard
+                key={index}
+                id={track.id}
+                image={track.album.images}
+                name={track.name}
+                duration={track.duration_ms}
+                artists={track.artists.map((artist) => artist.name).join(", ")}
+              />
+            ))}
+          </div>
         </div>
       )}
     </>

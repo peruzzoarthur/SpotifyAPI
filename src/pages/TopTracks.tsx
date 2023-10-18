@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
 import { catchErrors } from "../utils";
-import {
-  SectionWrapper,
-  TrackList,
-  TimeRangeButtons,
-  Loader,
-} from "../components";
 
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
@@ -30,22 +24,7 @@ const TopTracks = () => {
     catchErrors(fetchData());
   }, [sdk, activeRange]);
 
-  return (
-    <main>
-      <SectionWrapper title="Top Tracks" breadcrumb={true}>
-        <TimeRangeButtons
-          activeRange={activeRange}
-          setActiveRange={setActiveRange}
-        />
-
-        {topTracks && topTracks.items ? (
-          <TrackList tracks={topTracks.items} />
-        ) : (
-          <Loader />
-        )}
-      </SectionWrapper>
-    </main>
-  );
+  return <main></main>;
 };
 
 export default TopTracks;

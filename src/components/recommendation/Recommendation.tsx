@@ -68,8 +68,14 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
         const message = `Track with ID ${item.id} already exists in the Recommendation Input Cart.`;
         window.alert(message);
       } else {
-        setCart([...cart, item]);
-        requestForRec.seed_tracks.push(item.id);
+        if (cart.length >= 5) {
+          window.alert(
+            "Already have 5 items as seed to get your recommendations, consider deleting one of the already listed seeds"
+          );
+        } else {
+          setCart([...cart, item]);
+          requestForRec.seed_tracks.push(item.id);
+        }
       }
     }
     if (isArtist(item)) {
@@ -78,8 +84,14 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
         const message = `Artist with ID ${item.id} already exists in the Recommendation Input Cart.`;
         window.alert(message);
       } else {
-        setCart([...cart, item]);
-        requestForRec.seed_artists.push(item.id);
+        if (cart.length >= 5) {
+          window.alert(
+            "Already have 5 items as seed to get your recommendations, consider deleting one of the already listed seeds"
+          );
+        } else {
+          setCart([...cart, item]);
+          requestForRec.seed_artists.push(item.id);
+        }
       }
     }
   };
@@ -113,6 +125,7 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
     setRequestForRec((prevReqForRec: RequestForRec) => ({
       ...prevReqForRec,
       seed_tracks: prevReqForRec.seed_tracks.filter((id) => id !== itemId),
+      seed_artists: prevReqForRec.seed_tracks.filter((id) => id !== itemId),
     }));
   };
 

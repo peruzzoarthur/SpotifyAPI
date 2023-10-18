@@ -19,10 +19,9 @@ function ProfilePlaylistsSection({ playlists }: ProfilePlaylistSectionProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 grid-flow-row ml-5 mr-5 mt-5 ">
           {sixPlaylists.map((playlist, index) => (
-            <Link to={`/playlists/${playlist.id}`}>
+            <Link key={index} to={`/playlists/${playlist.id}`}>
               <div className="min-w-1/2 md:min-w-1/3 lg:min-w-1/4 xl:min-w-1/6">
                 <ProfilePlaylistsCard
-                  key={index}
                   image={playlist.images}
                   name={playlist.name}
                   totalTracks={playlist.tracks?.total}

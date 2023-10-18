@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { catchErrors } from "../utils";
-import { SectionWrapper, PlaylistsGrid, Loader } from "../components";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
 import { Page, SimplifiedPlaylist, SpotifyApi } from "@spotify/web-api-ts-sdk";
@@ -50,13 +49,7 @@ const Playlists = () => {
     catchErrors(fetchMoreData());
   }, [playlistsData]);
 
-  return (
-    <main>
-      <SectionWrapper title="Public Playlists" breadcrumb={true}>
-        {playlists ? <PlaylistsGrid playlists={playlists} /> : <Loader />}
-      </SectionWrapper>
-    </main>
-  );
+  return <main></main>;
 };
 
 export default Playlists;

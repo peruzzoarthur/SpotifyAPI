@@ -17,12 +17,11 @@ function ProfileTopTracksSection({ topTracks }: ProfileTopTracksSectionProps) {
           <h1 className="text-indigo-500 text-8xl pt-2 mb-2">Top Tracks</h1>
           <ProfileShowAllButton url={`/tracks/`} />
         </div>
-        <section className=" w-full h-auto pb-2">
+        <section className="w-full h-auto pb-2">
           <div className="grid grid-cols-1 ml-5 ">
             {top10Tracks.map((track, index) => (
-              <Link to={`/track/${track.id}`}>
+              <Link key={index} to={`/track/${track.id}`}>
                 <ProfileTopTracksCard
-                  key={index}
                   image={track.album.images}
                   name={track.name}
                   duration={track.duration_ms}

@@ -10,7 +10,6 @@ import {
   Track,
 } from "@spotify/web-api-ts-sdk";
 import { catchErrors } from "../utils";
-import { TrackList, SectionWrapper, Loader } from "../components";
 import { client_id, redirect_url, scopes } from "../spotify";
 
 interface AudioFeaturesWithListOrder extends AudioFeatures {
@@ -188,35 +187,7 @@ const PlaylistById = () => {
             </div>
           </div>
 
-          <main>
-            <SectionWrapper title="Playlist" breadcrumb={true}>
-              <label className="sr-only" htmlFor="order-select">
-                Sort tracks
-              </label>
-              <select
-                name="track-order"
-                id="order-select"
-                onChange={(e) =>
-                  setSortValue(
-                    e.target.value as keyof AudioFeaturesWithListOrder
-                  )
-                }
-              >
-                <option value="">Sort tracks</option>
-                {sortOptions.map((option, i) => (
-                  <option value={option} key={i}>
-                    {`${option.charAt(0).toUpperCase()}${option.slice(1)}`}
-                  </option>
-                ))}
-              </select>
-
-              {sortedTracks ? (
-                <TrackList tracks={sortedTracks} sortValue={sortValue} />
-              ) : (
-                <Loader />
-              )}
-            </SectionWrapper>
-          </main>
+          <main></main>
         </>
       )}
     </>
