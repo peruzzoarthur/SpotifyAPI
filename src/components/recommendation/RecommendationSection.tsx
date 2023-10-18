@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { CartContext, CartItem } from "./Recommendation";
 import { Artist, Track } from "@spotify/web-api-ts-sdk";
 import RecommendationTracksCard from "./RecommendationTracksCard";
+import RecommendationArtistCard from "./RecommendationArtistCard";
 
 function RecommendationSection() {
   const { cart, removeFromCart } = useContext(CartContext);
@@ -16,7 +17,11 @@ function RecommendationSection() {
         <h2 className="text-white text-3xl ml-4">
           Input Data for Recommendations
         </h2>
-        <div className="grid grid-cols-5 grid-flow-row-dense ml-6 mr-6">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3
+         xl:grid-cols-5 2xl:grid-cols-6 grid-flow-row ml-5 mr-5 mt-5 "
+        >
+          {" "}
           {cart.map((item, index) => (
             <div key={index}>
               {isTrack(item) && (
@@ -29,7 +34,16 @@ function RecommendationSection() {
                 />
               )}
 
-              {isArtist(item) && <p>Artist: {item.name}</p>}
+              {isArtist(item) && (
+                <RecommendationArtistCard
+                  genres={item.genres.join(", ")}
+                  id={item.id}
+                  image={item.images}
+                  handleRemoveFromCart={() => handleRemoveFromCart(item.id)}
+                  index={index}
+                  name={item.name}
+                />
+              )}
             </div>
           ))}
         </div>

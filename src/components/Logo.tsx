@@ -23,13 +23,16 @@ function Logo() {
          bg-opacity-90 p-2 rounded shadow-md"
         >
           <ul className="space-y-2">
+            <Link to={`/`}>
+              <li>Profile</li>
+            </Link>
+
             <Link to={`/liked-songs`}>
               <li>Liked songs</li>
             </Link>
             <Link to={`/recommendation`}>
               <li>Recommendation Liszt</li>
             </Link>
-            <li>Menu Item 3</li>
           </ul>
         </div>
       )}
