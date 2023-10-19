@@ -8,6 +8,8 @@ import { client_id, redirect_url, scopes } from "../spotify";
 import { SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 import { catchErrors } from "../utils";
 import LikedSongsTracksCard from "../components/liked-songs/LikedSongsTracksCard";
+import RecommendationResponseTrackCard from "../components/recommendation/RecommendationResponseTrackCard";
+import { Link } from "react-router-dom";
 
 export interface RecommendationsRequestRequiredArguments {
   seed_artists?: string[];
@@ -114,14 +116,23 @@ function RecommendationList() {
         <div className="bg-slate-800 ">
           <div className="bg-slate-300 bg-opacity-20 grid grid-cols-1 ml-6 mr-6 pt-2 ">
             {recResponse.tracks.map((track, index) => (
-              <LikedSongsTracksCard
+              <Link
                 key={index}
-                id={track.id}
-                image={track.album.images}
-                name={track.name}
-                duration={track.duration_ms}
-                artists={track.artists.map((artist) => artist.name).join(", ")}
-              />
+                to={track.external_urls.spotify}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <RecommendationResponseTrackCard
+                  index={index}
+                  id={track.id}
+                  image={track.album.images}
+                  name={track.name}
+                  duration={track.duration_ms}
+                  artists={track.artists
+                    .map((artist) => artist.name)
+                    .join(", ")}
+                />
+              </Link>
             ))}
           </div>
         </div>

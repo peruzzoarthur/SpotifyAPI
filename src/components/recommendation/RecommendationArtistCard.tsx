@@ -12,7 +12,6 @@ export interface RecomendationArtistCardProps {
 function RecommendationArtistCard({
   image,
   name,
-  id,
   genres,
   index,
   handleRemoveFromCart,
