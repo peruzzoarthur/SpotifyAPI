@@ -1,19 +1,21 @@
-interface RecomendationTracksCardProps {
-  imageUrl: string;
+interface TopTracksCardProps {
+  image: string;
   name: string | undefined;
   artists: string | undefined;
   index: number;
+  id: string;
 
-  handleRemoveFromCart: () => void;
+  handleAddToCart: () => void;
 }
 
-function RecommendationTracksCard({
-  imageUrl,
+function TopTracksCard({
+  image,
   name,
   artists,
   index,
-  handleRemoveFromCart,
-}: RecomendationTracksCardProps) {
+  handleAddToCart,
+  id,
+}: TopTracksCardProps) {
   return (
     <div
       key={index}
@@ -22,19 +24,19 @@ function RecommendationTracksCard({
      hover:bg-purple-200 hover:bg-opacity-30 hover:shadow-md duration-500 ease-in-out"
     >
       <div className="flex flex-col items-center hover:pt-2">
-        <img src={imageUrl} alt={name} className="mt-6 mb-4 w-48 " />
+        <img src={image} alt={name} className="mt-6 mb-4 w-48 " />
         <h2 className="text-lg font-bold">{name}</h2>
         <p className="text-sm">{artists}</p>
       </div>
 
       <button
-        className="bg-red-800 bg-opacity-60 rounded-md w-20  mt-4 mb-1 "
-        onClick={handleRemoveFromCart}
+        className="bg-emerald-800 bg-opacity-60 rounded-md w-24 mt-6 mb-1 "
+        onClick={handleAddToCart}
       >
-        Remove
+        Add to Cart
       </button>
     </div>
   );
 }
 
-export default RecommendationTracksCard;
+export default TopTracksCard;

@@ -19,9 +19,8 @@ function RecommendationSection() {
         </h2>
         <div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3
-         xl:grid-cols-5 2xl:grid-cols-6 grid-flow-row ml-5 mr-5 mt-5 "
+         xl:grid-cols-5 2xl:grid-cols-5 grid-flow-row-dense ml-5 mr-5 mt-5  "
         >
-          {" "}
           {cart.map((item, index) => (
             <div key={index}>
               {isTrack(item) && (

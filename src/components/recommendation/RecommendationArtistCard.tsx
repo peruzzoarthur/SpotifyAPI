@@ -19,7 +19,7 @@ function RecommendationArtistCard({
   return (
     <div
       key={index}
-      className="flex flex-col pt-4 m-4 items-center w-240 h-360
+      className="flex flex-col pt-4 m-4 items-center w-300 h-400
      text-slate-200 bg-slate-400 bg-opacity-30 drop-shadow-lg rounded-lg 
      hover:bg-purple-200 hover:bg-opacity-30 hover:shadow-md duration-500 ease-in-out"
     >
@@ -27,10 +27,12 @@ function RecommendationArtistCard({
         <img
           src={image[0].url}
           alt={name}
-          className="mt-6 mb-4 w-48 rounded-full"
+          className="mt-6 mb-4 w-48 h-48 rounded-full"
         />
-        <h2 className="text-xl font-bold">{name}</h2>
-        <p className="text-xs">{`[${genres}]`}</p>
+        <h2 className="text-xl font-bold items-center text-center">{name}</h2>
+        <p className="mt-0.5 text-xs text-center text-slate-300">
+          {genres ? `[${genres}]` : `No genre informed for this artist.`}
+        </p>
       </div>
 
       <button
