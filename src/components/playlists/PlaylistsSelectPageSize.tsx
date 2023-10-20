@@ -1,11 +1,13 @@
-import { MaxInt } from "@spotify/web-api-ts-sdk";
+import { MaxInt, Page, SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 
 interface SelectPageSizeProps {
   handlePageSizeChange: (size: MaxInt<50>) => void;
+  playlistData: Page<SimplifiedPlaylist> | undefined;
 }
 
 function PlaylistsSelectPageSize({
   handlePageSizeChange,
+  playlistData,
 }: SelectPageSizeProps) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = Number(e.target.value) as MaxInt<50>;
@@ -23,6 +25,7 @@ function PlaylistsSelectPageSize({
         <option value="30">30</option>
         <option value="40">40</option>
         <option value="50">50</option>
+        <option value={playlistData?.total}>All</option>
       </select>
     </div>
   );

@@ -14,7 +14,6 @@ function TopTracksCard({
   artists,
   index,
   handleAddToCart,
-  id,
 }: TopTracksCardProps) {
   return (
     <div

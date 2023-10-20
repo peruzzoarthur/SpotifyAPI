@@ -1,5 +1,6 @@
 import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 import { PlaylistsCard } from ".";
+import { Link } from "react-router-dom";
 
 interface PlaylistSectionProps {
   playlists: SimplifiedPlaylist[];
@@ -17,12 +18,14 @@ function PlaylistsSection({ playlists }: PlaylistSectionProps) {
          xl:grid-cols-5 2xl:grid-cols-5 grid-flow-row-dense ml-5 mr-5 mt-5  "
             >
               {playlists?.map((playlist, index) => (
-                <PlaylistsCard
-                  key={index}
-                  image={playlist.images[0].url}
-                  name={playlist.name}
-                  index={index}
-                />
+                <Link key={index} to={`/playlists/${playlist.id}`}>
+                  <PlaylistsCard
+                    image={playlist.images[0].url}
+                    name={playlist.name}
+                    index={index}
+                    id={playlist.id}
+                  />
+                </Link>
               ))}
             </div>
           </section>

@@ -21,45 +21,49 @@ const Playlists = () => {
     useState<Page<SimplifiedPlaylist>>();
   const [playlists, setPlaylists] = useState<SimplifiedPlaylist[]>([]);
   const [pageSize, setPageSize] = useState<MaxInt<50>>(10);
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!sdk) {
       return;
     }
     const fetchData = async () => {
-      const data = await sdk.currentUser.playlists.playlists();
+      const data = await sdk.currentUser.playlists.playlists(10);
       setPlaylistsData(data);
+      setNextUrl(data.next);
+      setPlaylists(data.items);
     };
 
     catchErrors(fetchData());
   }, [sdk, pageSize]);
 
   useEffect(() => {
-    if (!playlistsData) {
+    if (!playlistsData || playlists.length - 1 >= pageSize) {
       return;
     }
 
     const fetchMoreData = async () => {
-      if (playlistsData.next) {
-        const urlParts = playlistsData.next.split(spotify_url);
+      if (nextUrl) {
+        const urlParts = nextUrl.split(spotify_url);
         if (urlParts.length === 2) {
           const apiUrl = urlParts[1];
           const data: Page<SimplifiedPlaylist> = await sdk.makeRequest(
             "GET",
             apiUrl
           );
-          setPlaylistsData(data);
+
+          setNextUrl(data.next);
+          setPlaylistsData((prevData) => ({
+            ...prevData!,
+            items: [...prevData?.items!, ...data.items],
+          }));
+          setPlaylists((prevPlaylists) => [...prevPlaylists, ...data.items]);
         }
       }
     };
 
-    setPlaylists((playlists) => [
-      ...(playlists ? playlists : []),
-      ...playlistsData.items,
-    ]);
-
     catchErrors(fetchMoreData());
-  }, [playlistsData]);
+  }, [playlistsData, pageSize]);
 
   return (
     <main>
