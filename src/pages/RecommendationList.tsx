@@ -7,7 +7,6 @@ import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 import { catchErrors } from "../utils";
-import LikedSongsTracksCard from "../components/liked-songs/LikedSongsTracksCard";
 import RecommendationResponseTrackCard from "../components/recommendation/RecommendationResponseTrackCard";
 import { Link } from "react-router-dom";
 
@@ -97,7 +96,7 @@ function RecommendationList() {
       setRecResponse(data);
     };
     catchErrors(fetchData());
-  }, [getResponse]);
+  }, [getResponse, requestForRec, sdk]);
 
   return (
     <>

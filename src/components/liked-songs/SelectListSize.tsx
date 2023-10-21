@@ -1,7 +1,7 @@
 import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
 
 interface SelectListSizeProps {
-  handlePageSizeChange: any;
+  handlePageSizeChange: (size: number) => void;
   tracks: TrackWithAudioFeatures[] | null;
 }
 

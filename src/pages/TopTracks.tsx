@@ -6,10 +6,10 @@ import { client_id, redirect_url, scopes } from "../spotify";
 import { TopTracksHeader, TopTracksSection } from "../components/topTracks";
 import TopTracksOptions from "../components/topTracks/TopTracksOptions";
 import Logo from "../components/Logo";
-import { MaxInt } from "@spotify/web-api-ts-sdk";
+import { MaxInt, Track } from "@spotify/web-api-ts-sdk";
 
 const TopTracks = () => {
-  const [topTracks, setTopTracks] = useState<any>(null);
+  const [topTracks, setTopTracks] = useState<Track[] | null>([]);
   const [activeRange, setActiveRange] = useState<
     "short_term" | "medium_term" | "long_term"
   >("short_term");

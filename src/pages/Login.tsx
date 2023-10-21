@@ -1,5 +1,5 @@
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
-import { client_id, redirect_url, scopes } from "../spotify";
+import { client_id, redirect_url } from "../spotify";
 
 const Login = () => {
   return (

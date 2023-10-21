@@ -6,7 +6,7 @@ import {
   TopArtists,
   TopTracks,
   LikedSongs,
-  PlaylistById,
+  // PlaylistById,
   TrackById,
   RecommendationList,
 } from "./pages";
@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/liked-songs" element={<LikedSongs />} />
-        <Route path="/playlists/:id" element={<PlaylistById />} />
+        {/* <Route path="/playlists/:id" element={<PlaylistById />} /> */}
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/top-artists" element={<TopArtists />} />
         <Route path="/top-tracks" element={<TopTracks />} />

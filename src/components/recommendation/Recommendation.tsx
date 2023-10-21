@@ -59,7 +59,7 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     localStorage.setItem("reqForRec", JSON.stringify(requestForRec));
-  }, [cart]);
+  }, [cart, requestForRec]);
 
   const addToCart = (item: CartItem) => {
     if (isTrack(item)) {

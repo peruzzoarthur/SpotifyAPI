@@ -107,7 +107,7 @@ const LikedSongs = () => {
       ]);
     };
     catchErrors(fetchAudioFeatures());
-  }, [tracksData, pageSize]);
+  }, [tracksData, pageSize, likedSongsPage, tracks.length, nextUrl, sdk]);
 
   const tracksWithAudioFeatures = useMemo(() => {
     if (!tracks || !audioFeatures) {

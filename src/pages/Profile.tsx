@@ -95,7 +95,7 @@ const Profile = () => {
       }
     };
     catchErrors(fetchMoreData());
-  }, [pagePlaylist, profile]);
+  }, [pagePlaylist, profile, sdk]);
 
   return (
     <main className="bg-black">

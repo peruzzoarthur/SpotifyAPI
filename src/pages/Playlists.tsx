@@ -53,23 +53,41 @@ const Playlists = () => {
           );
 
           setNextUrl(data.next);
-          setPlaylistsData((prevData) => ({
-            ...prevData!,
-            items: [...prevData?.items!, ...data.items],
-          }));
+          setPlaylistsData((prevData) => {
+            if (prevData) {
+              return {
+                ...prevData,
+                items: [...(prevData.items || []), ...data.items],
+              };
+            } else {
+              return {
+                items: [...data.items],
+                href: "", // Add appropriate value for href
+                limit: 0, // Add appropriate value for limit
+                next: null, // Add appropriate value for next
+                offset: 0, // Add appropriate value for offset
+                previous: null, // Add appropriate value for previous
+                total: 0, // Add appropriate value for total
+              };
+            }
+          });
+
           setPlaylists((prevPlaylists) => [...prevPlaylists, ...data.items]);
         }
       }
     };
 
     catchErrors(fetchMoreData());
-  }, [playlistsData, pageSize]);
+  }, [playlistsData, pageSize, nextUrl, playlists.length, sdk]);
 
   return (
     <main>
       <Logo />
       <PlaylistsHeader />
-      <PlaylistsOptions setPageSize={setPageSize} />
+      <PlaylistsOptions
+        setPageSize={setPageSize}
+        playlistData={playlistsData}
+      />
       <PlaylistsSection playlists={playlists} />
     </main>
   );

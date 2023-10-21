@@ -27,7 +27,7 @@ const TrackById = () => {
       setImageUrl(data.album.images[0].url);
     };
     catchErrors(fetchTrackData());
-  }, [sdk]);
+  }, [id, sdk]);
 
   useEffect(() => {
     if (!trackData) {
@@ -38,7 +38,7 @@ const TrackById = () => {
       setAudioFeatures(data);
     };
     catchErrors(fetchAudioFeatures());
-  }, [trackData]);
+  }, [id, sdk.tracks, trackData]);
 
   return (
     <>

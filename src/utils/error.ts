@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Higher-order function for async/await error handling
  * @param {function} fn an async function
