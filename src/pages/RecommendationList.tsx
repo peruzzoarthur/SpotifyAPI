@@ -83,7 +83,12 @@ function RecommendationList() {
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   const handleRequest = () => {
-    setGetResponse(!getResponse);
+    if (!recResponse) {
+      setGetResponse(true);
+    } else {
+      setGetResponse(false);
+      setGetResponse(true);
+    }
   };
 
   useEffect(() => {
@@ -96,7 +101,7 @@ function RecommendationList() {
       setRecResponse(data);
     };
     catchErrors(fetchData());
-  }, [getResponse, requestForRec, sdk]);
+  }, [requestForRec, sdk, getResponse]);
 
   return (
     <>
@@ -111,7 +116,7 @@ function RecommendationList() {
         </button>
       </div>
       <RecommendationSection />
-      {recResponse && (
+      {recResponse && getResponse && (
         <div className="bg-slate-800 ">
           <div className="bg-slate-300 bg-opacity-20 grid grid-cols-1 ml-6 mr-6 pt-2 ">
             {recResponse.tracks.map((track, index) => (

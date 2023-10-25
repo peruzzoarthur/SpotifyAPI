@@ -6,26 +6,33 @@ import {
   TopArtists,
   TopTracks,
   LikedSongs,
-  // PlaylistById,
+  PlaylistById,
   TrackById,
   RecommendationList,
 } from "./pages";
 import { CartProvider } from "./components/recommendation/Recommendation";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <CartProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/liked-songs" element={<LikedSongs />} />
-        {/* <Route path="/playlists/:id" element={<PlaylistById />} /> */}
-        <Route path="/playlists" element={<Playlists />} />
-        <Route path="/top-artists" element={<TopArtists />} />
-        <Route path="/top-tracks" element={<TopTracks />} />
-        <Route path="/track/:id" element={<TrackById />} />
-        <Route path="/recommendation" element={<RecommendationList />} />
-      </Routes>
-    </CartProvider>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <CartProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/liked-songs" element={<LikedSongs />} />
+          <Route path="/playlists/:id" element={<PlaylistById />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/top-artists" element={<TopArtists />} />
+          <Route path="/top-tracks" element={<TopTracks />} />
+          <Route path="/track/:id" element={<TrackById />} />
+          <Route path="/recommendation" element={<RecommendationList />} />
+        </Routes>
+      </CartProvider>
+    </QueryClientProvider>
   );
 }
 

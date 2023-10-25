@@ -1,5 +1,92 @@
+import { PlaylistedTrack, SpotifyApi, Page } from "@spotify/web-api-ts-sdk";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSpotify } from "../hooks/useSpotify";
+import { client_id, redirect_url, scopes } from "../spotify";
+import { useParams } from "react-router-dom";
+import React from "react";
+
+function PlaylistById() {
+  const { id } = useParams();
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+  // const [tracks, setTracks] = useState<PlaylistedTrack[]>([]);
+  const {
+    data,
+    error,
+    fetchNextPage,
+    isFetching,
+    status,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery<Page<PlaylistedTrack> | undefined>({
+    queryKey: ["playlistTracks", id],
+
+    queryFn: async ({ pageParam = 0 }) => {
+      const playlist = await sdk.playlists.getPlaylistItems(
+        id as string,
+        undefined,
+        undefined,
+        undefined,
+        Number(pageParam)
+      );
+      return playlist;
+    },
+
+    enabled: !!sdk,
+
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (lastPage?.next) {
+        const url = new URL(lastPage.next);
+        const pageParam = url.searchParams.get("offset");
+        return Number(pageParam);
+      }
+      return undefined;
+    },
+  });
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return status === "pending" ? (
+    <p>Loading...</p>
+  ) : (
+    <>
+      <div>
+        {data &&
+          !isFetchingNextPage &&
+          data.pages.map((playlist, index) => (
+            <>
+              <React.Fragment key={index}>
+                {playlist?.items.map((t, i) => (
+                  <div key={i}>
+                    <p>{i + 1}</p>
+                    <p>{t.track.name}</p>
+                  </div>
+                ))}
+              </React.Fragment>
+            </>
+          ))}
+        <button onClick={() => fetchNextPage()}>
+          {isFetchingNextPage
+            ? "Loading More..."
+            : hasNextPage
+            ? "Load More"
+            : "Nothing to Load"}
+        </button>
+      </div>
+      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
+    </>
+  );
+}
+
+export default PlaylistById;
+
 // import { useState, useEffect, useMemo } from "react";
-// import { useParams } from "react-router-dom";
 // import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 // import { useSpotify } from "../hooks/useSpotify";
 // import {
@@ -20,7 +107,6 @@
 // }
 
 // const PlaylistById = () => {
-//   const { id } = useParams();
 //   const [playlistPage, setPlaylistPage] = useState<Playlist>();
 //   const [playlistTracks, setPlaylistTracks] = useState<Page<PlaylistedTrack>>();
 //   const [tracks, setTracks] = useState<TrackWithAudioFeatures[]>([]);
@@ -66,21 +152,7 @@
 //       return;
 //     }
 
-//     const fetchMoreData = async () => {
-//       if (playlistTracks.next) {
-//         const urlParts = playlistTracks.next.split(
-//           "https://api.spotify.com/v1/"
-//         );
-//         if (urlParts.length === 2) {
-//           const apiUrl = urlParts[1];
-//           const data: Page<PlaylistedTrack> = await sdk.makeRequest(
-//             "GET",
-//             apiUrl
-//           );
-//           setPlaylistTracks(data);
-//         }
-//       }
-//     };
+//
 
 //     const newTracks: Track[] = playlistTracks.items
 //       .map(({ track }: PlaylistedTrack) => track)
