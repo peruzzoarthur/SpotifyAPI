@@ -3,12 +3,17 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { useParams } from "react-router-dom";
-import React from "react";
+import { useState } from "react";
 
 function PlaylistById() {
   const { id } = useParams();
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
-  // const [tracks, setTracks] = useState<PlaylistedTrack[]>([]);
+  const [tracks, setTracks] = useState<PlaylistedTrack[]>([]);
+
+  const updateTracks = (newTracks: PlaylistedTrack[]) => {
+    setTracks((oldTracks) => [...oldTracks, ...newTracks]);
+  };
+
   const {
     data,
     error,
@@ -18,8 +23,7 @@ function PlaylistById() {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery<Page<PlaylistedTrack> | undefined>({
-    queryKey: ["playlistTracks", id],
-
+    queryKey: ["playlistTracks", { id }],
     queryFn: async ({ pageParam = 0 }) => {
       const playlist = await sdk.playlists.getPlaylistItems(
         id as string,
@@ -28,6 +32,9 @@ function PlaylistById() {
         undefined,
         Number(pageParam)
       );
+      if (tracks.length < playlist.total) {
+        updateTracks(playlist.items.slice(0, playlist.total));
+      }
       return playlist;
     },
 
@@ -38,9 +45,9 @@ function PlaylistById() {
       if (lastPage?.next) {
         const url = new URL(lastPage.next);
         const pageParam = url.searchParams.get("offset");
-        return Number(pageParam);
+        return pageParam;
       }
-      return undefined;
+      return;
     },
   });
 
@@ -57,21 +64,17 @@ function PlaylistById() {
   ) : (
     <>
       <div>
-        {data &&
-          !isFetchingNextPage &&
-          data.pages.map((playlist, index) => (
-            <>
-              <React.Fragment key={index}>
-                {playlist?.items.map((t, i) => (
-                  <div key={i}>
-                    <p>{i + 1}</p>
-                    <p>{t.track.name}</p>
-                  </div>
-                ))}
-              </React.Fragment>
-            </>
-          ))}
-        <button onClick={() => fetchNextPage()}>
+        {data && !isFetchingNextPage && (
+          <>
+            {tracks.map((t, index) => (
+              <div key={index}>
+                <p>{index + 1}</p>
+                <p>{t.track.name}</p>
+              </div>
+            ))}
+          </>
+        )}
+        <button onClick={async () => await fetchNextPage()}>
           {isFetchingNextPage
             ? "Loading More..."
             : hasNextPage
