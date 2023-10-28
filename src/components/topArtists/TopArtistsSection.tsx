@@ -4,7 +4,7 @@ import { TopArtistsCard } from ".";
 import { Artist } from "@spotify/web-api-ts-sdk";
 
 interface TopArtistsSectionProps {
-  artists: Artist[] | null;
+  artists: Artist[];
 }
 
 function TopArtistsSection({ artists }: TopArtistsSectionProps) {

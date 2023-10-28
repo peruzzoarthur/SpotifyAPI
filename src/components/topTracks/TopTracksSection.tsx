@@ -4,7 +4,7 @@ import { TopTracksCard } from ".";
 import { Track } from "@spotify/web-api-ts-sdk";
 
 interface TopTracksSectionsProps {
-  topTracks: Track[] | null;
+  topTracks: Track[] | undefined;
 }
 
 function TopTracksSection({ topTracks }: TopTracksSectionsProps) {

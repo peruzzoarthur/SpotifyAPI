@@ -1,37 +1,42 @@
-import { useState, useEffect } from "react";
-import { catchErrors } from "../utils";
+import { useState } from "react";
 
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { TopTracksHeader, TopTracksSection } from "../components/topTracks";
 import TopTracksOptions from "../components/topTracks/TopTracksOptions";
 import Logo from "../components/Logo";
-import { MaxInt, Track } from "@spotify/web-api-ts-sdk";
+import { MaxInt, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
+import { useQuery } from "@tanstack/react-query";
 
 const TopTracks = () => {
-  const [topTracks, setTopTracks] = useState<Track[] | null>([]);
   const [activeRange, setActiveRange] = useState<
     "short_term" | "medium_term" | "long_term"
   >("short_term");
   const [pageSize, setPageSize] = useState<MaxInt<50>>(10);
 
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!sdk) {
-        return;
-      }
-      const data = await sdk.currentUser.topItems(
+  const { data, error, isFetching } = useQuery<Track[]>({
+    queryKey: ["top-artists", activeRange, pageSize],
+    queryFn: async () => {
+      const fetch = await sdk.currentUser.topItems(
         "tracks",
         activeRange,
         pageSize
       );
-      setTopTracks(data.items);
-    };
 
-    catchErrors(fetchData());
-  }, [sdk, activeRange, pageSize]);
+      return fetch.items;
+    },
+    enabled: !!sdk,
+  });
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <main>
@@ -41,7 +46,7 @@ const TopTracks = () => {
         setActiveRange={setActiveRange}
         setPageSize={setPageSize}
       />
-      <TopTracksSection topTracks={topTracks} />
+      <TopTracksSection topTracks={data} />
     </main>
   );
 };

@@ -3,7 +3,7 @@ import { PlaylistsCard } from ".";
 import { Link } from "react-router-dom";
 
 interface PlaylistSectionProps {
-  playlists: SimplifiedPlaylist[];
+  playlists: SimplifiedPlaylist[] | undefined;
 }
 
 function PlaylistsSection({ playlists }: PlaylistSectionProps) {

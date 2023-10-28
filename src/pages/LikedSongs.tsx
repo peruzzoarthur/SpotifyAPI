@@ -10,7 +10,7 @@ import { catchErrors } from "../utils";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
 import LikedSongsTracksSection from "../components/liked-songs/LikedSongsTracksSection";
-import SelectAudioFeature from "../components/liked-songs/SelectAudioFeature";
+import SelectAudioFeature from "../components/SelectAudioFeature";
 import SelectListSize from "../components/liked-songs/SelectListSize";
 import LikedSongsHeader from "../components/liked-songs/LikedSongsHeader";
 import Logo from "../components/Logo";
