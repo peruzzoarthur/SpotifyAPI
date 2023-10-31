@@ -22,9 +22,21 @@ function Logo() {
           className="fixed top-28 right-4 z-20 bg-purple-500
          bg-opacity-90 p-2 rounded shadow-md"
         >
-          <ul className="space-y-2">
+          <ul className="text-xl space-y-2">
             <Link to={`/`}>
               <li>Profile</li>
+            </Link>
+
+            <Link to={`/top-tracks`}>
+              <li className="ml-0.5 text-lg">Tracks</li>
+            </Link>
+
+            <Link to={`/top-artists`}>
+              <li className="ml-0.5 text-lg">Artists</li>
+            </Link>
+
+            <Link to={`/playlists`}>
+              <li className="ml-0.5 text-lg">Playlists</li>
             </Link>
 
             <Link to={`/liked-songs`}>

@@ -2,7 +2,6 @@ import {
   SavedTrack,
   Page,
   Track,
-  SpotifyApi,
   AudioFeatures,
 } from "@spotify/web-api-ts-sdk";
 import { useState, useEffect, useMemo } from "react";
@@ -14,6 +13,7 @@ import SelectAudioFeature from "../components/SelectAudioFeature";
 import SelectListSize from "../components/liked-songs/SelectListSize";
 import LikedSongsHeader from "../components/liked-songs/LikedSongsHeader";
 import Logo from "../components/Logo";
+import { sortOptions } from "../components/SortOptions";
 
 export interface AudioFeaturesWithListOrder extends AudioFeatures {
   default_list_order?: string;
@@ -31,27 +31,14 @@ const LikedSongs = () => {
   const [audioFeatures, setAudioFeatures] = useState<AudioFeatures[]>([]);
   const [sortValue, setSortValue] =
     useState<keyof AudioFeaturesWithListOrder>("default_list_order");
-  const sortOptions = [
-    "danceability",
-    "energy",
-    "key",
-    "loudness",
-    "mode",
-    "speechiness",
-    "acousticness",
-    "instrumentalness",
-    "liveness",
-    "valence",
-    "tempo",
-    "time_signature",
-  ];
+
   const [pageSize, setPageSize] = useState<number>(10);
 
   const handlePageSizeChange = (size: number) => {
     setPageSize(size);
   };
 
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+  const sdk = useSpotify(client_id, redirect_url, scopes);
 
   useEffect(() => {
     if (!sdk) {
@@ -68,6 +55,10 @@ const LikedSongs = () => {
 
   useEffect(() => {
     if (!likedSongsPage || tracks.length >= pageSize) {
+      return;
+    }
+
+    if (!sdk) {
       return;
     }
 
