@@ -12,10 +12,10 @@ function SelectAudioFeature({
   setSortValue,
 }: SelectAudioFeatureProps) {
   return (
-    <div className="mb-2 justify-center flex mt-2 ">
-      <label className="text-black text-xl mr-1">Sort by Audio Feature: </label>
+    <div className="flex justify-center mt-2 mb-2 ">
+      <label className="mr-1 text-xl text-black">Sort by Audio Feature: </label>
       <select
-        className="h-7 w-44 bg-slate-900 bg-opacity-60 text-slate-100 text-center rounded-2xl"
+        className="text-center h-7 w-44 bg-slate-900 bg-opacity-60 text-slate-100 rounded-2xl"
         name="track-order"
         id="order-select"
         onChange={(e) =>

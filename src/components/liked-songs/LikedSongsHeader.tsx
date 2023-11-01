@@ -1,9 +1,11 @@
 function LikedSongsHeader() {
   return (
     <div className="bg-black bg-opacity-50 h-60">
-      <h1 className="text-8xl text-black ml-3 pt-12">Liked Songs</h1>
+      <h1 className="pt-12 ml-3 font-bold text-black font-sm text-8xl">
+        Liked Songs
+      </h1>
       <div>
-        <div className="text-2xl ml-5 text-slate-200">Your liked songs</div>
+        <div className="ml-5 text-2xl text-slate-200">Your liked songs</div>
       </div>
     </div>
   );

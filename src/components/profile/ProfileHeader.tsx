@@ -8,20 +8,20 @@ interface ProfileHeaderProps {
 function ProfileHeader({ profile, playlists }: ProfileHeaderProps) {
   return (
     <section className="flex w-full max-h-80 bg-slate-600 bg-opacity-40">
-      <div className="my-8 flex justify-between ml-8">
+      <div className="flex justify-between my-8 ml-8">
         <div className="flex items-center">
           {profile.images.length && profile.images[1].url && (
             <img
-              className="w-64 h-64 rounded-full mr-4"
+              className="w-64 h-64 mr-4 rounded-full"
               src={profile.images[1].url}
               alt="Avatar"
             />
           )}
           <div className="ml-5">
-            <div className="text-8xl font-semibold text-white mb-5 mt-8">
+            <div className="mt-8 mb-5 font-semibold text-white text-8xl">
               {profile.display_name}
             </div>
-            <div className="text-white ml-2 text-left text-lg">
+            <div className="ml-2 text-lg text-left text-white">
               {playlists && (
                 <p>
                   {playlists.length} Playlist

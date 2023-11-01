@@ -147,7 +147,7 @@ const LikedSongs = () => {
         <>
           <Logo />
           <LikedSongsHeader />
-          <div className="bg-slate-700 bg-opacity-20 pt-10 pb-10 flex flex-col items-center">
+          <div className="flex flex-col items-center pt-10 pb-10 bg-slate-700 bg-opacity-20">
             <SelectAudioFeature
               sortOptions={sortOptions}
               setSortValue={setSortValue}

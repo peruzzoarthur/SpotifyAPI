@@ -8,7 +8,7 @@ interface MainWithBackgroundProps {
 function MainWithBackground({ children }: MainWithBackgroundProps) {
   return (
     <main
-      className="flex h-auto w-full font-CircularStd"
+      className="flex w-full h-auto font-CircularStd"
       style={{
         backgroundImage: `url(${backgroundGradient})`,
         backgroundSize: "cover",

@@ -42,29 +42,25 @@ function PlaylistByIdExpandedTracksCard({
     : {};
 
   return (
-    <div
-      className="flex flex-row pt-4  m-4 items-center justify-center  h-52
-         text-slate-200 bg-slate-900 bg-opacity-30 drop-shadow-lg rounded-lg min-w-1280
-         hover:bg-green-200 hover:bg-opacity-30 hover:shadow-md duration-500 ease-in-out pl-10"
-    >
-      <div className="flex flex-row absolute left-0 pl-4">
+    <div className="flex flex-row items-center justify-center pt-4 pl-10 m-4 duration-500 ease-in-out rounded-lg h-52 text-slate-200 bg-slate-900 bg-opacity-30 drop-shadow-lg min-w-1280 hover:bg-green-200 hover:bg-opacity-30 hover:shadow-md">
+      <div className="absolute left-0 flex flex-row pl-4">
         <p className="ml-4 text-lg">{order}</p>
       </div>
 
-      <img src={imageUrl} alt={name} className="mb-4 w-48 ml-10" />
+      <img src={imageUrl} alt={name} className="w-48 mb-4 ml-10" />
       <div className="flex flex-col ml-4">
         <h2 className="text-xl font-bold">{name}</h2>
         <p className="text-base">{artists}</p>
         <p className="text-base">{formatDuration(duration)}</p>
       </div>
 
-      <div className="flex flex-grow justify-end">
+      <div className="flex justify-end flex-grow">
         {Object.entries(filteredAudioFeatures).length > 0 && (
-          <div className="grid grid-cols-10 mt-4 pl-16">
+          <div className="grid grid-cols-10 pl-16 mt-4">
             {sortOptions.map(({ key, icon }) => (
               <div
                 key={key}
-                className="flex flex-col items-center text-center pb-2"
+                className="flex flex-col items-center pb-2 text-center"
               >
                 <p className="text-3xl">{icon}</p>
                 <div className="mt-1 mb-1">
@@ -78,7 +74,7 @@ function PlaylistByIdExpandedTracksCard({
         <div className="flex pr-6">
           <p className="mt-10 mr-10">Popularity: {popularity}</p>
           <button
-            className="bg-green-400 bg-opacity-10 rounded-full h-10 w-32 mt-10 font-sm"
+            className="w-32 h-10 mt-10 bg-green-400 rounded-full bg-opacity-10 font-sm"
             onClick={handleAddToCart}
           >
             Add to cart

@@ -13,14 +13,11 @@ function RecommendationSection() {
 
   return (
     <>
-      <div className="bg-slate-800 pt-2 ">
-        <h2 className="text-white text-3xl ml-4">
+      <div className="pt-2 bg-slate-800 ">
+        <h2 className="ml-4 text-3xl text-white">
           Input Data for Recommendations
         </h2>
-        <div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3
-         xl:grid-cols-5 2xl:grid-cols-5 grid-flow-row-dense ml-5 mr-5 mt-5  "
-        >
+        <div className="grid grid-flow-row-dense grid-cols-1 mt-5 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
           {cart.map((item, index) => (
             <div key={index}>
               {isTrack(item) && (

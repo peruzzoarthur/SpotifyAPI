@@ -1,53 +1,65 @@
-import { useState } from "react";
 import logo from "../styles/img/spotify_logologo.jpg";
 import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function Logo() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   return (
-    <div className="relative">
-      <button
-        onClick={handleDropdownToggle}
-        className="fixed top-4 right-4 z-10 w-24 h-24 rounded-full"
-      >
-        <img className="w-24 h-24 rounded-full" src={logo} alt="Spotify Logo" />
-      </button>
-      {isDropdownOpen && (
-        <div
-          className="fixed top-28 right-4 z-20 bg-purple-500
-         bg-opacity-90 p-2 rounded shadow-md"
-        >
-          <ul className="text-xl space-y-2">
-            <Link to={`/`}>
-              <li>Profile</li>
-            </Link>
+    <div className="flex justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          {" "}
+          <img
+            className="w-24 h-24 rounded-full"
+            src={logo}
+            alt="Spotify Logo"
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-purple-600">
+          <DropdownMenuLabel>Links</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <Link to={`/`}>
+            <DropdownMenuItem className="cursor-pointer  hover:bg-slate-100">
+              Profile
+            </DropdownMenuItem>
+          </Link>
+          <Link to={`/top-artists`}>
+            <DropdownMenuItem className="cursor-pointer font-extralight hover:bg-slate-100">
+              {" "}
+              Artists
+            </DropdownMenuItem>
+          </Link>
+          <Link to={`/top-tracks`}>
+            <DropdownMenuItem className="cursor-pointer font-extralight hover:bg-slate-100">
+              {" "}
+              Tracks
+            </DropdownMenuItem>
+          </Link>
 
-            <Link to={`/top-tracks`}>
-              <li className="ml-0.5 text-lg">Tracks</li>
-            </Link>
-
-            <Link to={`/top-artists`}>
-              <li className="ml-0.5 text-lg">Artists</li>
-            </Link>
-
-            <Link to={`/playlists`}>
-              <li className="ml-0.5 text-lg">Playlists</li>
-            </Link>
-
-            <Link to={`/liked-songs`}>
-              <li>Liked songs</li>
-            </Link>
-            <Link to={`/recommendation`}>
-              <li>Recommendation Liszt</li>
-            </Link>
-          </ul>
-        </div>
-      )}
+          <Link to={`/playlists`}>
+            <DropdownMenuItem className="cursor-pointer font-extralight hover:bg-slate-100">
+              {" "}
+              Playlists
+            </DropdownMenuItem>
+          </Link>
+          <Link to={`/liked-songs`}>
+            <DropdownMenuItem className="cursor-pointer  hover:bg-slate-100">
+              Liked Songs
+            </DropdownMenuItem>
+          </Link>
+          <Link to={`/recommendation`}>
+            <DropdownMenuItem className="cursor-pointer  hover:bg-slate-100">
+              Recommendations Liszt
+            </DropdownMenuItem>
+          </Link>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

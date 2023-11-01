@@ -1,11 +1,12 @@
+import Logo from "../Logo";
+
 function RecommendationHeader() {
   return (
-    <div className="bg-slate-950 bg-opacity-50 h-60">
-      <h1 className="text-6xl text-black  ml-3 pt-16">
-        Get Recommendations Tracks
-      </h1>
+    <div className="flex flex-col bg-opacity-50 bg-slate-950 h-60">
+      <Logo />
+      <h1 className="ml-3 text-6xl text-black ">Get Recommendations Tracks</h1>
       <div>
-        <div className="text-2xl mt-2 ml-4 text-white">Discover new music</div>
+        <div className="mt-2 ml-4 text-2xl text-white">Discover new music</div>
       </div>
     </div>
   );

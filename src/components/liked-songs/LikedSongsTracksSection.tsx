@@ -4,6 +4,7 @@ import LikedSongsTracksCard from "./LikedSongsTracksCard";
 import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
 import LikedSongsExpandedTracksCard from "./LikedSongsExpandedTracksCard";
 import { CartContext } from "../recommendation/Recommendation";
+import { Button } from "../ui/button";
 
 interface LikedSongsTracksSectionProps {
   tracks: TrackWithAudioFeatures[] | null;
@@ -24,21 +25,22 @@ function LikedSongsTracksSection({ tracks }: LikedSongsTracksSectionProps) {
   return (
     <>
       <div className="bg-slate-950 bg-opacity-80">
-        <section className="bg-white bg-opacity-20 w-full h-auto pb-2">
-          <div className="flex flex-col justify-center items-center pl-4 pr-4 pt-4 pb-2">
-            <h1 className="text-white  text-center text-8xl pt-4 pl-2 mb-2 ml-4">
+        <section className="w-full h-auto pb-2 bg-white bg-opacity-20">
+          <div className="flex flex-col items-center justify-center pt-4 pb-2 pl-4 pr-4">
+            <h1 className="pt-4 pl-2 mb-2 ml-4 text-center text-white text-8xl">
               💚 💚 💚
             </h1>
-            <button
-              className="bg-slate-900 text-white bg-opacity-60 shadow-xl w-16 h-6 rounded-lg "
+
+            <Button
+              className="text-white bg-slate-900 bg-opacity-60"
               onClick={handleClick}
             >
-              Click
-            </button>
+              Expand
+            </Button>
           </div>
           <section className="w-full h-auto pb-2">
             {!isExpanded ? (
-              <div className="grid grid-cols-1 ml-5">
+              <div className="grid grid-cols-1 ml-5 place-self-stretch">
                 {tracks?.map((track, index) => (
                   // <Link to={`/track/${track.id}`} key={index}>
                   <LikedSongsTracksCard

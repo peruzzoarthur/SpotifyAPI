@@ -11,7 +11,7 @@ function PlaylistsOptions({ setPageSize, playlistData }: PlaylistOptionsProps) {
     setPageSize(size);
   };
   return (
-    <div className="w-full h-20 flex flex-col items-center justify-center bg-purple-900 bg-opacity-20">
+    <div className="flex flex-col items-center justify-center w-full h-20 bg-purple-900 bg-opacity-20">
       <PlaylistsSelectPageSize
         handlePageSizeChange={handlePageSizeChange}
         playlistData={playlistData}
