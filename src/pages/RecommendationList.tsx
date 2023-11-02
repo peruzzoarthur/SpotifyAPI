@@ -10,24 +10,17 @@ import {
 } from "unique-names-generator";
 import { CartContext } from "../components/recommendation/Recommendation";
 import RecommendationHeader from "../components/recommendation/RecommendationHeader";
-// import RecommendationResponseTrackCard from "../components/recommendation/RecommendationResponseTrackCard";
 import RecommendationSection from "../components/recommendation/RecommendationSection";
 import { RecommendationsResponse } from "../components/recommendation/types";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import logo from "../styles/img/spotify_logologo.jpg";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { formatDuration } from "@/utils";
+import { Table, TableBody } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { TrackTableRow } from "@/components/TrackTableRow";
+import { TrackTableHeader } from "@/components/TrackTableHeader";
+import { useToast } from "@/components/ui/use-toast";
 
 const randomStringConfig: Config = {
   dictionaries: [colors, adjectives, animals],
@@ -40,6 +33,7 @@ function RecommendationList() {
   const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
   // const [getResponse, setGetResponse] = useState<boolean>(true);
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const sdk = useSpotify(client_id, redirect_url, scopes);
 
@@ -60,9 +54,9 @@ function RecommendationList() {
       throw new Error("No uris added for playlist export...");
     }
 
-    const newPlaylistName = uniqueNamesGenerator(randomStringConfig);
+    const randomCoolPlaylistName = uniqueNamesGenerator(randomStringConfig);
     const createPlaylist = await sdk.playlists.createPlaylist("sp3ruzzo", {
-      name: `Cold ${newPlaylistName}`,
+      name: `Cold ${randomCoolPlaylistName}`,
       description: "Created with Coldzapp Spotify API",
       public: true,
     });
@@ -72,10 +66,14 @@ function RecommendationList() {
       addAsPlaylist
     );
 
-    window.alert(
-      `Success creating playlist with name "Cold ${newPlaylistName}"`
-    );
-
+    const toasted = async () => {
+      toast({
+        title: "Success!!!",
+        description: `Created playlist with name "Cold ${randomCoolPlaylistName}"`,
+        className: "bg-green-300 bg-opacity-60",
+      });
+    };
+    await toasted();
     return addRecommendationsToPlaylist;
   };
 
@@ -131,7 +129,7 @@ function RecommendationList() {
       <div className="bg-slate-950">
         <RecommendationSection>
           <Button
-            onClick={exportAsPlaylist}
+            onClick={async () => await exportAsPlaylist()}
             className="flex justify-center bg-green-300 bg-opacity-60"
           >
             Export as Cool Playlist.
@@ -139,47 +137,22 @@ function RecommendationList() {
         </RecommendationSection>
         {recResponse && (
           // && getResponse
-          <div className="text-white rounded-md  bg-slate-500 bg-opacity-60">
+          <div className="text-white rounded-md bg-slate-500 bg-opacity-60">
             <Table>
-              <TableCaption>List of recommended tracks</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="font-medium">Order</TableHead>
-                  <TableHead> </TableHead>
-                  <TableHead>Track name</TableHead>
-                  <TableHead>Artists</TableHead>
-                  <TableHead className="text-right">Duration</TableHead>
-                </TableRow>
-              </TableHeader>
+              <TrackTableHeader />
               <TableBody>
                 {recResponse.tracks.map((track, index) => (
-                  <>
-                    <TableRow className=" hover:bg-slate-400">
-                      {/* // Here i took down the <Link></Link> because it was breaking somehow the table design */}
-                      {/* <Link
+                  <TrackTableRow
                     key={index}
-                    to={track.external_urls.spotify}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  > */}
-                      <TableCell className="font-medium">{index + 1}</TableCell>
-                      <TableCell>
-                        <img
-                          className="max-h-32 max-w-32"
-                          src={track.album.images[0].url}
-                          alt={track.name}
-                        />
-                      </TableCell>
-                      <TableCell>{track.name}</TableCell>
-                      <TableCell>
-                        {track.artists.map((n) => n.name).join(", ")}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {formatDuration(track.duration_ms)}
-                      </TableCell>
-                      {/* </Link> */}
-                    </TableRow>
-                  </>
+                    artists={track.artists.map((a) => a.name).join(", ")}
+                    duration={track.duration_ms}
+                    id={track.id}
+                    image={track.album.images}
+                    index={index}
+                    name={track.name}
+                    order={index + 1}
+                    uri={track.uri}
+                  />
                 ))}
               </TableBody>
             </Table>

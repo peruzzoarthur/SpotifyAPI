@@ -1,8 +1,9 @@
 import { ReactNode, useContext } from "react";
 import { CartContext, CartItem } from "./Recommendation";
 import { Artist, Track } from "@spotify/web-api-ts-sdk";
-import RecommendationTracksCard from "./RecommendationTracksCard";
+// import RecommendationTracksCard from "./RecommendationTracksCard";
 import RecommendationArtistCard from "./RecommendationArtistCard";
+import { TrackCard } from "../TrackCard";
 
 interface RecommendationSectionProps {
   children?: ReactNode;
@@ -25,13 +26,20 @@ function RecommendationSection({ children }: RecommendationSectionProps) {
           {cart.map((item, index) => (
             <div key={index}>
               {isTrack(item) && (
-                <RecommendationTracksCard
-                  index={index}
-                  imageUrl={item.album.images[0].url}
+                <TrackCard
+                  artists={item.artists.map((a) => a.name).join(", ")}
+                  image={item.album.images}
                   name={item.name}
-                  artists={item.artists.map((artist) => artist.name).join(", ")}
-                  handleRemoveFromCart={() => handleRemoveFromCart(item.id)}
+                  handleClick={() => handleRemoveFromCart(item.id)}
+                  duration={item.duration_ms}
                 />
+                // <RecommendationTracksCard
+                //   index={index}
+                //   imageUrl={item.album.images[0].url}
+                //   name={item.name}
+                //   artists={item.artists.map((artist) => artist.name).join(", ")}
+                //   handleRemoveFromCart={() => handleRemoveFromCart(item.id)}
+                // />
               )}
 
               {isArtist(item) && (

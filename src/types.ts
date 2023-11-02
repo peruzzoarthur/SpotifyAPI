@@ -1,12 +1,15 @@
 import { Image } from "@spotify/web-api-ts-sdk";
 
-export interface TrackCardProps {
+export interface TrackProps {
   image: Image[];
   name: string;
   duration: number;
   order?: number;
   artists: string;
-  id: string;
+  id?: string;
   handleAddToCart?: () => void;
-  index: number;
+  handleRemoveFromCart?: () => void;
+  handleClick?: () => void;
+  index?: number;
+  uri?: string;
 }

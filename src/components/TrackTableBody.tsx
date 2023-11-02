@@ -1,10 +1,10 @@
-import { TrackCardProps } from "@/types";
+import { TrackProps } from "@/types";
 import { formatDuration } from "@/utils";
 import { TableCell } from "@/components/ui/table";
 
 import React from "react";
 
-export const TrackTableRow: React.FC<TrackCardProps> = ({
+export const TrackTableRow: React.FC<TrackProps> = ({
   artists,
   duration,
   image,
