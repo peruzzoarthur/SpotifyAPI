@@ -10,13 +10,26 @@ import {
 } from "unique-names-generator";
 import { CartContext } from "../components/recommendation/Recommendation";
 import RecommendationHeader from "../components/recommendation/RecommendationHeader";
-import RecommendationResponseTrackCard from "../components/recommendation/RecommendationResponseTrackCard";
+// import RecommendationResponseTrackCard from "../components/recommendation/RecommendationResponseTrackCard";
 import RecommendationSection from "../components/recommendation/RecommendationSection";
 import { RecommendationsResponse } from "../components/recommendation/types";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import logo from "../styles/img/spotify_logologo.jpg";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { formatDuration } from "@/utils";
+import { Button } from "@/components/ui/button";
 
-const customConfig: Config = {
+const randomStringConfig: Config = {
   dictionaries: [colors, adjectives, animals],
   separator: " ",
   length: 3,
@@ -25,19 +38,19 @@ const customConfig: Config = {
 function RecommendationList() {
   const { requestForRec } = useContext(CartContext);
   const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
-  const [getResponse, setGetResponse] = useState<boolean>(true);
+  // const [getResponse, setGetResponse] = useState<boolean>(true);
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
 
   const sdk = useSpotify(client_id, redirect_url, scopes);
 
-  const handleRequest = () => {
-    if (!recResponse) {
-      setGetResponse(true);
-    } else {
-      setGetResponse(false);
-      setGetResponse(true);
-    }
-  };
+  // const handleRequest = () => {
+  //   if (!recResponse) {
+  //     setGetResponse(true);
+  //   } else {
+  //     setGetResponse(false);
+  //     setGetResponse(true);
+  //   }
+  // };
 
   const exportAsPlaylist = async () => {
     if (!sdk) {
@@ -47,7 +60,7 @@ function RecommendationList() {
       throw new Error("No uris added for playlist export...");
     }
 
-    const newPlaylistName = uniqueNamesGenerator(customConfig);
+    const newPlaylistName = uniqueNamesGenerator(randomStringConfig);
     const createPlaylist = await sdk.playlists.createPlaylist("sp3ruzzo", {
       name: `Cold ${newPlaylistName}`,
       description: "Created with Coldzapp Spotify API",
@@ -62,6 +75,7 @@ function RecommendationList() {
     window.alert(
       `Success creating playlist with name "Cold ${newPlaylistName}"`
     );
+
     return addRecommendationsToPlaylist;
   };
 
@@ -97,18 +111,15 @@ function RecommendationList() {
   if (error) {
     return (
       <>
-        <main>
-          <div className="flex flex-col justify-between w-full h-full">
-            <div className="flex text-white bg-red-900">
-              Error: {error.message}
-            </div>
-            <Link to={"/"}>
-              <div className="bg-black w-16 h-6 text-white text-center rounded-md ml-0.5 mt-0.5">
-                Back
-              </div>
-            </Link>
-          </div>
-        </main>
+        <Link to={"/"}>
+          <Alert variant="destructive" className="text-white bg-red-800">
+            <img className="w-4 h-4" src={logo} />
+            <AlertTitle>{error.message}</AlertTitle>
+            <AlertDescription>
+              Click to go back to Profile Page.
+            </AlertDescription>
+          </Alert>
+        </Link>
       </>
     );
   }
@@ -116,46 +127,65 @@ function RecommendationList() {
   return (
     <>
       <RecommendationHeader />
-      <div className="flex justify-center pt-4 pb-4 bg-slate-900">
-        <button
-          className="w-32 h-32 text-white bg-purple-400 rounded-full bg-opacity-20 "
-          onClick={handleRequest}
-        >
-          Request Recommendations
-        </button>
-        <button
-          className="w-32 h-32 text-xs text-white bg-green-400 rounded-full bg-opacity-20 "
-          onClick={exportAsPlaylist}
-        >
-          Export this tracks as a Playlist
-        </button>
-      </div>
-      <RecommendationSection />
-      {recResponse && getResponse && (
-        <div className="bg-slate-800 ">
-          <div className="grid grid-cols-1 pt-2 ml-6 mr-6 bg-slate-300 bg-opacity-20 ">
-            {recResponse.tracks.map((track, index) => (
-              <Link
-                key={index}
-                to={track.external_urls.spotify}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <RecommendationResponseTrackCard
-                  index={index}
-                  id={track.id}
-                  image={track.album.images}
-                  name={track.name}
-                  duration={track.duration_ms}
-                  artists={track.artists
-                    .map((artist) => artist.name)
-                    .join(", ")}
-                />
-              </Link>
-            ))}
+
+      <div className="bg-slate-950">
+        <RecommendationSection>
+          <Button
+            onClick={exportAsPlaylist}
+            className="flex justify-center bg-green-300 bg-opacity-60"
+          >
+            Export as Cool Playlist.
+          </Button>
+        </RecommendationSection>
+        {recResponse && (
+          // && getResponse
+          <div className="text-white rounded-md  bg-slate-500 bg-opacity-60">
+            <Table>
+              <TableCaption>List of recommended tracks</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-medium">Order</TableHead>
+                  <TableHead> </TableHead>
+                  <TableHead>Track name</TableHead>
+                  <TableHead>Artists</TableHead>
+                  <TableHead className="text-right">Duration</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {recResponse.tracks.map((track, index) => (
+                  <>
+                    <TableRow className=" hover:bg-slate-400">
+                      {/* // Here i took down the <Link></Link> because it was breaking somehow the table design */}
+                      {/* <Link
+                    key={index}
+                    to={track.external_urls.spotify}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  > */}
+                      <TableCell className="font-medium">{index + 1}</TableCell>
+                      <TableCell>
+                        <img
+                          className="max-h-32 max-w-32"
+                          src={track.album.images[0].url}
+                          alt={track.name}
+                        />
+                      </TableCell>
+                      <TableCell>{track.name}</TableCell>
+                      <TableCell>
+                        {track.artists.map((n) => n.name).join(", ")}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {formatDuration(track.duration_ms)}
+                      </TableCell>
+                      {/* </Link> */}
+                    </TableRow>
+                  </>
+                ))}
+              </TableBody>
+            </Table>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }

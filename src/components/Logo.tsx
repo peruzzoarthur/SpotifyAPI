@@ -25,7 +25,7 @@ function Logo() {
           <DropdownMenuLabel>Links</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <Link to={`/`}>
-            <DropdownMenuItem className="cursor-pointer  hover:bg-slate-100">
+            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100">
               Profile
             </DropdownMenuItem>
           </Link>
@@ -49,12 +49,12 @@ function Logo() {
             </DropdownMenuItem>
           </Link>
           <Link to={`/liked-songs`}>
-            <DropdownMenuItem className="cursor-pointer  hover:bg-slate-100">
+            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100">
               Liked Songs
             </DropdownMenuItem>
           </Link>
           <Link to={`/recommendation`}>
-            <DropdownMenuItem className="cursor-pointer  hover:bg-slate-100">
+            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100">
               Recommendations Liszt
             </DropdownMenuItem>
           </Link>

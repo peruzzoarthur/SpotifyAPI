@@ -5,13 +5,16 @@ import ExpandedTrackCard from "./PlaylistByIdExpandedTracksCard";
 import { CartContext } from "../recommendation/Recommendation";
 import { Track } from "@spotify/web-api-ts-sdk";
 import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import logo from "../../styles/img/spotify_logologo.jpg";
 
 interface PlaylistByIdTracksSectionProps {
   tracks: TrackWithAudioFeatures[] | null;
 }
 function PlaylistByIdTracksSection({ tracks }: PlaylistByIdTracksSectionProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const { addToCart } = useContext(CartContext);
+
+  const { addToCart, errorMessage, setErrorMessage } = useContext(CartContext);
 
   const handleAddToCart = (track: TrackWithAudioFeatures) => {
     addToCart(track as Track);
@@ -21,20 +24,39 @@ function PlaylistByIdTracksSection({ tracks }: PlaylistByIdTracksSectionProps) {
     setIsExpanded(!isExpanded);
   };
 
+  const handleErrorMessage: React.MouseEventHandler<HTMLElement> = () => {
+    setErrorMessage("");
+  };
+
   return (
     <>
       <div className="bg-slate-950 bg-opacity-80">
-        <section className="bg-white bg-opacity-20 w-full h-auto pb-2">
-          <div className="flex flex-col justify-center items-center pl-4 pr-4 pt-4 pb-2">
-            <h1 className="text-white  text-center text-8xl pt-4 pl-2 mb-2 ml-4">
+        <section className="w-full h-auto pb-2 bg-white bg-opacity-20">
+          <div className="flex flex-col items-center justify-center pt-4 pb-2 pl-4 pr-4">
+            <h1 className="pt-4 pl-2 mb-2 ml-4 text-center text-white text-8xl">
               Your playlist tracks xD
             </h1>
             <button
-              className="bg-slate-900 text-white bg-opacity-60 shadow-xl w-40 h-6 rounded-lg "
+              className="w-40 h-6 text-white rounded-lg shadow-xl bg-slate-900 bg-opacity-60 "
               onClick={handleClick}
             >
               Expand Tracks Info
             </button>
+            {errorMessage && (
+              <Alert
+                variant="destructive"
+                className="fixed text-white bg-red-800"
+              >
+                <img className="w-4 h-4" src={logo} />
+                <AlertTitle>{errorMessage}</AlertTitle>
+                <AlertDescription
+                  className="cursor-pointer"
+                  onClick={handleErrorMessage}
+                >
+                  Click to close message.
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
           <section className="w-full h-auto pb-2">
             {!isExpanded ? (
@@ -56,7 +78,7 @@ function PlaylistByIdTracksSection({ tracks }: PlaylistByIdTracksSectionProps) {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 ml-5 grid-flow-row-dense">
+              <div className="grid grid-flow-row-dense grid-cols-1 ml-5">
                 {tracks?.map((track, index) => (
                   <ExpandedTrackCard
                     key={index}

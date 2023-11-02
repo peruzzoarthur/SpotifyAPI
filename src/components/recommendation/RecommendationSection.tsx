@@ -1,10 +1,14 @@
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { CartContext, CartItem } from "./Recommendation";
 import { Artist, Track } from "@spotify/web-api-ts-sdk";
 import RecommendationTracksCard from "./RecommendationTracksCard";
 import RecommendationArtistCard from "./RecommendationArtistCard";
 
-function RecommendationSection() {
+interface RecommendationSectionProps {
+  children?: ReactNode;
+}
+
+function RecommendationSection({ children }: RecommendationSectionProps) {
   const { cart, removeFromCart } = useContext(CartContext);
 
   const handleRemoveFromCart = (id: string) => {
@@ -13,7 +17,7 @@ function RecommendationSection() {
 
   return (
     <>
-      <div className="pt-2 bg-slate-800 ">
+      <div className="pt-2 pb-4 bg-slate-800 ">
         <h2 className="ml-4 text-3xl text-white">
           Input Data for Recommendations
         </h2>
@@ -43,6 +47,7 @@ function RecommendationSection() {
             </div>
           ))}
         </div>
+        <div className="flex justify-center pt-8 pb-4">{children}</div>
       </div>
     </>
   );

@@ -23,6 +23,8 @@ interface CartContextProps {
   addToCart: (item: CartItem) => void;
   removeFromCart: (itemId: string) => void;
   requestForRec: RequestForRec;
+  errorMessage: string;
+  setErrorMessage: (message: string) => void;
 }
 
 export const CartContext = createContext<CartContextProps>({
@@ -34,6 +36,8 @@ export const CartContext = createContext<CartContextProps>({
     seed_genres: [],
     seed_artists: [],
   },
+  errorMessage: "",
+  setErrorMessage: () => {},
 });
 
 interface CartProviderProps {
@@ -55,6 +59,7 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
           seed_artists: [],
         }
   );
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -62,35 +67,23 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
   }, [cart, requestForRec]);
 
   const addToCart = (item: CartItem) => {
-    if (isTrack(item)) {
+    if (isTrack(item) || isArtist(item)) {
       const existingItem = cart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
         const message = `Track with ID ${item.id} already exists in the Recommendation Input Cart.`;
-        window.alert(message);
+        setErrorMessage(message);
+        // window.alert(message);
+        // throw new Error(message);
       } else {
         if (cart.length >= 5) {
-          window.alert(
-            "Already have 5 items as seed to get your recommendations, consider deleting one of the already listed seeds"
-          );
+          const message =
+            "You already have 5 items as seed to get your recommendations, consider deleting one of the already listed seeds...";
+          setErrorMessage(message);
+
+          // window.alert(message);
         } else {
           setCart([...cart, item]);
           requestForRec.seed_tracks.push(item.id);
-        }
-      }
-    }
-    if (isArtist(item)) {
-      const existingItem = cart.find((cartItem) => cartItem.id === item.id);
-      if (existingItem) {
-        const message = `Artist with ID ${item.id} already exists in the Recommendation Input Cart.`;
-        window.alert(message);
-      } else {
-        if (cart.length >= 5) {
-          window.alert(
-            "Already have 5 items as seed to get your recommendations, consider deleting one of the already listed seeds"
-          );
-        } else {
-          setCart([...cart, item]);
-          requestForRec.seed_artists.push(item.id);
         }
       }
     }
@@ -139,7 +132,14 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, requestForRec }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        requestForRec,
+        errorMessage,
+        setErrorMessage,
+      }}
     >
       {children}
     </CartContext.Provider>
