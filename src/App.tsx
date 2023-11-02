@@ -8,9 +8,9 @@ import {
   LikedSongs,
   PlaylistById,
   TrackById,
-  RecommendationList,
+  Recommendation,
 } from "./pages";
-import { CartProvider } from "./components/recommendation/Recommendation";
+import { CartProvider } from "./components/recommendation/RecommendationContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "./components/ui/toaster";
@@ -32,7 +32,7 @@ function App() {
             <Route path="/top-artists" element={<TopArtists />} />
             <Route path="/top-tracks" element={<TopTracks />} />
             <Route path="/track/:id" element={<TrackById />} />
-            <Route path="/recommendation" element={<RecommendationList />} />
+            <Route path="/recommendation" element={<Recommendation />} />
           </Routes>
         </CartProvider>
       </QueryClientProvider>

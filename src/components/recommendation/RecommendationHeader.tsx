@@ -2,11 +2,15 @@ import Logo from "../Logo";
 
 function RecommendationHeader() {
   return (
-    <div className="flex flex-col bg-opacity-50 bg-slate-950 h-60">
+    <div className="flex flex-col bg-white bg-opacity-10 h-320">
       <Logo />
-      <h1 className="ml-3 text-6xl text-black ">Get Recommendations Tracks</h1>
-      <div>
-        <div className="mt-2 ml-4 text-2xl text-white">Discover new music</div>
+      <div className="flex flex-col items-start justify-end h-full mb-6">
+        <h1 className="ml-3 text-6xl text-white">Get Recommendations Tracks</h1>
+        <div>
+          <div className="mt-2 ml-4 text-2xl text-white">
+            Discover new music
+          </div>
+        </div>
       </div>
     </div>
   );

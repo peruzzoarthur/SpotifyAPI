@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import TrackCard from "./PlaylistByIdTracksCard";
 // import { Link } from "react-router-dom";
 import ExpandedTrackCard from "./PlaylistByIdExpandedTracksCard";
-import { CartContext } from "../recommendation/Recommendation";
+import { CartContext } from "../recommendation/RecommendationContext";
 import { Track } from "@spotify/web-api-ts-sdk";
 import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

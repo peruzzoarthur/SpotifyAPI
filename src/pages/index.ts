@@ -7,4 +7,4 @@ export { default as Home } from "./Home";
 export { default as Playlists } from "./Playlists";
 export { default as PlaylistById } from "./PlaylistById";
 export { default as TrackById } from "./TrackById";
-export { default as RecommendationList } from "./RecommendationList";
+export { default as Recommendation } from "./Recommendation";

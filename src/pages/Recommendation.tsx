@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   Config,
   adjectives,
@@ -8,7 +8,7 @@ import {
   colors,
   uniqueNamesGenerator,
 } from "unique-names-generator";
-import { CartContext } from "../components/recommendation/Recommendation";
+import { CartContext } from "../components/recommendation/RecommendationContext";
 import RecommendationHeader from "../components/recommendation/RecommendationHeader";
 import RecommendationSection from "../components/recommendation/RecommendationSection";
 import { RecommendationsResponse } from "../components/recommendation/types";
@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { TrackTableRow } from "@/components/TrackTableRow";
 import { TrackTableHeader } from "@/components/TrackTableHeader";
 import { useToast } from "@/components/ui/use-toast";
+import { CustomError } from "@/CustomError";
 
 const randomStringConfig: Config = {
   dictionaries: [colors, adjectives, animals],
@@ -28,7 +29,7 @@ const randomStringConfig: Config = {
   length: 3,
 };
 
-function RecommendationList() {
+function Recommendation() {
   const { requestForRec } = useContext(CartContext);
   const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
   // const [getResponse, setGetResponse] = useState<boolean>(true);
@@ -48,10 +49,13 @@ function RecommendationList() {
 
   const exportAsPlaylist = async () => {
     if (!sdk) {
-      throw new Error("Authentication error. Please refresh your login.");
+      throw new CustomError(
+        "Authentication error. Please refresh your login.",
+        500
+      );
     }
     if (!addAsPlaylist) {
-      throw new Error("No uris added for playlist export...");
+      throw new CustomError("No uris added for playlist export...", 405);
     }
 
     const randomCoolPlaylistName = uniqueNamesGenerator(randomStringConfig);
@@ -77,11 +81,17 @@ function RecommendationList() {
     return addRecommendationsToPlaylist;
   };
 
-  const { error, isFetching } = useQuery<RecommendationsResponse | undefined>({
+  const { error, isFetching } = useQuery<
+    RecommendationsResponse | undefined,
+    CustomError
+  >({
     queryKey: ["recommendation-response"],
     queryFn: async () => {
       if (!sdk) {
-        throw new Error("Authentication error. Please refresh your login.");
+        throw new CustomError(
+          "Authentication error. Please refresh your login.",
+          500
+        );
       }
 
       if (
@@ -89,15 +99,19 @@ function RecommendationList() {
         requestForRec.seed_genres.length === 0 &&
         requestForRec.seed_tracks.length === 0
       ) {
-        throw new Error(
-          "Please select at least one artist, genre, or track for recommendations."
+        throw new CustomError(
+          "Please select at least one artist, genre, or track for recommendations.",
+          409
         );
       }
-
-      const fetch = await sdk.recommendations.get(requestForRec);
-      setRecResponse(fetch);
-      setAddAsPlaylist(fetch.tracks.map((t) => t.uri));
-      return fetch;
+      try {
+        const fetch = await sdk.recommendations.get(requestForRec);
+        setRecResponse(fetch);
+        setAddAsPlaylist(fetch.tracks.map((t) => t.uri));
+        return fetch;
+      } catch (error) {
+        throw new CustomError("Please consider re-adjusting seeds.", 400);
+      }
     },
     enabled: !!sdk,
   });
@@ -109,28 +123,34 @@ function RecommendationList() {
   if (error) {
     return (
       <>
-        <Link to={"/"}>
-          <Alert variant="destructive" className="text-white bg-red-800">
+        <div className=" bg-slate-800">
+          <Alert
+            variant="destructive"
+            onClick={() => window.location.reload()}
+            className="text-white bg-red-800 cursor-pointer"
+          >
             <img className="w-4 h-4" src={logo} />
             <AlertTitle>{error.message}</AlertTitle>
-            <AlertDescription>
-              Click to go back to Profile Page.
-            </AlertDescription>
+            <AlertDescription>Click to try again.</AlertDescription>
           </Alert>
-        </Link>
+
+          <RecommendationHeader />
+
+          <RecommendationSection />
+        </div>
       </>
     );
   }
 
   return (
     <>
-      <RecommendationHeader />
-
       <div className="bg-slate-950">
+        <RecommendationHeader />
+
         <RecommendationSection>
           <Button
             onClick={async () => await exportAsPlaylist()}
-            className="flex justify-center bg-green-300 bg-opacity-60"
+            className="flex justify-center transition-all duration-500 bg-green-300 bg-opacity-60 hover:scale-110"
           >
             Export as Cool Playlist.
           </Button>
@@ -163,4 +183,4 @@ function RecommendationList() {
   );
 }
 
-export default RecommendationList;
+export default Recommendation;

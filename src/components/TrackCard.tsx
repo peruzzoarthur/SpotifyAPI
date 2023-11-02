@@ -7,7 +7,8 @@ import {
 } from "@/components/ui/card";
 import { TrackProps } from "@/types";
 import React from "react";
-import { Button } from "./ui/button";
+// import { Button } from "./ui/button";
+import { RemoveButton } from "./RemoveButton";
 
 export const TrackCard: React.FC<TrackProps> = ({
   artists,
@@ -17,7 +18,7 @@ export const TrackCard: React.FC<TrackProps> = ({
 }) => {
   return (
     <>
-      <Card className="mt-2 mb-2 mr-2 text-white bg-white bg-opacity-10">
+      <Card className="mt-2 mb-2 mr-2 text-white transition-all bg-white bg-opacity-10 hover:bg-green-400 hover:bg-opacity-10 hover:pt-1 hover-pr-2 h-420">
         <CardHeader>
           <img
             src={image[0].url}
@@ -28,12 +29,7 @@ export const TrackCard: React.FC<TrackProps> = ({
           <CardDescription className="text-sm">{artists}</CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button
-            onClick={handleClick}
-            className="text-white bg-red-600 bg-opacity-60"
-          >
-            Remove
-          </Button>
+          <RemoveButton handleClick={handleClick} />
         </CardFooter>
       </Card>
     </>

@@ -1,5 +1,4 @@
 @tailwind base;
-
 @tailwind components;
 @tailwind utilities;
 
@@ -49,7 +48,7 @@
     --ring: 142.4 71.8% 29.2%;
   }
 }
-
+/* 
 @layer utilities {
   .bg-background {
     background-color: var(--background);
@@ -57,7 +56,6 @@
 }
 @layer utilities {
   .border-border {
-    /* Define your border properties here */
   }
   .text-foreground {
   }
@@ -69,4 +67,4 @@
   body {
     @apply bg-background text-foreground;
   }
-}
+} */

@@ -3,7 +3,7 @@ import LikedSongsTracksCard from "./LikedSongsTracksCard";
 // import { Link } from "react-router-dom";
 import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
 import LikedSongsExpandedTracksCard from "./LikedSongsExpandedTracksCard";
-import { CartContext } from "../recommendation/Recommendation";
+import { CartContext } from "../recommendation/RecommendationContext";
 import { Button } from "../ui/button";
 
 interface LikedSongsTracksSectionProps {

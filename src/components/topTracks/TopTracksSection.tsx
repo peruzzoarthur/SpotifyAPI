@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CartContext } from "../recommendation/Recommendation";
+import { CartContext } from "../recommendation/RecommendationContext";
 import { TopTracksCard } from ".";
 import { Track } from "@spotify/web-api-ts-sdk";
 
