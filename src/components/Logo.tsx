@@ -11,7 +11,7 @@ import {
 
 function Logo() {
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end mt-1 mr-2">
       <DropdownMenu>
         <DropdownMenuTrigger>
           {" "}
@@ -21,40 +21,40 @@ function Logo() {
             alt="Spotify Logo"
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-purple-600">
-          <DropdownMenuLabel>Links</DropdownMenuLabel>
+        <DropdownMenuContent className="text-white bg-black w-300 bg-opacity-60">
+          <DropdownMenuLabel className="text-3xl">Links</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <Link to={`/`}>
-            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100">
+            <DropdownMenuItem className="text-2xl cursor-pointer hover:bg-black hover:bg-opacity-60">
               Profile
             </DropdownMenuItem>
           </Link>
           <Link to={`/top-artists`}>
-            <DropdownMenuItem className="cursor-pointer font-extralight hover:bg-slate-100">
+            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
               {" "}
               Artists
             </DropdownMenuItem>
           </Link>
           <Link to={`/top-tracks`}>
-            <DropdownMenuItem className="cursor-pointer font-extralight hover:bg-slate-100">
+            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
               {" "}
               Tracks
             </DropdownMenuItem>
           </Link>
 
           <Link to={`/playlists`}>
-            <DropdownMenuItem className="cursor-pointer font-extralight hover:bg-slate-100">
+            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
               {" "}
               Playlists
             </DropdownMenuItem>
           </Link>
           <Link to={`/liked-songs`}>
-            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100">
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
               Liked Songs
             </DropdownMenuItem>
           </Link>
           <Link to={`/recommendation`}>
-            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100">
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
               Recommendations Liszt
             </DropdownMenuItem>
           </Link>

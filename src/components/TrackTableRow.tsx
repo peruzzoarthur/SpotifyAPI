@@ -15,11 +15,11 @@ export const TrackTableRow: React.FC<TrackProps> = ({
 }) => {
   return (
     <>
-      <TableRow className="hover:bg-green-300 hover:bg-opacity-60">
+      <TableRow className="bg-black bg-opacity-10 hover:bg-green-200 hover:bg-opacity-10">
         <TableCell className="font-medium">{order}</TableCell>
         <TableCell>
           <Link to={`${uri}`}>
-            <img className="max-h-14 max-w-14" src={image[0].url} alt={name} />
+            <img className="max-h-32 max-w-32" src={image[0].url} alt={name} />
           </Link>
         </TableCell>
         <TableCell>{name}</TableCell>

@@ -17,13 +17,11 @@ export const ArtistCard: React.FC<ArtistProps> = ({
 }) => {
   return (
     <>
-      <Card className="mt-2 mb-2 mr-2 text-white transition-all bg-white bg-opacity-10 hover:bg-purple-400 hover:bg-opacity-10 hover:pt-1 hover-pr-2 h-420 ">
+      <Card className="mt-2 mb-2 mr-2 text-white transition-all duration-700 bg-black bg-opacity-60 hover:bg-black hover:bg-opacity-20 hover:pt-2 hover:pl-11 h-460">
         <CardHeader>
           <img src={image[0].url} alt={name} className="w-56 h-56 rounded-lg" />
           <CardTitle className="text-xl">{name}</CardTitle>
-          <CardDescription className="text-sm font-thin">
-            {genres}
-          </CardDescription>
+          <CardDescription className="font-light ">{genres}</CardDescription>
         </CardHeader>
         <CardFooter>
           <RemoveButton handleClick={handleClick} />

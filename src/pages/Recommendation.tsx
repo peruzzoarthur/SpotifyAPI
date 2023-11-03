@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
-// import { Link } from "react-router-dom";
 import {
   Config,
   adjectives,
@@ -9,8 +8,8 @@ import {
   uniqueNamesGenerator,
 } from "unique-names-generator";
 import { CartContext } from "../components/recommendation/RecommendationContext";
-import RecommendationHeader from "../components/recommendation/RecommendationHeader";
-import RecommendationSection from "../components/recommendation/RecommendationSection";
+import { RecommendationHeader } from "../components/recommendation/RecommendationHeader";
+import { RecommendationSection } from "../components/recommendation/RecommendationSection";
 import { RecommendationsResponse } from "../components/recommendation/types";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
@@ -22,6 +21,8 @@ import { TrackTableRow } from "@/components/TrackTableRow";
 import { TrackTableHeader } from "@/components/TrackTableHeader";
 import { useToast } from "@/components/ui/use-toast";
 import { CustomError } from "@/CustomError";
+import { AnalogBackground } from "@/components/background/analogBackground";
+import { RecommendationAlert } from "@/components/recommendation/RecommendationAlert";
 
 const randomStringConfig: Config = {
   dictionaries: [colors, adjectives, animals],
@@ -32,20 +33,10 @@ const randomStringConfig: Config = {
 function Recommendation() {
   const { requestForRec } = useContext(CartContext);
   const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
-  // const [getResponse, setGetResponse] = useState<boolean>(true);
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
   const { toast } = useToast();
 
   const sdk = useSpotify(client_id, redirect_url, scopes);
-
-  // const handleRequest = () => {
-  //   if (!recResponse) {
-  //     setGetResponse(true);
-  //   } else {
-  //     setGetResponse(false);
-  //     setGetResponse(true);
-  //   }
-  // };
 
   const exportAsPlaylist = async () => {
     if (!sdk) {
@@ -110,7 +101,21 @@ function Recommendation() {
         setAddAsPlaylist(fetch.tracks.map((t) => t.uri));
         return fetch;
       } catch (error) {
-        throw new CustomError("Please consider re-adjusting seeds.", 400);
+        if (error instanceof CustomError) {
+          if (error.response.status === 400) {
+            throw new CustomError("Please consider re-adjusting seeds.", 400);
+          } else if (error.response.status === 429) {
+            throw new CustomError(
+              "API request limit reached, please try later...",
+              429
+            );
+          } else {
+            throw new CustomError(
+              "Something strange happened, consider trying again...",
+              500
+            );
+          }
+        }
       }
     },
     enabled: !!sdk,
@@ -121,43 +126,55 @@ function Recommendation() {
   }
 
   if (error) {
+    const defaultBehavior = {
+      onClick: () => window.location.reload(),
+      description: "Click to try again",
+    };
+
+    const returnBehavior = {
+      onClick: () => (window.location.href = "/"),
+      description: "Go back home",
+    };
+
     return (
       <>
-        <div className=" bg-slate-800">
-          <Alert
-            variant="destructive"
-            onClick={() => window.location.reload()}
-            className="text-white bg-red-800 cursor-pointer"
-          >
-            <img className="w-4 h-4" src={logo} />
-            <AlertTitle>{error.message}</AlertTitle>
-            <AlertDescription>Click to try again.</AlertDescription>
-          </Alert>
+        <AnalogBackground>
+          {error.response.status === 409 ? (
+            <RecommendationAlert
+              error={error}
+              description={returnBehavior.description}
+              onClick={returnBehavior.onClick}
+            />
+          ) : (
+            <RecommendationAlert
+              error={error}
+              description={defaultBehavior.description}
+              onClick={defaultBehavior.onClick}
+            />
+          )}
 
           <RecommendationHeader />
 
           <RecommendationSection />
-        </div>
+        </AnalogBackground>
       </>
     );
   }
 
   return (
     <>
-      <div className="bg-slate-950">
+      <AnalogBackground>
         <RecommendationHeader />
 
         <RecommendationSection>
-          <Button
-            onClick={async () => await exportAsPlaylist()}
-            className="flex justify-center transition-all duration-500 bg-green-300 bg-opacity-60 hover:scale-110"
-          >
-            Export as Cool Playlist.
-          </Button>
+          {/* {recResponse && recResponse.tracks.length !== 0 && (
+            
+          )} */}
         </RecommendationSection>
-        {recResponse && (
-          // && getResponse
-          <div className="text-white rounded-md bg-slate-500 bg-opacity-60">
+
+        {recResponse && recResponse.tracks.length !== 0 ? (
+          <div className="flex flex-col items-center justify-center text-white bg-black rounded-md bg-opacity-80">
+            <h1 className="mt-6 mb-6 text-2xl">Recommended Tracks</h1>
             <Table>
               <TrackTableHeader />
               <TableBody>
@@ -176,9 +193,29 @@ function Recommendation() {
                 ))}
               </TableBody>
             </Table>
+            <div className="flex">
+              <Button
+                onClick={async () => await exportAsPlaylist()}
+                className="flex items-center mt-2 text-white transition-all duration-500 bg-white w-300 bg-opacity-30 hover:scale-110"
+              >
+                Export as Cool Playlist.
+              </Button>
+            </div>
           </div>
+        ) : (
+          <Alert
+            variant="destructive"
+            onClick={() => window.location.reload()}
+            className="text-white bg-red-800 cursor-pointer"
+          >
+            <img className="w-4 h-4" src={logo} />
+            <AlertTitle>Seed issue 😩</AlertTitle>
+            <AlertDescription>
+              Please re-adjust your seeds and clickOnMe...
+            </AlertDescription>
+          </Alert>
         )}
-      </div>
+      </AnalogBackground>
     </>
   );
 }

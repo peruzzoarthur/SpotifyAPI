@@ -12,20 +12,20 @@ export type CartItem =
   | LikedSongsTracksCardProps
   | TrackInfoCardProps;
 
-interface RequestForRec {
+type RequestForRec = {
   seed_tracks: string[];
   seed_genres: string[];
   seed_artists: string[];
-}
+};
 
-interface CartContextProps {
+type CartContextProps = {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (itemId: string) => void;
   requestForRec: RequestForRec;
   errorMessage: string;
   setErrorMessage: (message: string) => void;
-}
+};
 
 export const CartContext = createContext<CartContextProps>({
   cart: [],
@@ -69,21 +69,23 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
   const addToCart = (item: CartItem) => {
     if (isTrack(item) || isArtist(item)) {
       const existingItem = cart.find((cartItem) => cartItem.id === item.id);
+
       if (existingItem) {
-        const message = `Track with ID ${item.id} already exists in the Recommendation Input Cart.`;
+        const message = `Seed with ID ${item.id} already exists in the Recommendation Input Cart.`;
         setErrorMessage(message);
-        // window.alert(message);
-        // throw new Error(message);
       } else {
         if (cart.length >= 5) {
           const message =
             "You already have 5 items as seed to get your recommendations, consider deleting one of the already listed seeds...";
           setErrorMessage(message);
-
-          // window.alert(message);
         } else {
-          setCart([...cart, item]);
-          requestForRec.seed_tracks.push(item.id);
+          if (isTrack(item)) {
+            setCart([...cart, item]);
+            requestForRec.seed_tracks.push(item.id);
+          } else if (isArtist(item)) {
+            setCart([...cart, item]);
+            requestForRec.seed_artists.push(item.id);
+          }
         }
       }
     }
@@ -114,7 +116,6 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
       localStorage.setItem("reqForRec", JSON.stringify(updatedReqForRec));
     }
 
-    // todo_add_removal_of_artists_as_well
     setRequestForRec((prevReqForRec: RequestForRec) => ({
       ...prevReqForRec,
       seed_tracks: prevReqForRec.seed_tracks.filter((id) => id !== itemId),
