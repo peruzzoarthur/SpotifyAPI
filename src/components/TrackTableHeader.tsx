@@ -11,6 +11,16 @@ export const TrackTableHeader: React.FC = () => {
           <TableHead> </TableHead>
           <TableHead>Track name</TableHead>
           <TableHead>Artists</TableHead>
+
+          <TableHead>danceability</TableHead>
+          <TableHead>energy</TableHead>
+          <TableHead>loudness</TableHead>
+          <TableHead>speechiness</TableHead>
+          <TableHead>acousticness</TableHead>
+          <TableHead>instrumentalness</TableHead>
+          <TableHead>liveness</TableHead>
+          <TableHead>valence</TableHead>
+
           <TableHead className="text-right">Duration</TableHead>
         </TableRow>
       </TableHeader>

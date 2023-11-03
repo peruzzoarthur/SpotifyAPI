@@ -12,6 +12,7 @@ export const TrackTableRow: React.FC<TrackProps> = ({
   order,
   name,
   uri,
+  audio_features,
 }) => {
   return (
     <>
@@ -24,6 +25,16 @@ export const TrackTableRow: React.FC<TrackProps> = ({
         </TableCell>
         <TableCell>{name}</TableCell>
         <TableCell>{artists}</TableCell>
+
+        <TableCell>{audio_features?.danceability}</TableCell>
+        <TableCell>{audio_features?.energy}</TableCell>
+        <TableCell>{audio_features?.loudness}</TableCell>
+        <TableCell>{audio_features?.speechiness}</TableCell>
+        <TableCell>{audio_features?.acousticness}</TableCell>
+        <TableCell>{audio_features?.instrumentalness}</TableCell>
+        <TableCell>{audio_features?.liveness}</TableCell>
+        <TableCell>{audio_features?.valence}</TableCell>
+
         <TableCell className="text-right">{formatDuration(duration)}</TableCell>
       </TableRow>
     </>

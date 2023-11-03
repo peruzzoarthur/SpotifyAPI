@@ -1,4 +1,5 @@
 import { Image } from "@spotify/web-api-ts-sdk";
+import { AudioFeatures } from "./components/recommendation/types";
 
 //  Props
 
@@ -14,6 +15,7 @@ export type TrackProps = {
   handleClick?: () => void;
   index?: number;
   uri?: string;
+  audio_features?: AudioFeatures;
 };
 
 export type ArtistProps = {

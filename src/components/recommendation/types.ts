@@ -52,10 +52,36 @@ export interface RecommendationsRequest
   max_valence?: number;
   target_valence?: number;
 }
-export interface RecommendationsResponse {
+
+export type TrackWithAudioFeatures = Track & {
+  audio_features: AudioFeatures;
+};
+
+export type RecommendationsResponse = {
   seeds: RecommendationSeed[];
-  tracks: Track[];
-}
+  tracks: TrackWithAudioFeatures[];
+};
+
+export type AudioFeatures = {
+  danceability: number;
+  energy: number;
+  key: number;
+  loudness: number;
+  mode: number;
+  speechiness: number;
+  acousticness: number;
+  instrumentalness: number;
+  liveness: number;
+  valence: number;
+  tempo: number;
+  type: string;
+  id: string;
+  uri: string;
+  track_href: string;
+  analysis_url: string;
+  duration_ms: number;
+  time_signature: number;
+};
 export interface RecommendationSeed {
   id: string;
   href: string;

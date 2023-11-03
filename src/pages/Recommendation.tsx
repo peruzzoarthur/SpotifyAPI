@@ -96,10 +96,24 @@ function Recommendation() {
         );
       }
       try {
-        const fetch = await sdk.recommendations.get(requestForRec);
-        setRecResponse(fetch);
-        setAddAsPlaylist(fetch.tracks.map((t) => t.uri));
-        return fetch;
+        const fetchRecommendations = await sdk.recommendations.get(
+          requestForRec
+        );
+        setAddAsPlaylist(fetchRecommendations.tracks.map((t) => t.uri));
+        const fetchAudioFeatures = await sdk.tracks.audioFeatures(
+          fetchRecommendations.tracks.map((t) => t.id)
+        );
+
+        const recommendationWithAudioFeatures: RecommendationsResponse = {
+          seeds: fetchRecommendations.seeds,
+          tracks: fetchRecommendations.tracks.map((track, index) => ({
+            ...track,
+            audio_features: fetchAudioFeatures[index],
+          })),
+        };
+
+        setRecResponse(recommendationWithAudioFeatures);
+        return recommendationWithAudioFeatures;
       } catch (error) {
         if (error instanceof CustomError) {
           if (error.response.status === 400) {
@@ -189,6 +203,7 @@ function Recommendation() {
                     name={track.name}
                     order={index + 1}
                     uri={track.uri}
+                    audio_features={track.audio_features}
                   />
                 ))}
               </TableBody>
