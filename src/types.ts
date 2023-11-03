@@ -16,6 +16,7 @@ export type TrackProps = {
   index?: number;
   uri?: string;
   audio_features?: AudioFeatures;
+  popularity: number;
 };
 
 export type ArtistProps = {

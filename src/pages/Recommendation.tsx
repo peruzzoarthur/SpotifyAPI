@@ -63,9 +63,9 @@ function Recommendation() {
 
     const toasted = async () => {
       toast({
-        title: "Success!!!",
+        title: "Success! 🙌",
         description: `Created playlist with name "Cold ${randomCoolPlaylistName}"`,
-        className: "bg-green-300 bg-opacity-60",
+        className: "bg-black bg-opacity-60 text-white",
       });
     };
     await toasted();
@@ -179,13 +179,7 @@ function Recommendation() {
     <>
       <AnalogBackground>
         <RecommendationHeader />
-
-        <RecommendationSection>
-          {/* {recResponse && recResponse.tracks.length !== 0 && (
-            
-          )} */}
-        </RecommendationSection>
-
+        <RecommendationSection />
         {recResponse && recResponse.tracks.length !== 0 ? (
           <div className="flex flex-col items-center justify-center text-white bg-black rounded-md bg-opacity-80">
             <h1 className="mt-6 mb-6 text-2xl">Recommended Tracks</h1>
@@ -203,6 +197,7 @@ function Recommendation() {
                     name={track.name}
                     order={index + 1}
                     uri={track.uri}
+                    popularity={track.popularity}
                     audio_features={track.audio_features}
                   />
                 ))}

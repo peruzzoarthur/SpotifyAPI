@@ -33,6 +33,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
                   name={item.name}
                   handleClick={() => handleRemoveFromCart(item.id)}
                   duration={item.duration_ms}
+                  popularity={item.popularity}
                 />
               )}
 

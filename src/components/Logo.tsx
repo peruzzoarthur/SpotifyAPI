@@ -4,7 +4,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
+  // DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -22,15 +22,15 @@ function Logo() {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="text-white bg-black w-300 bg-opacity-60">
-          <DropdownMenuLabel className="text-3xl">Links</DropdownMenuLabel>
+          {/* <DropdownMenuLabel className="text-xl">Links</DropdownMenuLabel> */}
           <DropdownMenuSeparator />
           <Link to={`/`}>
-            <DropdownMenuItem className="text-2xl cursor-pointer hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
               Profile
             </DropdownMenuItem>
           </Link>
           <Link to={`/top-artists`}>
-            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-lg cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
               {" "}
               Artists
             </DropdownMenuItem>

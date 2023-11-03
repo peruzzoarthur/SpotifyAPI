@@ -7,9 +7,11 @@ export const TrackTableHeader: React.FC = () => {
     <>
       <TableHeader className="font-2xl">
         <TableRow>
-          <TableHead className="font-2xl">Order</TableHead>
-          <TableHead> </TableHead>
-          <TableHead>Track name</TableHead>
+          <TableHead className="font-2xl">#</TableHead>
+          <TableHead></TableHead>
+          <TableHead>Track</TableHead>
+          <TableHead>Popularity</TableHead>
+
           <TableHead>Artists</TableHead>
 
           <TableHead>danceability</TableHead>
@@ -21,7 +23,9 @@ export const TrackTableHeader: React.FC = () => {
           <TableHead>liveness</TableHead>
           <TableHead>valence</TableHead>
 
-          <TableHead className="text-right">Duration</TableHead>
+          <TableHead className="text-2xl text-right" title="Duration">
+            ⏱️
+          </TableHead>
         </TableRow>
       </TableHeader>
     </>
