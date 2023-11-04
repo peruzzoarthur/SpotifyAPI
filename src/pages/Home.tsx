@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Login, Profile } from ".";
+import { Login } from ".";
 import { useSpotify } from "../hooks/useSpotify";
 import { UserProfile } from "@spotify/web-api-ts-sdk";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { catchErrors } from "../utils";
 import { client_id, redirect_url, scopes } from "../spotify";
+import { Profile } from "./Profile";
 
 const Home = () => {
   const [profile, setProfile] = useState<UserProfile>();

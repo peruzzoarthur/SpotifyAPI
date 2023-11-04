@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { Page, SimplifiedPlaylist, SpotifyApi } from "@spotify/web-api-ts-sdk";
-import { PlaylistsHeader, PlaylistsSection } from "../components/playlists";
+import { PlaylistsHeader } from "../components/playlists";
 import Logo from "../components/Logo";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import PlaylistsSection from "@/components/playlists/PlaylistsSection";
 
 const Playlists = () => {
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
@@ -69,7 +70,7 @@ const Playlists = () => {
 
       <PlaylistsSection playlists={playlists} />
       <button
-        className="bg-slate-950 text-justify text-white flex justify-center w-64 h-10 rounded-lg"
+        className="flex justify-center w-64 h-10 text-justify text-white rounded-lg bg-slate-950"
         onClick={async () => await fetchNextPage()}
       >
         {isFetchingNextPage

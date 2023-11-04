@@ -2,18 +2,18 @@ import { Routes, Route } from "react-router-dom";
 
 import {
   Home,
-  Playlists,
   TopArtists,
   TopTracks,
   LikedSongs,
   PlaylistById,
   TrackById,
-  Recommendation,
+  Playlists,
 } from "./pages";
 import { CartProvider } from "./components/recommendation/RecommendationContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "./components/ui/toaster";
+import { Recommendation } from "./pages/Recommendation";
 
 const queryClient = new QueryClient();
 

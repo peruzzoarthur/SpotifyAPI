@@ -1,42 +1,34 @@
+import React from "react";
 import { Track } from "@spotify/web-api-ts-sdk";
-import ProfileTopTracksCard from "./ProfileTopTracksCard";
-import { Link } from "react-router-dom";
-import ProfileShowAllButton from "./ProfileShowAllButton";
+import { TrackCard } from "../TrackCard";
+import { ShowAllButton } from "../ShowAllButton";
 
-interface ProfileTopTracksSectionProps {
+type ProfileTopTracksSectionProps = {
   topTracks: Track[];
-}
+};
 
-function ProfileTopTracksSection({ topTracks }: ProfileTopTracksSectionProps) {
-  const top10Tracks = topTracks.slice(0, 10);
-
+export const ProfileTopTracksSection: React.FC<
+  ProfileTopTracksSectionProps
+> = ({ topTracks }: ProfileTopTracksSectionProps) => {
   return (
     <>
-      <section className="bg-white bg-opacity-20 w-full h-auto pb-2">
-        <div className="flex items-center justify-between pl-4 pr-4 pt-4 pb-2">
-          <h1 className="text-indigo-500 text-8xl pt-2 mb-2">Top Tracks</h1>
-          <ProfileShowAllButton url={`/top-tracks/`} />
-        </div>
-        <section className="w-full h-auto pb-2">
-          <div className="grid grid-cols-1 ml-5 ">
-            {top10Tracks.map((track, index) => (
-              <Link key={index} to={`/track/${track.id}`}>
-                <ProfileTopTracksCard
-                  image={track.album.images}
-                  name={track.name}
-                  duration={track.duration_ms}
-                  order={index + 1}
-                  artists={track.artists
-                    .map((artist) => artist.name)
-                    .join(", ")}
-                />
-              </Link>
-            ))}
+      <div className="flex flex-col items-start justify-center mt-8">
+        <h2 className="ml-6 text-5xl text-left text-white">Top Tracks</h2>
+        <ShowAllButton url="/top-tracks" />
+      </div>
+      <div className="flex flex-col items-start mt-8 ml-6 sm:flex-row sm:flex-wrap sm:mt-8 sm:ml-16">
+        {topTracks.map((track, index) => (
+          <div key={index} className="mb-4 mr-4">
+            <TrackCard
+              artists={track.artists.map((a) => a.name).join(", ")}
+              image={track.album.images}
+              name={track.name}
+              duration={track.duration_ms}
+              popularity={track.popularity}
+            />
           </div>
-        </section>
-      </section>
+        ))}
+      </div>
     </>
   );
-}
-
-export default ProfileTopTracksSection;
+};

@@ -33,6 +33,12 @@ export type ArtistProps = {
   genres: string;
 };
 
+export type PlaylistProps = {
+  image: Image[];
+  name: string;
+  totalTracks: number | undefined;
+};
+
 export interface CustomError extends Error {
   response?: {
     status: number;

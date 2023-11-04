@@ -30,7 +30,7 @@ const randomStringConfig: Config = {
   length: 3,
 };
 
-function Recommendation() {
+export const Recommendation = () => {
   const { requestForRec } = useContext(CartContext);
   const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
@@ -228,6 +228,4 @@ function Recommendation() {
       </AnalogBackground>
     </>
   );
-}
-
-export default Recommendation;
+};

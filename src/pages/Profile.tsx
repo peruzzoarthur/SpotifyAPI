@@ -1,115 +1,107 @@
-import { useState, useEffect } from "react";
-import { catchErrors } from "../utils/error";
+// import { useState } from "react";
 import { useSpotify } from "../hooks/useSpotify";
 import {
   Artist,
-  SpotifyApi,
   Track,
-  UserProfile,
   SimplifiedPlaylist,
-  Page,
+  SimplifiedArtist,
 } from "@spotify/web-api-ts-sdk";
-// import { MainWithBackground } from "../components";
-import ProfilePlaylistsSection from "../components/profile/ProfilePlaylistsSection";
+
 import { client_id, redirect_url, scopes } from "../spotify";
-import ProfileHeader from "../components/profile/ProfileHeader";
-import ProfileTopTracksSection from "../components/profile/ProfileTopTracksSection";
-import ProfileTopArtistsSection from "../components/profile/ProfileTopArtistsSection";
+import { useQuery } from "@tanstack/react-query";
+import { CustomError } from "@/CustomError";
+import { AnalogBackground } from "@/components/background/analogBackground";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileTopArtistsSection } from "@/components/profile/ProfileTopArtistsSection";
+import { ProfileTopTracksSection } from "@/components/profile/ProfileTopTracksSection";
+import { ProfilePlaylistsSection } from "@/components/profile/ProfilePlaylistsSection";
 
-import Logo from "../components/Logo";
-
-const Profile = () => {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [userCreatedPlaylists, setUserCreatedPlaylists] = useState<
-    SimplifiedPlaylist[]
-  >([]);
-  const [topArtists, setTopArtists] = useState<Artist[]>([]);
-  const [topTracks, setTopTracks] = useState<Track[]>([]);
-  const [pagePlaylist, setPagePlaylist] = useState<Page<SimplifiedPlaylist>>();
-
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (sdk) {
-        try {
-          const userProfile = await sdk.currentUser.profile();
-          setProfile(userProfile);
-
-          const initialPlaylistsPage =
-            await sdk.currentUser.playlists.playlists(50);
-          setPagePlaylist(initialPlaylistsPage);
-
-          const userPlaylists = initialPlaylistsPage.items;
-          setUserCreatedPlaylists(
-            userPlaylists.filter(
-              (playlist) => playlist.owner.id === userProfile.id
-            )
-          );
-
-          const userTopArtists = (await sdk.currentUser.topItems("artists"))
-            .items;
-          setTopArtists(userTopArtists);
-
-          const userTopTracks = (await sdk.currentUser.topItems("tracks"))
-            .items;
-          setTopTracks(userTopTracks);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }
-    };
-
-    catchErrors(fetchData());
-  }, [sdk]);
-
-  useEffect(() => {
-    if (!pagePlaylist) {
-      return;
-    }
-    const fetchMoreData = async () => {
-      if (pagePlaylist.next) {
-        try {
-          const urlParts = pagePlaylist.next.split(
-            "https://api.spotify.com/v1/"
-          );
-          if (urlParts.length === 2) {
-            const apiUrl = urlParts[1];
-            const data: Page<SimplifiedPlaylist> = await sdk.makeRequest(
-              "GET",
-              apiUrl
-            );
-            setPagePlaylist(data);
-
-            const newPlaylists = data.items.filter(
-              (playlist) => playlist.owner.id === profile?.id
-            );
-            setUserCreatedPlaylists((prevPlaylists) => [
-              ...prevPlaylists,
-              ...newPlaylists,
-            ]);
-          }
-        } catch (error) {
-          console.error("Error fetching more playlists:", error);
-        }
-      }
-    };
-    catchErrors(fetchMoreData());
-  }, [pagePlaylist, profile, sdk]);
-
-  return (
-    <main className="bg-black">
-      {profile && (
-        <div className="flex-col w-full">
-          <Logo />
-          <ProfileHeader profile={profile} playlists={userCreatedPlaylists} />
-          <ProfileTopArtistsSection topArtists={topArtists} />
-          <ProfileTopTracksSection topTracks={topTracks} />
-          <ProfilePlaylistsSection playlists={userCreatedPlaylists} />
-        </div>
-      )}
-    </main>
-  );
+type ProfileData = {
+  userData: {
+    picture: string;
+    name: string;
+    followers: number;
+  };
+  topArtists: Artist[];
+  topTracks: Track[];
+  topTracksArtists: Artist[];
+  playlists: SimplifiedPlaylist[];
 };
 
-export default Profile;
+export const Profile = () => {
+  const sdk = useSpotify(client_id, redirect_url, scopes);
+
+  const { data, error, isFetching } = useQuery<ProfileData, CustomError>({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      if (!sdk) {
+        throw new CustomError(
+          "Authentication error. Please refresh your login.",
+          500
+        );
+      }
+
+      try {
+        const fetchUserData = await sdk.currentUser.profile();
+
+        const fetchTopArtists: Artist[] = (
+          await sdk.currentUser.topItems("artists", undefined, 5)
+        ).items;
+
+        const fetchTopTracks: Track[] = (
+          await sdk.currentUser.topItems("tracks", undefined, 5)
+        ).items;
+
+        const topTracksSimpleArtists: SimplifiedArtist[] =
+          fetchTopTracks.flatMap((t) => t.artists);
+        const topTracksArtists = await sdk.artists.get(
+          topTracksSimpleArtists.map((a) => a.id)
+        );
+
+        const fetchUserPlaylists: SimplifiedPlaylist[] = (
+          await sdk.currentUser.playlists.playlists(5)
+        ).items;
+
+        return {
+          userData: {
+            picture: fetchUserData?.images[1]?.url || "",
+            name: fetchUserData?.display_name || "",
+            followers: fetchUserData?.followers?.total || 0,
+          },
+          topArtists: fetchTopArtists,
+          topTracks: fetchTopTracks,
+          topTracksArtists: topTracksArtists,
+          playlists: fetchUserPlaylists,
+        };
+      } catch (error) {
+        //TODO adjust errors
+        throw new CustomError("im a satanic sample error", 666);
+      }
+    },
+    enabled: !!sdk,
+  });
+
+  if (error) {
+    return <div> {error.message};</div>;
+  }
+
+  if (isFetching) {
+    return <div>I am LoadInG</div>;
+  }
+  return (
+    <AnalogBackground>
+      {data && (
+        <>
+          <ProfileHeader
+            followers={data.userData.followers}
+            image={data.userData.picture}
+            name={data.userData.name}
+          />
+          <ProfileTopArtistsSection topArtists={data.topArtists} />
+          <ProfileTopTracksSection topTracks={data.topTracks} />
+          <ProfilePlaylistsSection playlists={data.playlists} />
+        </>
+      )}
+    </AnalogBackground>
+  );
+};

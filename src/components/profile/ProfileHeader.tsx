@@ -1,43 +1,30 @@
-import { UserProfile, SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
+import React from "react";
+import Logo from "../Logo";
 
-interface ProfileHeaderProps {
-  profile: UserProfile;
-  playlists: SimplifiedPlaylist[];
-}
+type ProfileHeaderProps = {
+  image: string;
+  name: string;
+  followers: number;
+};
 
-function ProfileHeader({ profile, playlists }: ProfileHeaderProps) {
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+  name,
+  image,
+  // followers,
+}) => {
   return (
-    <section className="flex w-full max-h-80 bg-slate-600 bg-opacity-40">
-      <div className="flex justify-between my-8 ml-8">
-        <div className="flex items-center">
-          {profile.images.length && profile.images[1].url && (
-            <img
-              className="w-64 h-64 mr-4 rounded-full"
-              src={profile.images[1].url}
-              alt="Avatar"
-            />
-          )}
-          <div className="ml-5">
-            <div className="mt-8 mb-5 font-semibold text-white text-8xl">
-              {profile.display_name}
-            </div>
-            <div className="ml-2 text-lg text-left text-white">
-              {playlists && (
-                <p>
-                  {playlists.length} Playlist
-                  {playlists.length !== 1 ? "s" : " "}
-                </p>
-              )}
-              <p className="text-base">
-                {profile.followers.total} Follower
-                {profile.followers.total !== 1 ? "s" : ""}
-              </p>
-            </div>
-          </div>
+    <div className="flex flex-row justify-start bg-black bg-opacity-30 h-320 ">
+      <div className="flex flex-row">
+        <img src={image} alt={name} className="w-56 h-56 rounded-full" />
+        <h1 className="mt-16 ml-6 text-6xl font-bold text-white">{name}</h1>
+        <div>
+          {/* <div className="mt-2 ml-4 text-2xl text-white">{followers}</div> */}
         </div>
       </div>
-    </section>
+      <div className="flex items-start justify-end flex-1">
+        {" "}
+        <Logo />
+      </div>
+    </div>
   );
-}
-
-export default ProfileHeader;
+};

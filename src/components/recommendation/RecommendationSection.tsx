@@ -1,8 +1,8 @@
 import React, { ReactNode, useContext } from "react";
 import { CartContext, CartItem } from "./RecommendationContext";
 import { Artist, Track } from "@spotify/web-api-ts-sdk";
-import { TrackCard } from "../TrackCard";
-import { ArtistCard } from "../ArtistCard";
+import { ArtistCardWithRemoveButton } from "../ArtistCardWithButton";
+import { TrackCardWithRemoveButton } from "../TrackCardWithButton";
 
 type RecommendationSectionProps = {
   children?: ReactNode;
@@ -27,7 +27,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
           {cart.map((item, index) => (
             <div key={index}>
               {isTrack(item) && (
-                <TrackCard
+                <TrackCardWithRemoveButton
                   artists={item.artists.map((a) => a.name).join(", ")}
                   image={item.album.images}
                   name={item.name}
@@ -38,7 +38,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
               )}
 
               {isArtist(item) && (
-                <ArtistCard
+                <ArtistCardWithRemoveButton
                   genres={item.genres.join(", ")}
                   image={item.images}
                   name={item.name}
