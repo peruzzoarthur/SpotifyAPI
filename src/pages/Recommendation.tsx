@@ -49,8 +49,9 @@ export const Recommendation = () => {
       throw new CustomError("No uris added for playlist export...", 405);
     }
 
+    const username = (await sdk.currentUser.profile()).display_name;
     const randomCoolPlaylistName = uniqueNamesGenerator(randomStringConfig);
-    const createPlaylist = await sdk.playlists.createPlaylist("sp3ruzzo", {
+    const createPlaylist = await sdk.playlists.createPlaylist(username, {
       name: `Cold ${randomCoolPlaylistName}`,
       description: "Created with Coldzapp Spotify API",
       public: true,
