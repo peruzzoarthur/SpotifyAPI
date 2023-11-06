@@ -86,7 +86,7 @@ export const Profile = () => {
   }
 
   if (isFetching) {
-    return <div>I am LoadInG</div>;
+    return <div>Loading...</div>;
   }
   return (
     <AnalogBackground>

@@ -1,6 +1,5 @@
 import {
   PlaylistedTrack,
-  SpotifyApi,
   Page,
   AudioFeatures,
   Track,
@@ -19,14 +18,19 @@ import {
 } from "../components/playlistById";
 import { TrackWithAudioFeatures } from "./LikedSongs";
 import Logo from "../components/Logo";
+import { CustomError } from "@/CustomError";
 
 interface AudioFeaturesWithListOrder extends AudioFeatures {
   default_list_order?: string;
 }
 
-function PlaylistById() {
+type PlaylistByIdQueryFnProps = {
+  pageParam: string | null | unknown;
+};
+
+export const PlaylistById = () => {
   const { id } = useParams();
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+  const sdk = useSpotify(client_id, redirect_url, scopes);
   const [tracks, setTracks] = useState<TrackWithAudioFeatures[]>([]);
   const [audioFeatures, setAudioFeatures] = useState<AudioFeatures[]>([]);
   const [sortValue, setSortValue] =
@@ -48,7 +52,10 @@ function PlaylistById() {
   } = useInfiniteQuery<Page<PlaylistedTrack> | undefined>({
     queryKey: ["playlistTracks", { id }],
 
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam = "0" }: PlaylistByIdQueryFnProps) => {
+      if (!sdk) {
+        throw new CustomError("auth problem. please refresh login.", 500);
+      }
       const playlistName = (await sdk.playlists.getPlaylist(id as string)).name;
       setPlaylistName(playlistName);
       const playlist = await sdk.playlists.getPlaylistItems(
@@ -164,6 +171,4 @@ function PlaylistById() {
       <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
     </>
   );
-}
-
-export default PlaylistById;
+};

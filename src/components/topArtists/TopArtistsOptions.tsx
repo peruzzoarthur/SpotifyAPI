@@ -1,32 +1,31 @@
-import { MaxInt } from "@spotify/web-api-ts-sdk";
-import { TopArtistsSelectPageSize } from ".";
+import { Artist } from "@spotify/web-api-ts-sdk";
 import { SelectOrderByTimeRange } from "..";
 import { TimeRange } from "../../pages/TopArtists";
 
-interface TopArtistsOptionsProps {
-  setPageSize: React.Dispatch<React.SetStateAction<MaxInt<50>>>;
+type TopArtistsOptionsProps = {
   setActiveRange: React.Dispatch<
     React.SetStateAction<"short_term" | "medium_term" | "long_term">
   >;
-}
+  setTopArtists: React.Dispatch<React.SetStateAction<Artist[]>>;
+  activeRange: TimeRange["value"];
+};
 
-function TopArtistsOptions({
-  setPageSize,
+export const TopArtistsOptions = ({
   setActiveRange,
-}: TopArtistsOptionsProps) {
-  const handlePageSizeChange = (size: MaxInt<50>) => {
-    setPageSize(size);
-  };
-
+  setTopArtists,
+  activeRange,
+}: TopArtistsOptionsProps) => {
   const handleActiveRange = (timeRange: TimeRange["value"]) => {
+    setTopArtists([]);
     setActiveRange(timeRange);
   };
   return (
-    <div className="w-full h-20 flex flex-col items-center justify-center bg-slate-800 bg-opacity-90">
-      <TopArtistsSelectPageSize handlePageSizeChange={handlePageSizeChange} />
-      <SelectOrderByTimeRange handleOrderByTimeRange={handleActiveRange} />
+    <div className="flex flex-col items-center justify-center w-full h-20 bg-black bg-opacity-10">
+      {/* <TopArtistsSelectPageSize handlePageSizeChange={handlePageSizeChange} /> */}
+      <SelectOrderByTimeRange
+        handleOrderByTimeRange={handleActiveRange}
+        activeRange={activeRange}
+      />
     </div>
   );
-}
-
-export default TopArtistsOptions;
+};

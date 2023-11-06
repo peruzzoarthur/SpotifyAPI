@@ -7,7 +7,7 @@ import { AudioFeatures, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 import { useParams } from "react-router-dom";
 import { catchErrors } from "../utils";
 
-const TrackById = () => {
+export const TrackById = () => {
   const { id } = useParams();
   const [trackData, setTrackData] = useState<Track | undefined>();
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -42,7 +42,7 @@ const TrackById = () => {
 
   return (
     <>
-      <div className="bg-black h-screen pt-2 flex flex-row justify-center">
+      <div className="flex flex-row justify-center h-screen pt-2 bg-black">
         <TrackInfoCard
           imageUrl={imageUrl}
           audioFeatures={audioFeatures}
@@ -50,12 +50,10 @@ const TrackById = () => {
           trackName={trackData?.name}
           artists={trackData?.artists[0].name}
         />
-        <button className="text-white bg-purple-950 bg-opacity-60 h-16 w-32 rounded-full ml-6">
+        <button className="w-32 h-16 ml-6 text-white rounded-full bg-purple-950 bg-opacity-60">
           Suggest Track
         </button>
       </div>
     </>
   );
 };
-
-export default TrackById;

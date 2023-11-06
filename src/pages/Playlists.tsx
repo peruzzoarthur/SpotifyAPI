@@ -7,7 +7,7 @@ import Logo from "../components/Logo";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import PlaylistsSection from "@/components/playlists/PlaylistsSection";
 
-const Playlists = () => {
+export const Playlists = () => {
   const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   const [playlists, setPlaylists] = useState<SimplifiedPlaylist[]>([]);
@@ -84,5 +84,3 @@ const Playlists = () => {
     </main>
   );
 };
-
-export default Playlists;

@@ -1,15 +1,19 @@
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { CartContext } from "../recommendation/RecommendationContext";
-import { TopArtistsCard } from ".";
 import { Artist } from "@spotify/web-api-ts-sdk";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import logo from "../../styles/img/spotify_logologo.jpg";
+import { ArtistCardWithAddButton } from "../ArtistCard";
 
-interface TopArtistsSectionProps {
+type TopArtistsSectionProps = {
   artists: Artist[];
-}
+  children?: ReactNode;
+};
 
-function TopArtistsSection({ artists }: TopArtistsSectionProps) {
+export const TopArtistsSection = ({
+  artists,
+  children,
+}: TopArtistsSectionProps) => {
   const { addToCart, errorMessage, setErrorMessage } = useContext(CartContext);
 
   const handleAddToCart = (artist: Artist) => {
@@ -22,40 +26,36 @@ function TopArtistsSection({ artists }: TopArtistsSectionProps) {
 
   return (
     <>
-      <div className="bg-black ">
-        {errorMessage && (
-          <Alert className="fixed text-white bg-red-800">
-            <img className="w-4 h-4" src={logo} />
-            <AlertTitle>{errorMessage}</AlertTitle>
-            <AlertDescription
-              className="cursor-pointer"
-              onClick={handleErrorMessage}
-            >
-              Click to close message.
-            </AlertDescription>
-          </Alert>
-        )}
-        <section className="w-full h-auto pb-2 bg-white bg-opacity-20">
-          <div className="flex flex-col items-center justify-center pt-4 pb-2 pl-4 pr-4"></div>
-          <section className="w-full h-auto pb-2">
-            <div className="grid grid-flow-row-dense grid-cols-1 mt-5 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 ">
-              {artists?.map((artist, index) => (
-                <TopArtistsCard
-                  key={index}
-                  id={artist.id}
-                  image={artist.images}
-                  name={artist.name}
-                  genres={artist.genres.join(", ")}
-                  handleAddToCart={() => handleAddToCart(artist)}
-                  index={index}
-                />
-              ))}
+      {errorMessage && (
+        <Alert className="fixed text-white bg-red-800">
+          <img className="w-4 h-4" src={logo} />
+          <AlertTitle>{errorMessage}</AlertTitle>
+          <AlertDescription
+            className="cursor-pointer"
+            onClick={handleErrorMessage}
+          >
+            Click to close message.
+          </AlertDescription>
+        </Alert>
+      )}
+      <div className="pt-8 pb-4 min-h-640">
+        <h2 className="ml-4 text-4xl text-left text-white">
+          Input Data for Recommendations
+        </h2>
+        <div className="grid grid-flow-row-dense grid-cols-1 mt-8 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
+          {artists.map((item, index) => (
+            <div key={index}>
+              <ArtistCardWithAddButton
+                image={item.images}
+                name={item.name}
+                handleClick={() => handleAddToCart(item)}
+                genres={item.genres.join(", ")}
+              />
             </div>
-          </section>
-        </section>
+          ))}
+        </div>
+        <div className="flex justify-center pt-8 pb-4">{children}</div>
       </div>
     </>
   );
-}
-
-export default TopArtistsSection;
+};

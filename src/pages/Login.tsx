@@ -1,7 +1,7 @@
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { client_id, redirect_url } from "../spotify";
 
-const Login = () => {
+export const Login = () => {
   return (
     <button
       onClick={async () => {
@@ -19,5 +19,3 @@ const Login = () => {
     </button>
   );
 };
-
-export default Login;

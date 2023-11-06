@@ -23,6 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { CustomError } from "@/CustomError";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { RecommendationAlert } from "@/components/recommendation/RecommendationAlert";
+import { ContainerDark } from "@/components/Container";
 
 const randomStringConfig: Config = {
   dictionaries: [colors, adjectives, animals],
@@ -182,7 +183,7 @@ export const Recommendation = () => {
         <RecommendationHeader />
         <RecommendationSection />
         {recResponse && recResponse.tracks.length !== 0 ? (
-          <div className="flex flex-col items-center justify-center text-white bg-black rounded-md bg-opacity-80">
+          <ContainerDark>
             <h1 className="mt-6 mb-6 text-2xl">Recommended Tracks</h1>
             <Table>
               <TrackTableHeader />
@@ -212,7 +213,7 @@ export const Recommendation = () => {
                 Export as Cool Playlist.
               </Button>
             </div>
-          </div>
+          </ContainerDark>
         ) : (
           <Alert
             variant="destructive"

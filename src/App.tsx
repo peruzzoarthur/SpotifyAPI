@@ -1,19 +1,16 @@
 import { Routes, Route } from "react-router-dom";
-
-import {
-  Home,
-  TopArtists,
-  TopTracks,
-  LikedSongs,
-  PlaylistById,
-  TrackById,
-  Playlists,
-} from "./pages";
 import { CartProvider } from "./components/recommendation/RecommendationContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "./components/ui/toaster";
 import { Recommendation } from "./pages/Recommendation";
+import { TopArtists } from "./pages/TopArtists";
+import { Home } from "./pages/Home";
+import { LikedSongs } from "./pages/LikedSongs";
+import { PlaylistById } from "./pages/PlaylistById";
+import { TopTracks } from "./pages/TopTracks";
+import { Playlists } from "./pages/Playlists";
+import { TrackById } from "./pages/TrackById";
 
 const queryClient = new QueryClient();
 

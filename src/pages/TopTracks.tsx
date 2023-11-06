@@ -8,7 +8,7 @@ import Logo from "../components/Logo";
 import { MaxInt, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 import { useQuery } from "@tanstack/react-query";
 
-const TopTracks = () => {
+export const TopTracks = () => {
   const [activeRange, setActiveRange] = useState<
     "short_term" | "medium_term" | "long_term"
   >("short_term");
@@ -50,5 +50,3 @@ const TopTracks = () => {
     </main>
   );
 };
-
-export default TopTracks;

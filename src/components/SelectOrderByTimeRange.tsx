@@ -3,10 +3,12 @@ import { TimeRange } from "../pages/TopArtists";
 
 interface SelectOrderByTimeRangeProps {
   handleOrderByTimeRange: (timeRange: TimeRange["value"]) => void;
+  activeRange: TimeRange["value"];
 }
 
 function SelectOrderByTimeRange({
   handleOrderByTimeRange,
+  activeRange,
 }: SelectOrderByTimeRangeProps) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value as TimeRange["value"];
@@ -14,10 +16,11 @@ function SelectOrderByTimeRange({
   };
   return (
     <div>
-      <label className="text-white text-xl ">Select Time Range: </label>
+      <label className="text-xl text-white ">Select Time Range: </label>
       <select
-        className="h-7 w-auto bg-purple-200 bg-opacity-50 text-slate-100 text-center rounded-xl"
+        className="w-auto text-center bg-purple-200 bg-opacity-50 h-7 text-slate-100 rounded-xl"
         onChange={handleChange}
+        value={activeRange}
       >
         <option value="short_term">4 Weeks</option>
         <option value="medium_term">6 Months</option>
