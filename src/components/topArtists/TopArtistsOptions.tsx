@@ -21,7 +21,6 @@ export const TopArtistsOptions = ({
   };
   return (
     <div className="flex flex-col items-center justify-center w-full h-20 bg-black bg-opacity-10">
-      {/* <TopArtistsSelectPageSize handlePageSizeChange={handlePageSizeChange} /> */}
       <SelectOrderByTimeRange
         handleOrderByTimeRange={handleActiveRange}
         activeRange={activeRange}

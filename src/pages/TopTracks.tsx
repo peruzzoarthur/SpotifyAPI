@@ -1,52 +1,88 @@
 import { useState } from "react";
-
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
-import { TopTracksHeader, TopTracksSection } from "../components/topTracks";
 import TopTracksOptions from "../components/topTracks/TopTracksOptions";
-import Logo from "../components/Logo";
-import { MaxInt, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
-import { useQuery } from "@tanstack/react-query";
+import { Page, Track } from "@spotify/web-api-ts-sdk";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { AnalogBackground } from "@/components/background/analogBackground";
+import { LoadMoreButton } from "@/components/LoadMoreButton";
+import { Container } from "@/components/Container";
+import { CustomError } from "@/CustomError";
+import { TopTracksHeader } from "@/components/topTracks/TopTracksHeader";
+import { TopTracksSection } from "@/components/topTracks/TopTracksSection";
+
+export type TimeRange = {
+  value: "short_term" | "medium_term" | "long_term";
+};
 
 export const TopTracks = () => {
-  const [activeRange, setActiveRange] = useState<
-    "short_term" | "medium_term" | "long_term"
-  >("short_term");
-  const [pageSize, setPageSize] = useState<MaxInt<50>>(10);
+  const [activeRange, setActiveRange] =
+    useState<TimeRange["value"]>("short_term");
+  const [topTracks, setTopTracks] = useState<Track[]>([]);
 
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+  const sdk = useSpotify(client_id, redirect_url, scopes);
 
-  const { data, error, isFetching } = useQuery<Track[]>({
-    queryKey: ["top-artists", activeRange, pageSize],
-    queryFn: async () => {
-      const fetch = await sdk.currentUser.topItems(
-        "tracks",
-        activeRange,
-        pageSize
-      );
+  const updateTopTracks = (newTopTracks: Track[]) => {
+    setTopTracks((oldTopTracks) => [...newTopTracks, ...oldTopTracks]);
+  };
 
-      return fetch.items;
-    },
-    enabled: !!sdk,
-  });
+  const { data, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useInfiniteQuery<Page<Track>>({
+      queryKey: ["top-tracks", activeRange],
+      queryFn: async ({ pageParam = 0 }) => {
+        if (!sdk) {
+          throw new CustomError("Auth error, please refresh login", 500);
+        }
 
-  if (isFetching) {
-    return <div>Loading...</div>;
-  }
+        const fetchTopTracks = await sdk.currentUser.topItems(
+          "tracks",
+          activeRange,
+          10,
+          Number(pageParam)
+        );
+
+        setTopTracks(fetchTopTracks.items);
+
+        if (topTracks.length !== 0 && topTracks.length < fetchTopTracks.total) {
+          updateTopTracks(topTracks);
+        }
+
+        return fetchTopTracks;
+      },
+      enabled: !!sdk,
+      initialPageParam: 0,
+      getNextPageParam: (lastPage) => {
+        if (lastPage?.next) {
+          const url = new URL(lastPage.next);
+          const pageParam = url.searchParams.get("offset");
+          return pageParam;
+        }
+        return;
+      },
+    });
 
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
   return (
-    <main>
-      <Logo />
-      <TopTracksHeader />
-      <TopTracksOptions
-        setActiveRange={setActiveRange}
-        setPageSize={setPageSize}
-      />
-      <TopTracksSection topTracks={data} />
-    </main>
+    <>
+      <AnalogBackground>
+        <TopTracksHeader />
+        <Container>
+          <TopTracksOptions
+            setActiveRange={setActiveRange}
+            setTopTracks={setTopTracks}
+            activeRange={activeRange}
+          />
+          {data && topTracks && <TopTracksSection topTracks={topTracks} />}
+          <LoadMoreButton
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
+        </Container>
+      </AnalogBackground>
+    </>
   );
 };

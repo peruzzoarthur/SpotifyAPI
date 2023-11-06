@@ -5,7 +5,14 @@ import {
   InfiniteData,
   InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
-import { Artist, Page } from "@spotify/web-api-ts-sdk";
+import {
+  Artist,
+  Page,
+  Playlist,
+  PlaylistedTrack,
+  SimplifiedPlaylist,
+  Track,
+} from "@spotify/web-api-ts-sdk";
 
 type LoadMoreButtonProps = {
   isFetchingNextPage: boolean;
@@ -13,7 +20,15 @@ type LoadMoreButtonProps = {
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined
   ) => Promise<
-    InfiniteQueryObserverResult<InfiniteData<Page<Artist>, unknown>, Error>
+    InfiniteQueryObserverResult<
+      InfiniteData<
+        | Page<Artist | Track | SimplifiedPlaylist | Playlist | PlaylistedTrack>
+        | undefined
+        | unknown,
+        unknown
+      >,
+      Error
+    >
   >;
 };
 

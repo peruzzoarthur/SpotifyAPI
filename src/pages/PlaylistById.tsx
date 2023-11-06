@@ -17,8 +17,10 @@ import {
   PlaylistByIdTracksSection,
 } from "../components/playlistById";
 import { TrackWithAudioFeatures } from "./LikedSongs";
-import Logo from "../components/Logo";
 import { CustomError } from "@/CustomError";
+import { LoadMoreButton } from "@/components/LoadMoreButton";
+import { AnalogBackground } from "@/components/background/analogBackground";
+import { Container } from "@/components/Container";
 
 interface AudioFeaturesWithListOrder extends AudioFeatures {
   default_list_order?: string;
@@ -41,61 +43,55 @@ export const PlaylistById = () => {
     setTracks((oldTracks) => [...oldTracks, ...newTracks]);
   };
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    isFetching,
-    status,
-    isFetchingNextPage,
-    hasNextPage,
-  } = useInfiniteQuery<Page<PlaylistedTrack> | undefined>({
-    queryKey: ["playlistTracks", { id }],
+  const { data, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useInfiniteQuery<Page<PlaylistedTrack> | undefined>({
+      queryKey: ["playlistTracks", { id }],
 
-    queryFn: async ({ pageParam = "0" }: PlaylistByIdQueryFnProps) => {
-      if (!sdk) {
-        throw new CustomError("auth problem. please refresh login.", 500);
-      }
-      const playlistName = (await sdk.playlists.getPlaylist(id as string)).name;
-      setPlaylistName(playlistName);
-      const playlist = await sdk.playlists.getPlaylistItems(
-        id as string,
-        undefined,
-        undefined,
-        undefined,
-        Number(pageParam)
-      );
-
-      const ids = playlist.items.map((t) => t.track.id);
-
-      const fetchAudioFeatures = async () => {
-        return await sdk.tracks.audioFeatures(ids);
-      };
-
-      const audioFeatures = await fetchAudioFeatures();
-      setAudioFeatures(audioFeatures);
-
-      if (tracks.length < playlist.total) {
-        updateTracks(
-          playlist.items.map((t) => t.track as Track).slice(0, playlist.total)
+      queryFn: async ({ pageParam = "0" }: PlaylistByIdQueryFnProps) => {
+        if (!sdk) {
+          throw new CustomError("auth problem. please refresh login.", 500);
+        }
+        const playlistName = (await sdk.playlists.getPlaylist(id as string))
+          .name;
+        setPlaylistName(playlistName);
+        const playlist = await sdk.playlists.getPlaylistItems(
+          id as string,
+          undefined,
+          undefined,
+          undefined,
+          Number(pageParam)
         );
-      }
 
-      return playlist;
-    },
+        const ids = playlist.items.map((t) => t.track.id);
 
-    enabled: !!sdk,
+        const fetchAudioFeatures = async () => {
+          return await sdk.tracks.audioFeatures(ids);
+        };
 
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-      if (lastPage?.next) {
-        const url = new URL(lastPage.next);
-        const pageParam = url.searchParams.get("offset");
-        return pageParam;
-      }
-      return;
-    },
-  });
+        const audioFeatures = await fetchAudioFeatures();
+        setAudioFeatures(audioFeatures);
+
+        if (tracks.length < playlist.total) {
+          updateTracks(
+            playlist.items.map((t) => t.track as Track).slice(0, playlist.total)
+          );
+        }
+
+        return playlist;
+      },
+
+      enabled: !!sdk,
+
+      initialPageParam: 0,
+      getNextPageParam: (lastPage) => {
+        if (lastPage?.next) {
+          const url = new URL(lastPage.next);
+          const pageParam = url.searchParams.get("offset");
+          return pageParam;
+        }
+        return;
+      },
+    });
 
   const tracksWithAudioFeatures = useMemo(() => {
     if (!tracks || !audioFeatures) {
@@ -138,37 +134,30 @@ export const PlaylistById = () => {
     );
   }, [sortValue, tracksWithAudioFeatures]);
 
-  if (isFetching) {
-    return <div>Loading...</div>;
-  }
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  return status === "pending" ? (
-    <p>Loading...</p>
-  ) : (
+  return (
     <>
-      <Logo />
-      <PlaylistByIdHeader playlistName={playlistName} />
-      <SelectAudioFeature
-        setSortValue={setSortValue}
-        sortOptions={sortOptions}
-      />
-      <div>
-        {data && !isFetchingNextPage && (
-          <PlaylistByIdTracksSection tracks={sortedTracks} />
-        )}
-        <button onClick={async () => await fetchNextPage()}>
-          {isFetchingNextPage
-            ? "Loading More..."
-            : hasNextPage
-            ? "Load More"
-            : "Nothing to Load"}
-        </button>
-      </div>
-      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
+      <AnalogBackground>
+        <PlaylistByIdHeader playlistName={playlistName} />
+        <Container>
+          <SelectAudioFeature
+            setSortValue={setSortValue}
+            sortOptions={sortOptions}
+          />
+
+          {data && !isFetchingNextPage && (
+            <PlaylistByIdTracksSection tracks={sortedTracks} />
+          )}
+          <LoadMoreButton
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
+        </Container>
+      </AnalogBackground>
     </>
   );
 };

@@ -1,46 +1,63 @@
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { CartContext } from "../recommendation/RecommendationContext";
-import { TopTracksCard } from ".";
 import { Track } from "@spotify/web-api-ts-sdk";
+import { TrackCardWithAddButton } from "../TrackCardWithButton";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import logo from "../../styles/img/spotify_logologo.jpg";
 
 interface TopTracksSectionsProps {
-  topTracks: Track[] | undefined;
+  topTracks: Track[];
+  children?: ReactNode;
 }
 
-function TopTracksSection({ topTracks }: TopTracksSectionsProps) {
-  const { addToCart } = useContext(CartContext);
+export const TopTracksSection = ({
+  topTracks,
+  children,
+}: TopTracksSectionsProps) => {
+  const { addToCart, errorMessage, setErrorMessage } = useContext(CartContext);
+
   const handleAddToCart = (track: Track) => {
     addToCart(track);
   };
+
+  const handleErrorMessage: React.MouseEventHandler<HTMLElement> = () => {
+    setErrorMessage("");
+  };
+
   return (
     <>
-      <div className="bg-slate-950 bg-opacity-80 ">
-        <section className="bg-white bg-opacity-20 w-full h-auto pb-2">
-          <div className="flex flex-col justify-center items-center pl-4 pr-4 pt-4 pb-2"></div>
-          <section className="w-full h-auto pb-2">
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3
-         xl:grid-cols-5 2xl:grid-cols-5 grid-flow-row-dense ml-5 mr-5 mt-5  "
-            >
-              {topTracks?.map((track, index) => (
-                <TopTracksCard
-                  key={index}
-                  id={track.id}
-                  image={track.album.images[0].url}
-                  name={track.name}
-                  artists={track.artists
-                    .map((artist) => artist.name)
-                    .join(", ")}
-                  handleAddToCart={() => handleAddToCart(track)}
-                  index={index}
-                />
-              ))}
+      <div className="pt-8 pb-4 min-h-640">
+        <h2 className="ml-4 text-4xl text-left text-white">
+          Input Data for Recommendations
+        </h2>
+        <div className="grid grid-flow-row-dense grid-cols-1 mt-8 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
+          {topTracks.map((item, index) => (
+            <div key={index}>
+              <TrackCardWithAddButton
+                image={item.album.images}
+                name={item.name}
+                handleClick={() => handleAddToCart(item)}
+                artists={item.artists.map((a) => a.name).join(", ")}
+                duration={item.duration_ms}
+                popularity={item.popularity}
+              />
             </div>
-          </section>
-        </section>
+          ))}
+          {errorMessage && (
+            <Alert className="fixed text-white bg-red-800">
+              <img className="w-4 h-4" src={logo} />
+              <AlertTitle>{errorMessage}</AlertTitle>
+              <AlertDescription
+                className="cursor-pointer"
+                onClick={handleErrorMessage}
+              >
+                Click to close message.
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+        <div className="flex justify-center pt-8 pb-4">{children}</div>
       </div>
     </>
   );
-}
-
-export default TopTracksSection;
+};

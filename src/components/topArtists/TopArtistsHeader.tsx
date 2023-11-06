@@ -7,10 +7,10 @@ export const TopArtistsHeader: React.FC = () => {
     <div className="flex flex-col bg-black bg-opacity-30 h-320">
       <Logo />
       <div className="flex flex-col items-start justify-end h-full mb-24 ml-4">
-        <h1 className="ml-3 text-6xl text-white">Get Recommendations Tracks</h1>
+        <h1 className="ml-3 text-6xl text-white">Top Artists</h1>
         <div>
           <div className="mt-2 ml-4 text-2xl text-white">
-            Discover new music
+            your most viewed artists
           </div>
         </div>
 

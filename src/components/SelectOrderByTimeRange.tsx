@@ -18,7 +18,7 @@ function SelectOrderByTimeRange({
     <div>
       <label className="text-xl text-white ">Select Time Range: </label>
       <select
-        className="w-auto text-center bg-purple-200 bg-opacity-50 h-7 text-slate-100 rounded-xl"
+        className="w-auto text-center text-white bg-black bg-opacity-20 h-7 rounded-xl"
         onChange={handleChange}
         value={activeRange}
       >
