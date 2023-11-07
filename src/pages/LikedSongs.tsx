@@ -1,133 +1,101 @@
+import { SavedTrack, Page } from "@spotify/web-api-ts-sdk";
+import { LikedSongsHeader } from "@/components/liked-songs/LikedSongsHeader";
+import { AnalogBackground } from "@/components/background/analogBackground";
+import { useSpotify } from "@/hooks/useSpotify";
+import { client_id, redirect_url, scopes } from "@/spotify";
 import {
-  SavedTrack,
-  Page,
-  Track,
   AudioFeatures,
-} from "@spotify/web-api-ts-sdk";
-import { useState, useEffect, useMemo } from "react";
-import { catchErrors } from "../utils";
-import { useSpotify } from "../hooks/useSpotify";
-import { client_id, redirect_url, scopes, spotify_url } from "../spotify";
-import LikedSongsTracksSection from "../components/liked-songs/LikedSongsTracksSection";
-import SelectAudioFeature from "../components/SelectAudioFeature";
-import SelectListSize from "../components/liked-songs/SelectListSize";
-import LikedSongsHeader from "../components/liked-songs/LikedSongsHeader";
-import Logo from "../components/Logo";
-import { sortOptions } from "../components/SortOptions";
+  TrackWithAudioFeatures,
+} from "@/components/recommendation/types";
+import { useMemo, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { CustomError } from "@/CustomError";
+import { LoadMoreButton } from "@/components/LoadMoreButton";
+import { SelectAudioFeature } from "@/components/SelectAudioFeature";
+import { sortOptions } from "@/components/SortOptions";
+import { LikedSongsTracksSection } from "@/components/liked-songs/LikedSongsTracksSection";
+import { Container } from "@/components/Container";
 
-export interface AudioFeaturesWithListOrder extends AudioFeatures {
+export type AudioFeaturesWithListOrder = AudioFeatures & {
   default_list_order?: string;
-}
+};
 
-export interface TrackWithAudioFeatures extends Track {
-  audio_features?: AudioFeaturesWithListOrder;
-}
+type LikedSongsQueryFnProps = {
+  pageParam: string | null | unknown;
+};
 
 export const LikedSongs = () => {
-  const [likedSongsPage, setLikedSongsPage] = useState<Page<SavedTrack>>();
-  const [tracksData, setTracksData] = useState<Track[]>([]);
-  const [tracks, setTracks] = useState<TrackWithAudioFeatures[]>([]);
-  const [nextUrl, setNextUrl] = useState<string | null>(null);
-  const [audioFeatures, setAudioFeatures] = useState<AudioFeatures[]>([]);
+  const sdk = useSpotify(client_id, redirect_url, scopes);
   const [sortValue, setSortValue] =
     useState<keyof AudioFeaturesWithListOrder>("default_list_order");
+  const [likedSongsData, setLikedSongsData] = useState<
+    TrackWithAudioFeatures[] | undefined
+  >();
 
-  const [pageSize, setPageSize] = useState<number>(10);
-
-  const handlePageSizeChange = (size: number) => {
-    setPageSize(size);
+  const updateTracks = (newTracks: TrackWithAudioFeatures[]) => {
+    setLikedSongsData((oldTracks) => {
+      if (oldTracks) {
+        return [...oldTracks, ...newTracks];
+      } else {
+        return [...newTracks];
+      }
+    });
   };
 
-  const sdk = useSpotify(client_id, redirect_url, scopes);
-
-  useEffect(() => {
-    if (!sdk) {
-      return;
-    }
-    const fetchData = async () => {
-      const data = await sdk.currentUser.tracks.savedTracks(10);
-      setLikedSongsPage(data);
-      setNextUrl(data.next);
-      setTracksData(data.items.map(({ track }) => track));
-    };
-    catchErrors(fetchData());
-  }, [sdk, pageSize]);
-
-  useEffect(() => {
-    if (!likedSongsPage || tracks.length >= pageSize) {
-      return;
-    }
-
-    if (!sdk) {
-      return;
-    }
-
-    const fetchMoreData = async () => {
-      if (nextUrl) {
-        const urlParts = nextUrl.split(spotify_url);
-        if (urlParts.length === 2) {
-          const apiUrl = urlParts[1];
-          const data: Page<SavedTrack> = await sdk.makeRequest("GET", apiUrl);
-
-          setNextUrl(data.next);
-          setTracksData(data.items.map(({ track }) => track));
-        }
+  const { fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery<
+    Page<SavedTrack>
+  >({
+    queryKey: ["likedSongs"],
+    queryFn: async ({ pageParam = "0" }: LikedSongsQueryFnProps) => {
+      if (!sdk) {
+        throw new CustomError("auth problem. please refresh login.", 500);
       }
-    };
 
-    const newTracks: Track[] = tracksData.filter((track): track is Track => {
-      return track.type === "track";
-    });
-
-    setTracks((prevTracks): Track[] => {
-      const trackIds = prevTracks.map((track) => track.id);
-      const uniqueNewTracks = newTracks.filter(
-        (track) => !trackIds.includes(track.id)
+      const fetchLikedSongs = await sdk.currentUser.tracks.savedTracks(
+        50,
+        Number(pageParam)
       );
-      return [...prevTracks, ...uniqueNewTracks];
-    });
-    catchErrors(fetchMoreData());
 
-    const fetchAudioFeatures = async () => {
-      const ids = tracksData.map(({ id }) => id);
-      const data = await sdk.tracks.audioFeatures(ids);
+      const ids = fetchLikedSongs.items.map((t) => t.track.id);
 
-      setAudioFeatures((audioFeatures) => [
-        ...(audioFeatures ? audioFeatures : []),
-        ...data,
-      ]);
-    };
-    catchErrors(fetchAudioFeatures());
-  }, [tracksData, pageSize, likedSongsPage, tracks.length, nextUrl, sdk]);
+      const fetchAudioFeatures = await sdk.tracks.audioFeatures(ids);
 
-  const tracksWithAudioFeatures = useMemo(() => {
-    if (!tracks || !audioFeatures) {
-      return null;
-    }
-
-    return tracks.map((track) => {
-      const trackToAdd = track as TrackWithAudioFeatures;
-
-      if (!track.audio_features) {
-        const audioFeaturesObject = audioFeatures.find((item) => {
-          if (!item || !track) {
-            return null;
-          }
-          return item.id === track.id;
+      const tracksWithAudioFeatures: TrackWithAudioFeatures[] =
+        fetchLikedSongs.items.map((item) => {
+          const correspondingAudioFeature = fetchAudioFeatures.find(
+            (audioFeature) => audioFeature.id === item.track.id
+          );
+          return {
+            ...item.track,
+            audio_features: correspondingAudioFeature,
+          };
         });
-        trackToAdd["audio_features"] = audioFeaturesObject;
+
+      updateTracks(tracksWithAudioFeatures);
+
+      return fetchLikedSongs;
+    },
+
+    enabled: !!sdk,
+
+    initialPageParam: 0,
+
+    getNextPageParam: (lastPage) => {
+      if (lastPage?.next) {
+        const url = new URL(lastPage.next);
+        const pageParam = url.searchParams.get("offset");
+        return pageParam;
       }
+      return;
+    },
+  });
 
-      return trackToAdd;
-    });
-  }, [tracks, audioFeatures]);
-
-  const sortedTracks = useMemo(() => {
-    if (!tracksWithAudioFeatures) {
-      return null;
+  const sortedTracks = useMemo<TrackWithAudioFeatures[]>(() => {
+    if (!likedSongsData) {
+      return [];
     }
 
-    return [...tracksWithAudioFeatures].sort(
+    return [...likedSongsData].sort(
       (a: TrackWithAudioFeatures, b: TrackWithAudioFeatures) => {
         const aFeatures = a["audio_features"] as AudioFeaturesWithListOrder;
         const bFeatures = b["audio_features"] as AudioFeaturesWithListOrder;
@@ -139,27 +107,25 @@ export const LikedSongs = () => {
         return Number(bFeatures[sortValue]) - Number(aFeatures[sortValue]);
       }
     );
-  }, [sortValue, tracksWithAudioFeatures]);
+  }, [sortValue, likedSongsData]);
 
   return (
     <>
-      {likedSongsPage && (
-        <>
-          <Logo />
-          <LikedSongsHeader />
-          <div className="flex flex-col items-center pt-10 pb-10 bg-slate-700 bg-opacity-20">
-            <SelectAudioFeature
-              sortOptions={sortOptions}
-              setSortValue={setSortValue}
-            />
-            <SelectListSize
-              handlePageSizeChange={handlePageSizeChange}
-              tracks={tracks}
-            />
-          </div>
-          <LikedSongsTracksSection tracks={sortedTracks} />
-        </>
-      )}
+      <AnalogBackground>
+        <LikedSongsHeader />
+        <Container className="bg-black bg-opacity-20">
+          <SelectAudioFeature
+            sortOptions={sortOptions}
+            setSortValue={setSortValue}
+          />
+          {likedSongsData && <LikedSongsTracksSection tracks={sortedTracks} />}
+          <LoadMoreButton
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
+        </Container>
+      </AnalogBackground>
     </>
   );
 };

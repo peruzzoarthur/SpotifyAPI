@@ -1,15 +1,15 @@
 import React from "react";
 import { TimeRange } from "../pages/TopArtists";
 
-interface SelectOrderByTimeRangeProps {
+type SelectOrderByTimeRangeProps = {
   handleOrderByTimeRange: (timeRange: TimeRange["value"]) => void;
   activeRange: TimeRange["value"];
-}
+};
 
-function SelectOrderByTimeRange({
+export const SelectOrderByTimeRange: React.FC<SelectOrderByTimeRangeProps> = ({
   handleOrderByTimeRange,
   activeRange,
-}: SelectOrderByTimeRangeProps) {
+}: SelectOrderByTimeRangeProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value as TimeRange["value"];
     handleOrderByTimeRange(selectedValue);
@@ -28,6 +28,4 @@ function SelectOrderByTimeRange({
       </select>
     </div>
   );
-}
-
-export default SelectOrderByTimeRange;
+};

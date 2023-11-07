@@ -54,7 +54,12 @@ export interface RecommendationsRequest
 }
 
 export type TrackWithAudioFeatures = Track & {
-  audio_features: AudioFeatures;
+  audio_features?: AudioFeatures;
+};
+
+export type NewTrackWithAudioFeatures = {
+  track: Track[];
+  audioFeatures: AudioFeatures[];
 };
 
 export type RecommendationsResponse = {

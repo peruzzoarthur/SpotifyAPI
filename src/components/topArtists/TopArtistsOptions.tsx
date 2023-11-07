@@ -1,6 +1,6 @@
 import { Artist } from "@spotify/web-api-ts-sdk";
-import { SelectOrderByTimeRange } from "..";
 import { TimeRange } from "../../pages/TopArtists";
+import { SelectOrderByTimeRange } from "../SelectOrderByTimeRange";
 
 type TopArtistsOptionsProps = {
   setActiveRange: React.Dispatch<

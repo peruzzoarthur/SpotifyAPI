@@ -1,89 +1,88 @@
-import { useContext, useState } from "react";
-import LikedSongsTracksCard from "./LikedSongsTracksCard";
-// import { Link } from "react-router-dom";
-import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
-import LikedSongsExpandedTracksCard from "./LikedSongsExpandedTracksCard";
+import React, { useContext } from "react";
+
 import { CartContext } from "../recommendation/RecommendationContext";
-import { Button } from "../ui/button";
+
+import { TrackWithAudioFeatures } from "../recommendation/types";
+import { Track } from "@spotify/web-api-ts-sdk";
+import { Table, TableBody } from "../ui/table";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { TrackTableHeader } from "../TrackTableHeader";
+import { TrackTableRow } from "../TrackTableRow";
+import { useToast } from "../ui/use-toast";
+import logo from "../../styles/img/spotify_logologo.jpg";
 
 interface LikedSongsTracksSectionProps {
-  tracks: TrackWithAudioFeatures[] | null;
+  tracks: TrackWithAudioFeatures[];
 }
+export const LikedSongsTracksSection = ({
+  tracks,
+}: LikedSongsTracksSectionProps) => {
+  const { addToCart, errorMessage, cart, setErrorMessage } =
+    useContext(CartContext);
 
-function LikedSongsTracksSection({ tracks }: LikedSongsTracksSectionProps) {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const { addToCart } = useContext(CartContext);
+  const { toast } = useToast();
+
+  const toasted = (track: Track) => {
+    const existingItem = cart.find((cartItem) => cartItem.id === track.id);
+    if (cart.length >= 5) {
+      return;
+    } else if (!existingItem) {
+      toast({
+        title: "Success! 🙌",
+
+        description: `Added ${track.name} to recommendation cart.`,
+        className: "bg-emerald-600 bg-opacity-60 text-white",
+      });
+    }
+  };
 
   const handleAddToCart = (track: TrackWithAudioFeatures) => {
     addToCart(track);
+    toasted(track);
   };
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setIsExpanded(!isExpanded);
+  const handleErrorMessage: React.MouseEventHandler<HTMLElement> = () => {
+    setErrorMessage("");
   };
 
   return (
     <>
-      <div className="bg-slate-950 bg-opacity-80">
-        <section className="w-full h-auto pb-2 bg-white bg-opacity-20">
-          <div className="flex flex-col items-center justify-center pt-4 pb-2 pl-4 pr-4">
-            <h1 className="pt-4 pl-2 mb-2 ml-4 text-center text-white text-8xl">
-              💚 💚 💚
-            </h1>
-
-            <Button
-              className="text-white bg-slate-900 bg-opacity-60"
-              onClick={handleClick}
-            >
-              Expand
-            </Button>
-          </div>
-          <section className="w-full h-auto pb-2">
-            {!isExpanded ? (
-              <div className="grid grid-cols-1 ml-5 place-self-stretch">
-                {tracks?.map((track, index) => (
-                  // <Link to={`/track/${track.id}`} key={index}>
-                  <LikedSongsTracksCard
-                    index={index}
-                    id={track.id}
-                    image={track.album.images}
-                    name={track.name}
-                    duration={track.duration_ms}
-                    order={index + 1}
-                    artists={track.artists
-                      .map((artist) => artist.name)
-                      .join(", ")}
-                    handleAddToCart={() => handleAddToCart(track)}
-                  />
-                  // </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 ml-5">
-                {tracks?.map((track, index) => (
-                  // <Link to={`/track/${track.id}`} key={index}>
-                  <LikedSongsExpandedTracksCard
-                    imageUrl={track.album.images[0].url}
-                    name={track.name}
-                    duration={track.duration_ms}
-                    order={index + 1}
-                    artists={track.artists
-                      .map((artist) => artist.name)
-                      .join(", ")}
-                    audioFeatures={track.audio_features}
-                    popularity={track.popularity}
-                    id={track.id}
-                    handleAddToCart={() => handleAddToCart(track)}
-                  />
-                  // </Link>
-                ))}
-              </div>
-            )}
-          </section>
-        </section>
-      </div>
+      <div className="flex flex-col items-center justify-center pt-4 pb-2 pl-4 pr-4"></div>
+      <section className="w-full h-auto pb-2">
+        <Table>
+          {errorMessage && (
+            <Alert className="fixed text-white bg-red-800">
+              <img className="w-4 h-4" src={logo} />
+              <AlertTitle>{errorMessage}</AlertTitle>
+              <AlertDescription
+                className="cursor-pointer"
+                onClick={handleErrorMessage}
+              >
+                Click to close message.
+              </AlertDescription>
+            </Alert>
+          )}
+          <TrackTableHeader />
+          <TableBody>
+            {tracks.map((track, index) => (
+              <TrackTableRow
+                key={index}
+                artists={track.artists.map((a) => a.name).join(", ")}
+                duration={track.duration_ms}
+                id={track.id}
+                image={track.album.images}
+                index={index}
+                name={track.name}
+                order={index + 1}
+                uri={track.uri}
+                popularity={track.popularity}
+                audio_features={track.audio_features}
+                handleClick={() => handleAddToCart(track)}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </section>
     </>
   );
-}
-
-export default LikedSongsTracksSection;
+};

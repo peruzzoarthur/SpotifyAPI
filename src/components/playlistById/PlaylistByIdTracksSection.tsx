@@ -1,11 +1,13 @@
 import { useContext } from "react";
 import { CartContext } from "../recommendation/RecommendationContext";
-import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import logo from "../../styles/img/spotify_logologo.jpg";
 import { Table, TableBody } from "../ui/table";
 import { TrackTableHeader } from "../TrackTableHeader";
 import { TrackTableRow } from "../TrackTableRow";
+import { Track } from "@spotify/web-api-ts-sdk";
+import { useToast } from "../ui/use-toast";
+import { TrackWithAudioFeatures } from "../recommendation/types";
 
 type PlaylistByIdTracksSectionProps = {
   tracks: TrackWithAudioFeatures[];
@@ -13,10 +15,27 @@ type PlaylistByIdTracksSectionProps = {
 export const PlaylistByIdTracksSection = ({
   tracks,
 }: PlaylistByIdTracksSectionProps) => {
-  const { addToCart, errorMessage, setErrorMessage } = useContext(CartContext);
+  const { addToCart, errorMessage, setErrorMessage, cart } =
+    useContext(CartContext);
+
+  const { toast } = useToast();
+
+  const toasted = (track: Track) => {
+    const existingItem = cart.find((cartItem) => cartItem.id === track.id);
+    if (cart.length >= 5) {
+      return;
+    } else if (!existingItem) {
+      toast({
+        title: "Success! 🙌",
+        description: `Added ${track.name} to recommendation cart.`,
+        className: "bg-emerald-600 bg-opacity-60 text-white",
+      });
+    }
+  };
 
   const handleAddToCart = (track: TrackWithAudioFeatures) => {
     addToCart(track);
+    toasted(track);
   };
 
   const handleErrorMessage: React.MouseEventHandler<HTMLElement> = () => {

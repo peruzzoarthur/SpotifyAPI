@@ -22,7 +22,9 @@ export const TopArtistsSection = ({
 
   const toasted = (artist: Artist) => {
     const existingItem = cart.find((cartItem) => cartItem.id === artist.id);
-    if (!existingItem) {
+    if (cart.length >= 5) {
+      return;
+    } else if (!existingItem) {
       toast({
         title: "Success! 🙌",
         description: `Added ${artist.name} to recommendation cart.`,
