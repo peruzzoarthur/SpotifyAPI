@@ -4,6 +4,7 @@ import { Track } from "@spotify/web-api-ts-sdk";
 import { TrackCardWithAddButton } from "../TrackCardWithButton";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import logo from "../../styles/img/spotify_logologo.jpg";
+import { useToast } from "../ui/use-toast";
 
 interface TopTracksSectionsProps {
   topTracks: Track[];
@@ -14,10 +15,27 @@ export const TopTracksSection = ({
   topTracks,
   children,
 }: TopTracksSectionsProps) => {
-  const { addToCart, errorMessage, setErrorMessage } = useContext(CartContext);
+  const { addToCart, errorMessage, setErrorMessage, cart } =
+    useContext(CartContext);
+
+  const { toast } = useToast();
+
+  const toasted = (track: Track) => {
+    const existingItem = cart.find((cartItem) => cartItem.id === track.id);
+    if (cart.length >= 5) {
+      return;
+    } else if (!existingItem) {
+      toast({
+        title: "Success! 🙌",
+        description: `Added ${track.name} to recommendation cart.`,
+        className: "bg-emerald-600 bg-opacity-60 text-white",
+      });
+    }
+  };
 
   const handleAddToCart = (track: Track) => {
     addToCart(track);
+    toasted(track);
   };
 
   const handleErrorMessage: React.MouseEventHandler<HTMLElement> = () => {

@@ -4,6 +4,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import React from "react";
 import { Link } from "react-router-dom";
 import { getAudioFeatureFontSize } from "@/utils/VisualAudioFeatureRepresentation";
+import { AddButton } from "./AddButton";
 
 export const TrackTableRow: React.FC<TrackProps> = ({
   artists,
@@ -14,6 +15,7 @@ export const TrackTableRow: React.FC<TrackProps> = ({
   uri,
   audio_features,
   popularity,
+  handleClick,
 }) => {
   return (
     <>
@@ -170,6 +172,15 @@ export const TrackTableRow: React.FC<TrackProps> = ({
         )}
 
         <TableCell className="text-right">{formatDuration(duration)}</TableCell>
+
+        {handleClick && (
+          <TableCell>
+            <AddButton
+              handleClick={handleClick}
+              className="w-6 h-6 ml-2 mr-2"
+            />
+          </TableCell>
+        )}
       </TableRow>
     </>
   );

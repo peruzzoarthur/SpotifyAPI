@@ -4,6 +4,7 @@ import { Artist } from "@spotify/web-api-ts-sdk";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import logo from "../../styles/img/spotify_logologo.jpg";
 import { ArtistCardWithAddButton } from "../ArtistCard";
+import { useToast } from "@/components/ui/use-toast";
 
 type TopArtistsSectionProps = {
   artists: Artist[];
@@ -14,10 +15,27 @@ export const TopArtistsSection = ({
   artists,
   children,
 }: TopArtistsSectionProps) => {
-  const { addToCart, errorMessage, setErrorMessage } = useContext(CartContext);
+  const { addToCart, errorMessage, setErrorMessage, cart } =
+    useContext(CartContext);
+
+  const { toast } = useToast();
+
+  const toasted = (artist: Artist) => {
+    const existingItem = cart.find((cartItem) => cartItem.id === artist.id);
+    if (!existingItem) {
+      toast({
+        title: "Success! 🙌",
+        description: `Added ${artist.name} to recommendation cart.`,
+        className: "bg-emerald-600 bg-opacity-60 text-white",
+      });
+    } else {
+      return;
+    }
+  };
 
   const handleAddToCart = (artist: Artist) => {
     addToCart(artist);
+    toasted(artist);
   };
 
   const handleErrorMessage: React.MouseEventHandler<HTMLElement> = () => {

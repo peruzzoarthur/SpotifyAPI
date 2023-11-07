@@ -94,7 +94,7 @@ export const Recommendation = () => {
       ) {
         throw new CustomError(
           "Please select at least one artist, genre, or track for recommendations.",
-          409
+          400 //todo
         );
       }
       try {
@@ -117,21 +117,8 @@ export const Recommendation = () => {
         setRecResponse(recommendationWithAudioFeatures);
         return recommendationWithAudioFeatures;
       } catch (error) {
-        if (error instanceof CustomError) {
-          if (error.response.status === 400) {
-            throw new CustomError("Please consider re-adjusting seeds.", 400);
-          } else if (error.response.status === 429) {
-            throw new CustomError(
-              "API request limit reached, please try later...",
-              429
-            );
-          } else {
-            throw new CustomError(
-              "Something strange happened, consider trying again...",
-              500
-            );
-          }
-        }
+        throw new CustomError(`Please consider re-adjusting seeds.`, 400);
+        //TODO -> the error im receiving here is a {message, status}, how can I catch this error type? and based on the status receive, treat the error differently. (400, 429)
       }
     },
     enabled: !!sdk,
@@ -155,7 +142,7 @@ export const Recommendation = () => {
     return (
       <>
         <AnalogBackground>
-          {error.response.status === 409 ? (
+          {error.status === 409 ? (
             <RecommendationAlert
               error={error}
               description={returnBehavior.description}
