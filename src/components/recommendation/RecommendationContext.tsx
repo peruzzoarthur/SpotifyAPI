@@ -1,8 +1,8 @@
 import { Track, Album, Artist } from "@spotify/web-api-ts-sdk";
 import { createContext, useState, FC, ReactNode, useEffect } from "react";
-import { TrackWithAudioFeatures } from "../../pages/LikedSongs";
 import { LikedSongsTracksCardProps } from "../liked-songs/LikedSongsTracksCard";
 import { TrackInfoCardProps } from "../liked-songs/LikedSongsExpandedTracksCard";
+import { RecommendationsRequest, TrackWithAudioFeatures } from "./types";
 
 export type CartItem =
   | Track
@@ -12,7 +12,7 @@ export type CartItem =
   | LikedSongsTracksCardProps
   | TrackInfoCardProps;
 
-type RequestForRec = {
+type RequestSeeds = {
   seed_tracks: string[];
   seed_genres: string[];
   seed_artists: string[];
@@ -22,7 +22,7 @@ type CartContextProps = {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (itemId: string) => void;
-  requestForRec: RequestForRec;
+  requestSeeds: RequestSeeds;
   errorMessage: string;
   setErrorMessage: (message: string) => void;
 };
@@ -31,7 +31,7 @@ export const CartContext = createContext<CartContextProps>({
   cart: [],
   addToCart: () => {},
   removeFromCart: () => {},
-  requestForRec: {
+  requestSeeds: {
     seed_tracks: [],
     seed_genres: [],
     seed_artists: [],
@@ -50,7 +50,7 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(
     storedCart ? JSON.parse(storedCart) : []
   );
-  const [requestForRec, setRequestForRec] = useState<RequestForRec>(
+  const [requestSeeds, setRequestSeeds] = useState<RequestSeeds>(
     requestForRecommendations
       ? JSON.parse(requestForRecommendations)
       : {
@@ -59,12 +59,13 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
           seed_artists: [],
         }
   );
+
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
-    localStorage.setItem("reqForRec", JSON.stringify(requestForRec));
-  }, [cart, requestForRec]);
+    localStorage.setItem("reqForRec", JSON.stringify(requestSeeds));
+  }, [cart, requestSeeds]);
 
   const addToCart = (item: CartItem) => {
     if (isTrack(item) || isArtist(item)) {
@@ -79,12 +80,12 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
             "You already have 5 items as seed to get your recommendations, consider deleting one of the already listed seeds...";
           setErrorMessage(message);
         } else {
-          if (isTrack(item)) {
+          if (isTrack(item) && requestSeeds.seed_tracks) {
             setCart([...cart, item]);
-            requestForRec.seed_tracks.push(item.id);
-          } else if (isArtist(item)) {
+            requestSeeds.seed_tracks.push(item.id);
+          } else if (isArtist(item) && requestSeeds.seed_artists) {
             setCart([...cart, item]);
-            requestForRec.seed_artists.push(item.id);
+            requestSeeds.seed_artists.push(item.id);
           }
         }
       }
@@ -105,21 +106,21 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
     if (requestForRecommendations) {
       const parsedReqForRec = JSON.parse(
         requestForRecommendations
-      ) as RequestForRec;
+      ) as RecommendationsRequest;
       const updatedReqForRec = {
-        seed_tracks: parsedReqForRec.seed_tracks.filter((id) => id !== itemId),
+        seed_tracks: parsedReqForRec.seed_tracks?.filter((id) => id !== itemId),
         seed_genres: parsedReqForRec.seed_genres,
-        seed_artists: parsedReqForRec.seed_artists.filter(
+        seed_artists: parsedReqForRec.seed_artists?.filter(
           (id) => id !== itemId
         ),
       };
       localStorage.setItem("reqForRec", JSON.stringify(updatedReqForRec));
     }
 
-    setRequestForRec((prevReqForRec: RequestForRec) => ({
-      ...prevReqForRec,
-      seed_tracks: prevReqForRec.seed_tracks.filter((id) => id !== itemId),
-      seed_artists: prevReqForRec.seed_tracks.filter((id) => id !== itemId),
+    setRequestSeeds((prevRequestSeeds: RequestSeeds) => ({
+      ...prevRequestSeeds,
+      seed_tracks: prevRequestSeeds.seed_tracks.filter((id) => id !== itemId),
+      seed_artists: prevRequestSeeds.seed_artists.filter((id) => id !== itemId),
     }));
   };
 
@@ -137,7 +138,7 @@ export const CartProvider: FC<CartProviderProps> = ({ children }) => {
         cart,
         addToCart,
         removeFromCart,
-        requestForRec,
+        requestSeeds,
         errorMessage,
         setErrorMessage,
       }}

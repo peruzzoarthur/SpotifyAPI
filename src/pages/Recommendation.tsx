@@ -24,6 +24,7 @@ import { CustomError } from "@/CustomError";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { RecommendationAlert } from "@/components/recommendation/RecommendationAlert";
 import { ContainerDark } from "@/components/Container";
+import { RecommendationOptions } from "@/components/recommendation/RecommendationOptions";
 
 const randomStringConfig: Config = {
   dictionaries: [colors, adjectives, animals],
@@ -32,9 +33,25 @@ const randomStringConfig: Config = {
 };
 
 export const Recommendation = () => {
-  const { requestForRec } = useContext(CartContext);
+  const { requestSeeds } = useContext(CartContext);
+
   const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
+  // audio features states
+  const [danceability, setDanceability] = useState<number[]>([]);
+  const [energy, setEnergy] = useState<number[]>([]);
+  const [loudness, setLoudness] = useState<number[]>([]);
+  const [speechiness, setSpeechiness] = useState<number[]>([]);
+  const [acousticness, setAcousticness] = useState<number[]>([]);
+  const [instrumentalness, setInstrumentalness] = useState<number[]>([]);
+  const [liveness, setLiveness] = useState<number[]>([]);
+  const [valence, setValence] = useState<number[]>([]);
+
+  // options states
+  const [isFilters, setIsFilters] = useState<boolean>(false);
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState<boolean>(false);
+  const [tryAgain, setTryAgain] = useState<boolean>(false);
+
   const { toast } = useToast();
 
   const sdk = useSpotify(client_id, redirect_url, scopes);
@@ -78,7 +95,7 @@ export const Recommendation = () => {
     RecommendationsResponse | undefined,
     CustomError
   >({
-    queryKey: ["recommendation-response"],
+    queryKey: ["recommendation-response", tryAgain],
     queryFn: async () => {
       if (!sdk) {
         throw new CustomError(
@@ -88,19 +105,29 @@ export const Recommendation = () => {
       }
 
       if (
-        requestForRec.seed_artists.length === 0 &&
-        requestForRec.seed_genres.length === 0 &&
-        requestForRec.seed_tracks.length === 0
+        requestSeeds.seed_artists.length === 0 &&
+        requestSeeds.seed_genres.length === 0 &&
+        requestSeeds.seed_tracks.length === 0
       ) {
         throw new CustomError(
           "Please select at least one artist, genre, or track for recommendations.",
           400 //todo
         );
       }
+
       try {
-        const fetchRecommendations = await sdk.recommendations.get(
-          requestForRec
-        );
+        const fetchRecommendations = await sdk.recommendations.get({
+          ...requestSeeds,
+          limit: 2,
+          target_acousticness: acousticness[0],
+          target_danceability: danceability[0],
+          target_energy: energy[0],
+          target_instrumentalness: instrumentalness[0],
+          target_liveness: liveness[0],
+          target_loudness: loudness[0],
+          target_speechiness: speechiness[0],
+          target_valence: valence[0],
+        });
         setAddAsPlaylist(fetchRecommendations.tracks.map((t) => t.uri));
         const fetchAudioFeatures = await sdk.tracks.audioFeatures(
           fetchRecommendations.tracks.map((t) => t.id)
@@ -115,6 +142,9 @@ export const Recommendation = () => {
         };
 
         setRecResponse(recommendationWithAudioFeatures);
+
+        setTryAgain(false);
+
         return recommendationWithAudioFeatures;
       } catch (error) {
         throw new CustomError(`Please consider re-adjusting seeds.`, 400);
@@ -124,9 +154,9 @@ export const Recommendation = () => {
     enabled: !!sdk,
   });
 
-  if (isFetching) {
-    return <div>Loading...</div>;
-  }
+  // if (isFetching) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (error) {
     const defaultBehavior = {
@@ -142,13 +172,14 @@ export const Recommendation = () => {
     return (
       <>
         <AnalogBackground>
-          {error.status === 409 ? (
+          {!isFetching && error.status === 409 && (
             <RecommendationAlert
               error={error}
               description={returnBehavior.description}
               onClick={returnBehavior.onClick}
             />
-          ) : (
+          )}
+          {!isFetching && error.status !== 409 && (
             <RecommendationAlert
               error={error}
               description={defaultBehavior.description}
@@ -169,6 +200,30 @@ export const Recommendation = () => {
       <AnalogBackground>
         <RecommendationHeader />
         <RecommendationSection />
+        <RecommendationOptions
+          isFilters={isFilters}
+          isFiltersExpanded={isFiltersExpanded}
+          setIsFilters={setIsFilters}
+          setIsFiltersExpanded={setIsFiltersExpanded}
+          setValence={setValence}
+          valence={valence}
+          setTryAgain={setTryAgain}
+          danceability={danceability}
+          setDanceability={setDanceability}
+          acousticness={acousticness}
+          setAcousticness={setAcousticness}
+          energy={energy}
+          setEnergy={setEnergy}
+          loudness={loudness}
+          setLoudness={setLoudness}
+          liveness={liveness}
+          setLiveness={setLiveness}
+          instrumentalness={instrumentalness}
+          setInstrumentalness={setInstrumentalness}
+          speechiness={speechiness}
+          setSpeechiness={setSpeechiness}
+        />
+
         {recResponse && recResponse.tracks.length !== 0 ? (
           <ContainerDark>
             <h1 className="mt-6 mb-6 text-2xl">Recommended Tracks</h1>

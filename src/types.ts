@@ -44,3 +44,9 @@ export interface CustomError extends Error {
     status: number;
   };
 }
+
+export type valenceParams = {
+  min_valence: number;
+  target_valence: number;
+  max_valence: number;
+};

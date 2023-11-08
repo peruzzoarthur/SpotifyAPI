@@ -1,12 +1,20 @@
 import { Track } from "@spotify/web-api-ts-sdk";
 
-export interface RecommendationsRequestRequiredArguments {
+export type RecommendationSeed = {
+  id: string;
+  href: string;
+  type: string;
+  initialPoolSize: number;
+  afterFilteringSize: number;
+  afterRelinkingSize: number;
+};
+
+export type RecommendationsRequestRequiredArguments = {
   seed_artists?: string[];
   seed_genres?: string[];
   seed_tracks?: string[];
-}
-export interface RecommendationsRequest
-  extends RecommendationsRequestRequiredArguments {
+};
+export type RecommendationsRequest = RecommendationsRequestRequiredArguments & {
   limit?: number;
   market?: string;
   min_acousticness?: number;
@@ -51,7 +59,7 @@ export interface RecommendationsRequest
   min_valence?: number;
   max_valence?: number;
   target_valence?: number;
-}
+};
 
 export type TrackWithAudioFeatures = Track & {
   audio_features?: AudioFeatures;
@@ -87,11 +95,3 @@ export type AudioFeatures = {
   duration_ms: number;
   time_signature: number;
 };
-export interface RecommendationSeed {
-  id: string;
-  href: string;
-  type: string;
-  initialPoolSize: number;
-  afterFilteringSize: number;
-  afterRelinkingSize: number;
-}
