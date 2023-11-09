@@ -118,7 +118,7 @@ export const Recommendation = () => {
       try {
         const fetchRecommendations = await sdk.recommendations.get({
           ...requestSeeds,
-          limit: 2,
+          limit: 20,
           target_acousticness: acousticness[0],
           target_danceability: danceability[0],
           target_energy: energy[0],
