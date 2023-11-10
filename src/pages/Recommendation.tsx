@@ -32,9 +32,9 @@ const randomStringConfig: Config = {
   length: 3,
 };
 
-export const Recommendation = () => {
+export const Recommendation = (): React.JSX.Element => {
+  // Tracks states
   const { requestSeeds } = useContext(CartContext);
-  // const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
   // Audio features states
   const [danceability, setDanceability] = useState<number[]>([]);
@@ -45,7 +45,6 @@ export const Recommendation = () => {
   const [instrumentalness, setInstrumentalness] = useState<number[]>([]);
   const [liveness, setLiveness] = useState<number[]>([]);
   const [valence, setValence] = useState<number[]>([]);
-
   // Options states
   const [isFilters, setIsFilters] = useState<boolean>(false);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState<boolean>(false);
@@ -61,9 +60,6 @@ export const Recommendation = () => {
         "Authentication error. Please refresh your login.",
         401
       );
-    }
-    if (!addAsPlaylist) {
-      throw new CustomError("No uris added for playlist export...", 405);
     }
 
     const username = (await sdk.currentUser.profile()).display_name;
@@ -127,7 +123,9 @@ export const Recommendation = () => {
           target_speechiness: speechiness[0],
           target_valence: valence[0],
         });
+
         setAddAsPlaylist(fetchRecommendations.tracks.map((t) => t.uri));
+
         const fetchAudioFeatures = await sdk.tracks.audioFeatures(
           fetchRecommendations.tracks.map((t) => t.id)
         );
@@ -140,14 +138,11 @@ export const Recommendation = () => {
           })),
         };
 
-        // setRecResponse(recommendationWithAudioFeatures);
-
         setTryAgain(false);
 
         return recommendationWithAudioFeatures;
       } catch (error) {
-        throw new CustomError(`Please consider re-adjusting seeds.`, 400);
-        //TODO -> the error im receiving here is a {message, status}, how can I catch this error type? and based on the status receive, treat the error differently. (400, 429)
+        throw new CustomError(`Something bad happened.`, 429);
       }
     },
     enabled: !!sdk,
@@ -170,14 +165,14 @@ export const Recommendation = () => {
     return (
       <>
         <AnalogBackground>
-          {!isFetching && error.status === 409 && (
+          {!isFetching && error.status === 401 && (
             <RecommendationAlert
               error={error}
               description={returnBehavior.description}
               onClick={returnBehavior.onClick}
             />
           )}
-          {!isFetching && error.status !== 409 && (
+          {!isFetching && error.status !== 401 && (
             <RecommendationAlert
               error={error}
               description={defaultBehavior.description}
@@ -244,21 +239,26 @@ export const Recommendation = () => {
                     ))}
                   </TableBody>
                 </Table>
-                <div className="flex">
-                  <Button
-                    onClick={async () => await exportAsPlaylist()}
-                    className="flex items-center mt-2 text-white transition-all duration-500 bg-white w-300 bg-opacity-30 hover:scale-110"
-                  >
-                    Export as Cool Playlist
-                  </Button>
-                </div>
+
+                {addAsPlaylist.length > 0 && (
+                  <div className="flex">
+                    <Button
+                      onClick={async () => await exportAsPlaylist()}
+                      className="flex items-center mt-2 text-white transition-all duration-500 bg-white w-300 bg-opacity-30 hover:scale-110"
+                    >
+                      Export as Cool Playlist
+                    </Button>
+                  </div>
+                )}
               </>
             ) : (
               <div className="text-white"> Loading... </div>
             )}
           </ContainerDark>
         ) : (
-          !isFetching && (
+          !isFetching &&
+          data &&
+          data.tracks.length === 0 && (
             <Alert
               variant="destructive"
               onClick={() => window.location.reload()}
