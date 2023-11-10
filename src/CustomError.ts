@@ -1,12 +1,12 @@
 interface ICustomError {
-  message: string;
+  message: string | undefined;
   status: number | undefined;
 }
 export class CustomError implements ICustomError {
-  message: string;
+  message: string | undefined;
   status: number | undefined;
 
-  constructor(message: string, status: number | undefined) {
+  constructor(message: string | undefined, status: number | undefined) {
     this.message = message;
     this.status = status;
   }

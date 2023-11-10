@@ -34,10 +34,9 @@ const randomStringConfig: Config = {
 
 export const Recommendation = () => {
   const { requestSeeds } = useContext(CartContext);
-
-  const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
+  // const [recResponse, setRecResponse] = useState<RecommendationsResponse>();
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
-  // audio features states
+  // Audio features states
   const [danceability, setDanceability] = useState<number[]>([]);
   const [energy, setEnergy] = useState<number[]>([]);
   const [loudness, setLoudness] = useState<number[]>([]);
@@ -47,7 +46,7 @@ export const Recommendation = () => {
   const [liveness, setLiveness] = useState<number[]>([]);
   const [valence, setValence] = useState<number[]>([]);
 
-  // options states
+  // Options states
   const [isFilters, setIsFilters] = useState<boolean>(false);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState<boolean>(false);
   const [tryAgain, setTryAgain] = useState<boolean>(false);
@@ -60,7 +59,7 @@ export const Recommendation = () => {
     if (!sdk) {
       throw new CustomError(
         "Authentication error. Please refresh your login.",
-        500
+        401
       );
     }
     if (!addAsPlaylist) {
@@ -91,7 +90,7 @@ export const Recommendation = () => {
     return addRecommendationsToPlaylist;
   };
 
-  const { error, isFetching } = useQuery<
+  const { data, error, isFetching } = useQuery<
     RecommendationsResponse | undefined,
     CustomError
   >({
@@ -100,7 +99,7 @@ export const Recommendation = () => {
       if (!sdk) {
         throw new CustomError(
           "Authentication error. Please refresh your login.",
-          500
+          401
         );
       }
 
@@ -141,7 +140,7 @@ export const Recommendation = () => {
           })),
         };
 
-        setRecResponse(recommendationWithAudioFeatures);
+        // setRecResponse(recommendationWithAudioFeatures);
 
         setTryAgain(false);
 
@@ -152,11 +151,10 @@ export const Recommendation = () => {
       }
     },
     enabled: !!sdk,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    throwOnError: false,
   });
-
-  // if (isFetching) {
-  //   return <div>Loading...</div>;
-  // }
 
   if (error) {
     const defaultBehavior = {
@@ -186,9 +184,7 @@ export const Recommendation = () => {
               onClick={defaultBehavior.onClick}
             />
           )}
-
           <RecommendationHeader />
-
           <RecommendationSection />
         </AnalogBackground>
       </>
@@ -223,51 +219,58 @@ export const Recommendation = () => {
           speechiness={speechiness}
           setSpeechiness={setSpeechiness}
         />
-
-        {recResponse && recResponse.tracks.length !== 0 ? (
+        {data && data.tracks.length !== 0 ? (
           <ContainerDark>
             <h1 className="mt-6 mb-6 text-2xl">Recommended Tracks</h1>
-            <Table>
-              <TrackTableHeader />
-              <TableBody>
-                {recResponse.tracks.map((track, index) => (
-                  <TrackTableRow
-                    key={index}
-                    artists={track.artists.map((a) => a.name).join(", ")}
-                    duration={track.duration_ms}
-                    id={track.id}
-                    image={track.album.images}
-                    index={index}
-                    name={track.name}
-                    order={index + 1}
-                    uri={track.uri}
-                    popularity={track.popularity}
-                    audio_features={track.audio_features}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-            <div className="flex">
-              <Button
-                onClick={async () => await exportAsPlaylist()}
-                className="flex items-center mt-2 text-white transition-all duration-500 bg-white w-300 bg-opacity-30 hover:scale-110"
-              >
-                Export as Cool Playlist.
-              </Button>
-            </div>
+            {!isFetching ? (
+              <>
+                <Table>
+                  <TrackTableHeader />
+                  <TableBody>
+                    {data.tracks.map((track, index) => (
+                      <TrackTableRow
+                        key={index}
+                        artists={track.artists.map((a) => a.name).join(", ")}
+                        duration={track.duration_ms}
+                        id={track.id}
+                        image={track.album.images}
+                        index={index}
+                        name={track.name}
+                        order={index + 1}
+                        uri={track.uri}
+                        popularity={track.popularity}
+                        audio_features={track.audio_features}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+                <div className="flex">
+                  <Button
+                    onClick={async () => await exportAsPlaylist()}
+                    className="flex items-center mt-2 text-white transition-all duration-500 bg-white w-300 bg-opacity-30 hover:scale-110"
+                  >
+                    Export as Cool Playlist
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="text-white"> Loading... </div>
+            )}
           </ContainerDark>
         ) : (
-          <Alert
-            variant="destructive"
-            onClick={() => window.location.reload()}
-            className="text-white bg-red-800 cursor-pointer"
-          >
-            <img className="w-4 h-4" src={logo} />
-            <AlertTitle>Seed issue 😩</AlertTitle>
-            <AlertDescription>
-              Please re-adjust your seeds and clickOnMe...
-            </AlertDescription>
-          </Alert>
+          !isFetching && (
+            <Alert
+              variant="destructive"
+              onClick={() => window.location.reload()}
+              className="text-white bg-red-800 cursor-pointer"
+            >
+              <img className="w-4 h-4" src={logo} />
+              <AlertTitle>Seed issue 😩</AlertTitle>
+              <AlertDescription>
+                Please re-adjust your seeds and clickOnMe...
+              </AlertDescription>
+            </Alert>
+          )
         )}
       </AnalogBackground>
     </>

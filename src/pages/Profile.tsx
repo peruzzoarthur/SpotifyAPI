@@ -31,13 +31,13 @@ type ProfileData = {
 export const Profile = () => {
   const sdk = useSpotify(client_id, redirect_url, scopes);
 
-  const { data, error, isFetching } = useQuery<ProfileData, CustomError>({
+  const { data, error, isFetching } = useQuery<ProfileData>({
     queryKey: ["profile"],
     queryFn: async () => {
       if (!sdk) {
         throw new CustomError(
           "Authentication error. Please refresh your login.",
-          500
+          401
         );
       }
 

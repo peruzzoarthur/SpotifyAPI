@@ -31,7 +31,7 @@ export const TopTracks = () => {
       queryKey: ["top-tracks", activeRange],
       queryFn: async ({ pageParam = 0 }) => {
         if (!sdk) {
-          throw new CustomError("Auth error, please refresh login", 500);
+          throw new CustomError("Auth error, please refresh login", 401);
         }
 
         const fetchTopTracks = await sdk.currentUser.topItems(

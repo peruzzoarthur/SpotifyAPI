@@ -1,37 +1,43 @@
-import { useState, useEffect } from "react";
 import { useSpotify } from "../hooks/useSpotify";
 import { UserProfile } from "@spotify/web-api-ts-sdk";
-import { SpotifyApi } from "@spotify/web-api-ts-sdk";
-import { catchErrors } from "../utils";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { Profile } from "./Profile";
 import { Login } from "./Login";
+import { useQuery } from "@tanstack/react-query";
+import { CustomError, SpotifyError } from "@/CustomError";
 
 export const Home = () => {
-  const [profile, setProfile] = useState<UserProfile>();
+  const sdk = useSpotify(client_id, redirect_url, scopes);
 
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      if (sdk) {
-        const data = await sdk.currentUser.profile();
-        setProfile(data);
+  const { data, error, isFetching } = useQuery<UserProfile, SpotifyError>({
+    queryKey: ["profile-first-login"],
+    queryFn: async () => {
+      if (!sdk) {
+        throw new CustomError("Authentication Problem", 401);
       }
-    };
-    catchErrors(fetchProfileData());
-  }, [sdk]);
+      const fetchProfile = await sdk.currentUser.profile();
+      return fetchProfile;
+    },
+    enabled: !!sdk,
+    throwOnError: true,
+  });
+
+  if (error) {
+    return (
+      <div>
+        {error.message} {error.status}
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="App">
         <header className="App-header">
-          {!profile ? (
+          {!data ? (
             <Login />
           ) : (
-            <>
-              <Profile />
-            </>
+            <>{isFetching ? <div>Loading...</div> : <Profile />}</>
           )}
         </header>
       </div>

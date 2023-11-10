@@ -65,7 +65,7 @@ export const RecommendationOptions: React.FC<RecommendationOptionsProps> = ({
       setEnergy([0.5]);
       setInstrumentalness([0.5]);
       setLiveness([0.5]);
-      setLoudness([-30]);
+      ~setLoudness([-30]);
       setSpeechiness([0.5]);
       setIsFilters(true);
     } else if (!isFiltersExpanded) {
@@ -89,28 +89,29 @@ export const RecommendationOptions: React.FC<RecommendationOptionsProps> = ({
       </Button>
       {isFilters && isFiltersExpanded && (
         <>
-          <SliderDanceability
-            danceability={danceability}
-            setDanceability={setDanceability}
-          />
-          <SliderEnergy energy={energy} setEnergy={setEnergy} />
-          <SliderLoudness loudness={loudness} setLoudness={setLoudness} />
-          <SliderSpeechiness
-            speechiness={speechiness}
-            setSpeechiness={setSpeechiness}
-          />
-          <SliderAcousticness
-            acousticness={acousticness}
-            setAcousticness={setAcousticness}
-          />
-          <SliderInstrumentalness
-            instrumentalness={instrumentalness}
-            setInstrumentalness={setInstrumentalness}
-          />
-          <SliderLiveness liveness={liveness} setLiveness={setLiveness} />
+          <div className="grid grid-cols-2 gap-x-4">
+            <SliderDanceability
+              danceability={danceability}
+              setDanceability={setDanceability}
+            />
+            <SliderEnergy energy={energy} setEnergy={setEnergy} />
+            <SliderLoudness loudness={loudness} setLoudness={setLoudness} />
+            <SliderSpeechiness
+              speechiness={speechiness}
+              setSpeechiness={setSpeechiness}
+            />
+            <SliderAcousticness
+              acousticness={acousticness}
+              setAcousticness={setAcousticness}
+            />
+            <SliderInstrumentalness
+              instrumentalness={instrumentalness}
+              setInstrumentalness={setInstrumentalness}
+            />
+            <SliderLiveness liveness={liveness} setLiveness={setLiveness} />
 
-          <SliderValence valence={valence} setValence={setValence} />
-
+            <SliderValence valence={valence} setValence={setValence} />
+          </div>
           <Button
             className="mt-4 mb-4 text-white w-300 bg-purple-950 bg-opacity-40"
             onClick={handleTryAgain}

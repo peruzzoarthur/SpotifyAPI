@@ -31,7 +31,7 @@ export const TopArtists = () => {
       queryKey: ["top-artists", activeRange],
       queryFn: async ({ pageParam = 0 }) => {
         if (!sdk) {
-          throw new CustomError("Auth error, please refresh login", 500);
+          throw new CustomError("Auth error, please refresh login", 401);
         }
 
         const fetchTopArtists = await sdk.currentUser.topItems(
