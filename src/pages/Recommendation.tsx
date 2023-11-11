@@ -10,7 +10,6 @@ import {
 import { CartContext } from "../components/recommendation/RecommendationContext";
 import { RecommendationHeader } from "../components/recommendation/RecommendationHeader";
 import { RecommendationSection } from "../components/recommendation/RecommendationSection";
-import { RecommendationsResponse } from "../components/recommendation/types";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -25,6 +24,7 @@ import { AnalogBackground } from "@/components/background/analogBackground";
 import { RecommendationAlert } from "@/components/recommendation/RecommendationAlert";
 import { ContainerDark } from "@/components/Container";
 import { RecommendationOptions } from "@/components/recommendation/RecommendationOptions";
+import { RecommendationsResponse } from "@/types";
 
 const randomStringConfig: Config = {
   dictionaries: [colors, adjectives, animals],

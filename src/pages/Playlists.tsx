@@ -20,33 +20,39 @@ export const Playlists = () => {
     );
   };
 
-  const { data, error, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteQuery<Page<SimplifiedPlaylist>>({
-      queryKey: ["playlists"],
+  const {
+    data,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+  } = useInfiniteQuery<Page<SimplifiedPlaylist>>({
+    queryKey: ["playlists"],
 
-      queryFn: async ({ pageParam }) => {
-        const fetch = await sdk.currentUser.playlists.playlists(
-          25,
-          Number(pageParam)
-        );
+    queryFn: async ({ pageParam }) => {
+      const fetch = await sdk.currentUser.playlists.playlists(
+        25,
+        Number(pageParam)
+      );
 
-        await updatePlaylists(fetch.items);
+      await updatePlaylists(fetch.items);
 
-        return fetch;
-      },
+      return fetch;
+    },
 
-      enabled: !!sdk,
+    enabled: !!sdk,
 
-      initialPageParam: 0,
+    initialPageParam: 0,
 
-      getNextPageParam: (lastPage) => {
-        if (lastPage.next) {
-          const url = new URL(lastPage.next);
-          const pageParam = url.searchParams.get("offset");
-          return pageParam;
-        }
-      },
-    });
+    getNextPageParam: (lastPage) => {
+      if (lastPage.next) {
+        const url = new URL(lastPage.next);
+        const pageParam = url.searchParams.get("offset");
+        return pageParam;
+      }
+    },
+  });
 
   if (error) {
     return <div>error: {error.message}</div>;
@@ -58,6 +64,7 @@ export const Playlists = () => {
       <Container>
         <PlaylistsSection playlists={playlists} />
         <LoadMoreButton
+          isFetching={isFetching}
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}

@@ -1,7 +1,6 @@
 import {
   PlaylistedTrack,
   Page,
-  AudioFeatures,
   Playlist,
   Track,
 } from "@spotify/web-api-ts-sdk";
@@ -18,11 +17,7 @@ import { Container } from "@/components/Container";
 import { PlaylistByIdHeader } from "@/components/playlistById/PlaylistByIdHeader";
 import { PlaylistByIdTracksSection } from "@/components/playlistById/PlaylistByIdTracksSection";
 import { SelectAudioFeature } from "@/components/SelectAudioFeature";
-import { TrackWithAudioFeatures } from "@/components/recommendation/types";
-
-type AudioFeaturesWithListOrder = AudioFeatures & {
-  default_list_order?: string;
-};
+import { AudioFeaturesWithListOrder, TrackWithAudioFeatures } from "@/types";
 
 type PlaylistByIdQueryFnProps = {
   pageParam: string | null | unknown;
@@ -56,17 +51,18 @@ export const PlaylistById = () => {
 
       queryFn: async ({ pageParam = "0" }: PlaylistByIdQueryFnProps) => {
         if (!sdk) {
-          throw new CustomError("auth problem. please refresh login.", 500);
-        }
+          throw new CustomError("auth problem. please refresh login.", 402);
+        } // todo: adjust error with a pattern for all components
 
         if (!id) {
-          throw new CustomError("unable to fetch playlist info", 400);
-        }
+          throw new CustomError("ID is null.", 400);
+        } // todo: adjust error with a pattern for all components
 
-        // this is for the header info about playlist: name, description, image...
+        // fetch data about the playlist, in order to be displayed as info [header]
         const fetchPlaylistData = await sdk.playlists.getPlaylist(id);
         setPlaylistData(fetchPlaylistData);
 
+        // fetch the playlisted tracks
         const playlist = await sdk.playlists.getPlaylistItems(
           id as string,
           undefined,
@@ -75,10 +71,11 @@ export const PlaylistById = () => {
           Number(pageParam)
         );
 
+        // map ids for further fetching of tracks audio features
         const ids = playlist.items.map((t) => t.track.id);
-
         const fetchAudioFeatures = await sdk.tracks.audioFeatures(ids);
 
+        // returning new object with proper structure, tracks + audio_features
         const tracksWithAudioFeatures: TrackWithAudioFeatures[] =
           playlist.items.map((item) => {
             const correspondingAudioFeature = fetchAudioFeatures.find(
@@ -94,9 +91,7 @@ export const PlaylistById = () => {
 
         return playlist;
       },
-
       enabled: !!sdk,
-
       initialPageParam: 0,
       getNextPageParam: (lastPage) => {
         if (lastPage?.next) {
@@ -108,6 +103,7 @@ export const PlaylistById = () => {
       },
     });
 
+  // sorting tracks by audio feature
   const sortedTracks = useMemo<TrackWithAudioFeatures[]>(() => {
     if (!playlistTracksData) {
       return [];
@@ -128,6 +124,7 @@ export const PlaylistById = () => {
   }, [sortValue, playlistTracksData]);
 
   if (error) {
+    // TODO
     return <div>Error: {error.message}</div>;
   }
 
@@ -145,15 +142,12 @@ export const PlaylistById = () => {
             <PlaylistByIdTracksSection tracks={sortedTracks} />
           )}
 
-          {!isFetching ? (
-            <LoadMoreButton
-              fetchNextPage={fetchNextPage}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            />
-          ) : (
-            <div className="text-black">Loading...</div>
-          )}
+          <LoadMoreButton
+            isFetching={isFetching}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         </Container>
       </AnalogBackground>
     </>

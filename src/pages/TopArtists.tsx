@@ -26,43 +26,49 @@ export const TopArtists = () => {
     setTopArtists((oldTopArtists) => [...newTopArtists, ...oldTopArtists]);
   };
 
-  const { data, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteQuery<Page<Artist>>({
-      queryKey: ["top-artists", activeRange],
-      queryFn: async ({ pageParam = 0 }) => {
-        if (!sdk) {
-          throw new CustomError("Auth error, please refresh login", 401);
-        }
+  const {
+    data,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isFetching,
+  } = useInfiniteQuery<Page<Artist>>({
+    queryKey: ["top-artists", activeRange],
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!sdk) {
+        throw new CustomError("Auth error, please refresh login", 401);
+      }
 
-        const fetchTopArtists = await sdk.currentUser.topItems(
-          "artists",
-          activeRange,
-          10,
-          Number(pageParam)
-        );
+      const fetchTopArtists = await sdk.currentUser.topItems(
+        "artists",
+        activeRange,
+        10,
+        Number(pageParam)
+      );
 
-        setTopArtists(fetchTopArtists.items);
+      setTopArtists(fetchTopArtists.items);
 
-        if (
-          topArtists.length !== 0 &&
-          topArtists.length < fetchTopArtists.total
-        ) {
-          updateTopArtists(topArtists);
-        }
+      if (
+        topArtists.length !== 0 &&
+        topArtists.length < fetchTopArtists.total
+      ) {
+        updateTopArtists(topArtists);
+      }
 
-        return fetchTopArtists;
-      },
-      enabled: !!sdk,
-      initialPageParam: 0,
-      getNextPageParam: (lastPage) => {
-        if (lastPage?.next) {
-          const url = new URL(lastPage.next);
-          const pageParam = url.searchParams.get("offset");
-          return pageParam;
-        }
-        return;
-      },
-    });
+      return fetchTopArtists;
+    },
+    enabled: !!sdk,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (lastPage?.next) {
+        const url = new URL(lastPage.next);
+        const pageParam = url.searchParams.get("offset");
+        return pageParam;
+      }
+      return;
+    },
+  });
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -80,6 +86,7 @@ export const TopArtists = () => {
           />
           {data && topArtists && <TopArtistsSection artists={topArtists} />}
           <LoadMoreButton
+            isFetching={isFetching}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}

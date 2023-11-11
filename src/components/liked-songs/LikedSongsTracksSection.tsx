@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 
 import { CartContext } from "../recommendation/RecommendationContext";
 
-import { TrackWithAudioFeatures } from "../recommendation/types";
 import { Track } from "@spotify/web-api-ts-sdk";
 import { Table, TableBody } from "../ui/table";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
@@ -10,6 +9,7 @@ import { TrackTableHeader } from "../TrackTableHeader";
 import { TrackTableRow } from "../TrackTableRow";
 import { useToast } from "../ui/use-toast";
 import logo from "../../styles/img/spotify_logologo.jpg";
+import { TrackWithAudioFeatures } from "@/types";
 
 interface LikedSongsTracksSectionProps {
   tracks: TrackWithAudioFeatures[];

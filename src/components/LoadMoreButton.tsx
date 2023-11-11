@@ -15,6 +15,7 @@ import {
 } from "@spotify/web-api-ts-sdk";
 
 type LoadMoreButtonProps = {
+  isFetching: boolean;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   fetchNextPage: (
@@ -33,8 +34,9 @@ type LoadMoreButtonProps = {
 };
 
 export const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
-  hasNextPage,
+  isFetching,
   isFetchingNextPage,
+  hasNextPage,
   fetchNextPage,
 }) => {
   return (
@@ -45,7 +47,9 @@ export const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
         await fetchNextPage();
       }}
     >
-      {isFetchingNextPage
+      {isFetching && !isFetchingNextPage
+        ? "Loading..."
+        : isFetchingNextPage
         ? "Loading More..."
         : hasNextPage
         ? "Load More"

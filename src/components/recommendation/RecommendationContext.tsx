@@ -1,16 +1,8 @@
+import { RecommendationsRequest, TrackWithAudioFeatures } from "@/types";
 import { Track, Album, Artist } from "@spotify/web-api-ts-sdk";
 import { createContext, useState, FC, ReactNode, useEffect } from "react";
-import { LikedSongsTracksCardProps } from "../liked-songs/LikedSongsTracksCard";
-import { TrackInfoCardProps } from "../liked-songs/LikedSongsExpandedTracksCard";
-import { RecommendationsRequest, TrackWithAudioFeatures } from "./types";
 
-export type CartItem =
-  | Track
-  | Album
-  | Artist
-  | TrackWithAudioFeatures
-  | LikedSongsTracksCardProps
-  | TrackInfoCardProps;
+export type CartItem = Track | Album | Artist | TrackWithAudioFeatures;
 
 type RequestSeeds = {
   seed_tracks: string[];

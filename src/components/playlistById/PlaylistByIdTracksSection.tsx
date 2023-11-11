@@ -7,7 +7,7 @@ import { TrackTableHeader } from "../TrackTableHeader";
 import { TrackTableRow } from "../TrackTableRow";
 import { Track } from "@spotify/web-api-ts-sdk";
 import { useToast } from "../ui/use-toast";
-import { TrackWithAudioFeatures } from "../recommendation/types";
+import { TrackWithAudioFeatures } from "@/types";
 
 type PlaylistByIdTracksSectionProps = {
   tracks: TrackWithAudioFeatures[];

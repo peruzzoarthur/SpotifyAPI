@@ -3,10 +3,6 @@ import { LikedSongsHeader } from "@/components/liked-songs/LikedSongsHeader";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { useSpotify } from "@/hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "@/spotify";
-import {
-  AudioFeatures,
-  TrackWithAudioFeatures,
-} from "@/components/recommendation/types";
 import { useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { CustomError } from "@/CustomError";
@@ -15,10 +11,7 @@ import { SelectAudioFeature } from "@/components/SelectAudioFeature";
 import { sortOptions } from "@/components/SortOptions";
 import { LikedSongsTracksSection } from "@/components/liked-songs/LikedSongsTracksSection";
 import { Container } from "@/components/Container";
-
-export type AudioFeaturesWithListOrder = AudioFeatures & {
-  default_list_order?: string;
-};
+import { AudioFeaturesWithListOrder, TrackWithAudioFeatures } from "@/types";
 
 type LikedSongsQueryFnProps = {
   pageParam: string | null | unknown;
@@ -32,6 +25,8 @@ export const LikedSongs = () => {
     TrackWithAudioFeatures[] | undefined
   >();
 
+  // update function for keeping all fetched data in the same array
+
   const updateTracks = (newTracks: TrackWithAudioFeatures[]) => {
     setLikedSongsData((oldTracks) => {
       if (oldTracks) {
@@ -42,9 +37,16 @@ export const LikedSongs = () => {
     });
   };
 
-  const { fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery<
-    Page<SavedTrack>
-  >({
+  // fetching
+
+  const {
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    data,
+    error,
+    isFetching,
+  } = useInfiniteQuery<Page<SavedTrack>>({
     queryKey: ["likedSongs"],
     queryFn: async ({ pageParam = "0" }: LikedSongsQueryFnProps) => {
       if (!sdk) {
@@ -52,7 +54,7 @@ export const LikedSongs = () => {
       }
 
       const fetchLikedSongs = await sdk.currentUser.tracks.savedTracks(
-        50,
+        1,
         Number(pageParam)
       );
 
@@ -77,6 +79,8 @@ export const LikedSongs = () => {
     },
 
     enabled: !!sdk,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
 
     initialPageParam: 0,
 
@@ -89,6 +93,8 @@ export const LikedSongs = () => {
       return;
     },
   });
+
+  // sorting liked songs
 
   const sortedTracks = useMemo<TrackWithAudioFeatures[]>(() => {
     if (!likedSongsData) {
@@ -109,6 +115,11 @@ export const LikedSongs = () => {
     );
   }, [sortValue, likedSongsData]);
 
+  if (error) {
+    // TODO
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <>
       <AnalogBackground>
@@ -118,8 +129,11 @@ export const LikedSongs = () => {
             sortOptions={sortOptions}
             setSortValue={setSortValue}
           />
-          {likedSongsData && <LikedSongsTracksSection tracks={sortedTracks} />}
+          {likedSongsData && data && (
+            <LikedSongsTracksSection tracks={sortedTracks} />
+          )}
           <LoadMoreButton
+            isFetching={isFetching}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}

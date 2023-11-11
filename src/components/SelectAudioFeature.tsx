@@ -1,5 +1,5 @@
+import { AudioFeaturesWithListOrder } from "@/types";
 import React from "react";
-import { AudioFeaturesWithListOrder } from "../pages/LikedSongs";
 
 type SelectAudioFeatureProps = {
   sortOptions: string[];

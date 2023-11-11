@@ -26,40 +26,46 @@ export const TopTracks = () => {
     setTopTracks((oldTopTracks) => [...newTopTracks, ...oldTopTracks]);
   };
 
-  const { data, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteQuery<Page<Track>>({
-      queryKey: ["top-tracks", activeRange],
-      queryFn: async ({ pageParam = 0 }) => {
-        if (!sdk) {
-          throw new CustomError("Auth error, please refresh login", 401);
-        }
+  const {
+    data,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isFetching,
+  } = useInfiniteQuery<Page<Track>>({
+    queryKey: ["top-tracks", activeRange],
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!sdk) {
+        throw new CustomError("Auth error, please refresh login", 401);
+      }
 
-        const fetchTopTracks = await sdk.currentUser.topItems(
-          "tracks",
-          activeRange,
-          10,
-          Number(pageParam)
-        );
+      const fetchTopTracks = await sdk.currentUser.topItems(
+        "tracks",
+        activeRange,
+        10,
+        Number(pageParam)
+      );
 
-        setTopTracks(fetchTopTracks.items);
+      setTopTracks(fetchTopTracks.items);
 
-        if (topTracks.length !== 0 && topTracks.length < fetchTopTracks.total) {
-          updateTopTracks(topTracks);
-        }
+      if (topTracks.length !== 0 && topTracks.length < fetchTopTracks.total) {
+        updateTopTracks(topTracks);
+      }
 
-        return fetchTopTracks;
-      },
-      enabled: !!sdk,
-      initialPageParam: 0,
-      getNextPageParam: (lastPage) => {
-        if (lastPage?.next) {
-          const url = new URL(lastPage.next);
-          const pageParam = url.searchParams.get("offset");
-          return pageParam;
-        }
-        return;
-      },
-    });
+      return fetchTopTracks;
+    },
+    enabled: !!sdk,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (lastPage?.next) {
+        const url = new URL(lastPage.next);
+        const pageParam = url.searchParams.get("offset");
+        return pageParam;
+      }
+      return;
+    },
+  });
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -77,6 +83,7 @@ export const TopTracks = () => {
           />
           {data && topTracks && <TopTracksSection topTracks={topTracks} />}
           <LoadMoreButton
+            isFetching={isFetching}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
