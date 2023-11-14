@@ -4,7 +4,7 @@ import {
   Artist,
   Track,
   SimplifiedPlaylist,
-  SimplifiedArtist,
+  // SimplifiedArtist,
 } from "@spotify/web-api-ts-sdk";
 
 import { client_id, redirect_url, scopes } from "../spotify";
@@ -24,7 +24,7 @@ type ProfileData = {
   };
   topArtists: Artist[];
   topTracks: Track[];
-  topTracksArtists: Artist[];
+  // topTracksArtists: Artist[];
   playlists: SimplifiedPlaylist[];
 };
 
@@ -52,11 +52,11 @@ export const Profile = () => {
           await sdk.currentUser.topItems("tracks", undefined, 5)
         ).items;
 
-        const topTracksSimpleArtists: SimplifiedArtist[] =
-          fetchTopTracks.flatMap((t) => t.artists);
-        const topTracksArtists = await sdk.artists.get(
-          topTracksSimpleArtists.map((a) => a.id)
-        );
+        // const topTracksSimpleArtists: SimplifiedArtist[] =
+        //   fetchTopTracks.map((t) => t.artists)
+        // const topTracksArtists = await sdk.artists.get(
+        //   topTracksSimpleArtists.map((a) => a.id)
+        // );
 
         const fetchUserPlaylists: SimplifiedPlaylist[] = (
           await sdk.currentUser.playlists.playlists(5)
@@ -70,7 +70,7 @@ export const Profile = () => {
           },
           topArtists: fetchTopArtists,
           topTracks: fetchTopTracks,
-          topTracksArtists: topTracksArtists,
+          // topTracksArtists: topTracksArtists,
           playlists: fetchUserPlaylists,
         };
       } catch (error) {

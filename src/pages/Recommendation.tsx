@@ -90,7 +90,7 @@ export const Recommendation = (): React.JSX.Element => {
     RecommendationsResponse | undefined,
     CustomError
   >({
-    queryKey: ["recommendation-response", tryAgain],
+    queryKey: ["recommendation-response", tryAgain, requestSeeds],
     queryFn: async () => {
       if (!sdk) {
         throw new CustomError(
