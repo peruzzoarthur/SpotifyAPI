@@ -68,6 +68,7 @@ export const RecommendationOptions: React.FC<RecommendationOptionsProps> = ({
       ~setLoudness([-30]);
       setSpeechiness([0.5]);
       setIsFilters(true);
+      setIsFiltersExpanded(true);
     } else if (!isFiltersExpanded) {
       setIsFiltersExpanded(true);
     } else {

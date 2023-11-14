@@ -22,7 +22,7 @@ export const SliderInstrumentalness: React.FC<SliderInstrumentalnessProps> = ({
           className="text-white bg-white bg-opacity-40 w-240"
           defaultValue={instrumentalness}
           max={1}
-          step={0.05}
+          step={0.01}
           onValueChange={handleValueChange}
         />
         <p className="mb-2 ml-2 text-base">🎷</p>

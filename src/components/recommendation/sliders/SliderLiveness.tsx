@@ -22,7 +22,7 @@ export const SliderLiveness: React.FC<SliderLivenessProps> = ({
           className="text-white bg-white bg-opacity-40 w-240"
           defaultValue={liveness}
           max={1}
-          step={0.05}
+          step={0.01}
           onValueChange={handleValueChange}
         />
         <p className="mb-2 ml-2 text-base">🎤</p>

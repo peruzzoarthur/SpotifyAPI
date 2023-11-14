@@ -7,7 +7,10 @@ import {
   colors,
   uniqueNamesGenerator,
 } from "unique-names-generator";
-import { CartContext } from "../components/recommendation/RecommendationContext";
+import {
+  CartContext,
+  CartItem,
+} from "../components/recommendation/RecommendationContext";
 import { RecommendationHeader } from "../components/recommendation/RecommendationHeader";
 import { RecommendationSection } from "../components/recommendation/RecommendationSection";
 import { useSpotify } from "../hooks/useSpotify";
@@ -26,15 +29,10 @@ import { ContainerDark } from "@/components/Container";
 import { RecommendationOptions } from "@/components/recommendation/RecommendationOptions";
 import { RecommendationsResponse } from "@/types";
 
-const randomStringConfig: Config = {
-  dictionaries: [colors, adjectives, animals],
-  separator: " ",
-  length: 3,
-};
-
 export const Recommendation = (): React.JSX.Element => {
-  // Tracks states
-  const { requestSeeds } = useContext(CartContext);
+  // Context
+  const { requestSeeds, cart } = useContext(CartContext);
+  // To export playlist state
   const [addAsPlaylist, setAddAsPlaylist] = useState<string[]>([]);
   // Audio features states
   const [danceability, setDanceability] = useState<number[]>([]);
@@ -45,16 +43,20 @@ export const Recommendation = (): React.JSX.Element => {
   const [instrumentalness, setInstrumentalness] = useState<number[]>([]);
   const [liveness, setLiveness] = useState<number[]>([]);
   const [valence, setValence] = useState<number[]>([]);
-  // Options states
+  // State functionality options
   const [isFilters, setIsFilters] = useState<boolean>(false);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState<boolean>(false);
   const [tryAgain, setTryAgain] = useState<boolean>(false);
 
+  // Toast
   const { toast } = useToast();
 
+  // Init SDK
   const sdk = useSpotify(client_id, redirect_url, scopes);
 
-  const exportAsPlaylist = async () => {
+  // Handle creating and exporting playlist
+  const handleExportAsPlaylist = async (): Promise<void> => {
+    // verify if sdk is on
     if (!sdk) {
       throw new CustomError(
         "Authentication error. Please refresh your login.",
@@ -62,19 +64,7 @@ export const Recommendation = (): React.JSX.Element => {
       );
     }
 
-    const username = (await sdk.currentUser.profile()).display_name;
-    const randomCoolPlaylistName = uniqueNamesGenerator(randomStringConfig);
-    const createPlaylist = await sdk.playlists.createPlaylist(username, {
-      name: `Cold ${randomCoolPlaylistName}`,
-      description: "Created with Coldzapp Spotify API",
-      public: true,
-    });
-
-    const addRecommendationsToPlaylist = await sdk.playlists.addItemsToPlaylist(
-      createPlaylist.id,
-      addAsPlaylist
-    );
-
+    // define toast reaction for playlist creation
     const toasted = async () => {
       toast({
         title: "Success! 🙌",
@@ -82,10 +72,65 @@ export const Recommendation = (): React.JSX.Element => {
         className: "bg-black bg-opacity-60 text-white",
       });
     };
+
+    // extract a string of the cart elements for further adding to playlist description... this need better implementing...
+    // todo
+    const extractSeedsList = (
+      cart: CartItem[]
+    ): { tracks: string; artists: string } => {
+      const trackNames: string[] = [];
+      const artistNames: string[] = [];
+
+      cart.forEach((item) => {
+        if (item.type === "track") {
+          trackNames.push(item.name);
+        } else if (item.type === "artist") {
+          artistNames.push(item.name);
+        }
+      });
+      const tracksString = trackNames.join(", ");
+      const artistsString = artistNames.join(", ");
+
+      return { tracks: tracksString, artists: artistsString };
+    };
+
+    const seedsList = extractSeedsList(cart);
+
+    // generate random string for naming the playlist
+    const randomStringConfig: Config = {
+      dictionaries: [colors, adjectives, animals],
+      separator: " ",
+      length: 3,
+    };
+
+    const randomCoolPlaylistName = uniqueNamesGenerator(randomStringConfig);
+
+    // get the username for calling createPlaylist
+    const username = (await sdk.currentUser.profile()).display_name;
+
+    // create playlist with random name and added seeds to description...
+    const createPlaylist = await sdk.playlists.createPlaylist(username, {
+      name: `Cold ${randomCoolPlaylistName}`,
+      description:
+        `Created with Coldzapp Spotify API.` +
+        `  // Track Seeds: ${seedsList.tracks}` +
+        `  // Artist Seeds: ${seedsList.artists}`,
+      public: true,
+    });
+
+    // add recommended tracks (state: addAsPlaylist) to the above created randomNamedPlaylist
+    const addRecommendationsToPlaylist = await sdk.playlists.addItemsToPlaylist(
+      createPlaylist.id,
+      addAsPlaylist
+    );
+
+    // toast it
     await toasted();
+
     return addRecommendationsToPlaylist;
   };
 
+  // fetching and managing recommendations with useQuery
   const { data, error, isFetching } = useQuery<
     RecommendationsResponse | undefined,
     CustomError
@@ -243,7 +288,7 @@ export const Recommendation = (): React.JSX.Element => {
                 {addAsPlaylist.length > 0 && (
                   <div className="flex">
                     <Button
-                      onClick={async () => await exportAsPlaylist()}
+                      onClick={async () => await handleExportAsPlaylist()}
                       className="flex items-center mt-2 text-white transition-all duration-500 bg-white w-300 bg-opacity-30 hover:scale-110"
                     >
                       Export as Cool Playlist
