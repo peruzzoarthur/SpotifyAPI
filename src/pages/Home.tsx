@@ -1,20 +1,17 @@
 import { useSpotify } from "../hooks/useSpotify";
-import { UserProfile } from "@spotify/web-api-ts-sdk";
+import { SpotifyApi, UserProfile } from "@spotify/web-api-ts-sdk";
 import { client_id, redirect_url, scopes } from "../spotify";
 import { Profile } from "./Profile";
 import { Login } from "./Login";
 import { useQuery } from "@tanstack/react-query";
-import { CustomError, SpotifyError } from "@/CustomError";
+import { SpotifyError } from "@/CustomError";
 
 export const Home = () => {
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   const { data, error, isFetching } = useQuery<UserProfile, SpotifyError>({
-    queryKey: ["profile-first-login"],
+    queryKey: ["home"],
     queryFn: async () => {
-      if (!sdk) {
-        throw new CustomError("Authentication Problem", 401);
-      }
       const fetchProfile = await sdk.currentUser.profile();
       return fetchProfile;
     },

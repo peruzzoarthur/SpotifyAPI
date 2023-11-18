@@ -1,11 +1,10 @@
-import { SavedTrack, Page } from "@spotify/web-api-ts-sdk";
+import { SavedTrack, Page, SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { LikedSongsHeader } from "@/components/liked-songs/LikedSongsHeader";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { useSpotify } from "@/hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "@/spotify";
 import { useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { CustomError } from "@/CustomError";
 import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { SelectAudioFeature } from "@/components/SelectAudioFeature";
 import { sortOptions } from "@/components/SortOptions";
@@ -18,7 +17,11 @@ type LikedSongsQueryFnProps = {
 };
 
 export const LikedSongs = () => {
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk: SpotifyApi = useSpotify(
+    client_id,
+    redirect_url,
+    scopes
+  ) as SpotifyApi;
   const [sortValue, setSortValue] =
     useState<keyof AudioFeaturesWithListOrder>("default_list_order");
   const [likedSongsData, setLikedSongsData] = useState<
@@ -47,12 +50,8 @@ export const LikedSongs = () => {
     error,
     isFetching,
   } = useInfiniteQuery<Page<SavedTrack>>({
-    queryKey: ["likedSongs"],
+    queryKey: ["liked-songs"],
     queryFn: async ({ pageParam = "0" }: LikedSongsQueryFnProps) => {
-      if (!sdk) {
-        throw new CustomError("auth problem. please refresh login.", 500);
-      }
-
       const fetchLikedSongs = await sdk.currentUser.tracks.savedTracks(
         1,
         Number(pageParam)

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
-import { Artist, Page } from "@spotify/web-api-ts-sdk";
+import { Artist, Page, SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { CustomError } from "@/CustomError";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { TopArtistsHeader } from "@/components/topArtists/TopArtistsHeader";
 import { TopArtistsOptions } from "@/components/topArtists/TopArtistsOptions";
@@ -20,7 +19,7 @@ export const TopArtists = () => {
     useState<TimeRange["value"]>("short_term");
   const [topArtists, setTopArtists] = useState<Artist[]>([]);
 
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   const updateTopArtists = (newTopArtists: Artist[]) => {
     setTopArtists((oldTopArtists) => [...newTopArtists, ...oldTopArtists]);
@@ -34,12 +33,8 @@ export const TopArtists = () => {
     hasNextPage,
     isFetching,
   } = useInfiniteQuery<Page<Artist>>({
-    queryKey: ["top-artists", activeRange],
+    queryKey: ["top-artists", activeRange, topArtists.length],
     queryFn: async ({ pageParam = 0 }) => {
-      if (!sdk) {
-        throw new CustomError("Auth error, please refresh login", 401);
-      }
-
       const fetchTopArtists = await sdk.currentUser.topItems(
         "artists",
         activeRange,

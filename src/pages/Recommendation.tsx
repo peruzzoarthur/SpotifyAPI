@@ -28,6 +28,7 @@ import { RecommendationAlert } from "@/components/recommendation/RecommendationA
 import { ContainerDark } from "@/components/Container";
 import { RecommendationOptions } from "@/components/recommendation/RecommendationOptions";
 import { RecommendationsResponse } from "@/types";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
 export const Recommendation = (): React.JSX.Element => {
   // Context
@@ -52,18 +53,10 @@ export const Recommendation = (): React.JSX.Element => {
   const { toast } = useToast();
 
   // Init SDK
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   // Handle creating and exporting playlist
   const handleExportAsPlaylist = async (): Promise<void> => {
-    // verify if sdk is on
-    if (!sdk) {
-      throw new CustomError(
-        "Authentication error. Please refresh your login.",
-        401
-      );
-    }
-
     // define toast reaction for playlist creation
     const toasted = async () => {
       toast({
@@ -137,13 +130,6 @@ export const Recommendation = (): React.JSX.Element => {
   >({
     queryKey: ["recommendation-response", tryAgain, requestSeeds],
     queryFn: async () => {
-      if (!sdk) {
-        throw new CustomError(
-          "Authentication error. Please refresh your login.",
-          401
-        );
-      }
-
       if (
         requestSeeds.seed_artists.length === 0 &&
         requestSeeds.seed_genres.length === 0 &&

@@ -4,6 +4,7 @@ import {
   Artist,
   Track,
   SimplifiedPlaylist,
+  SpotifyApi,
   // SimplifiedArtist,
 } from "@spotify/web-api-ts-sdk";
 
@@ -29,18 +30,11 @@ type ProfileData = {
 };
 
 export const Profile = () => {
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   const { data, error, isFetching } = useQuery<ProfileData>({
     queryKey: ["profile"],
     queryFn: async () => {
-      if (!sdk) {
-        throw new CustomError(
-          "Authentication error. Please refresh your login.",
-          401
-        );
-      }
-
       try {
         const fetchUserData = await sdk.currentUser.profile();
 

@@ -3,6 +3,7 @@ import {
   Page,
   Playlist,
   Track,
+  SpotifyApi,
 } from "@spotify/web-api-ts-sdk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSpotify } from "../hooks/useSpotify";
@@ -33,7 +34,7 @@ export const PlaylistById = () => {
   >();
   const [playlistData, setPlaylistData] = useState<Playlist>();
 
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   const updateTracks = (newTracks: TrackWithAudioFeatures[]) => {
     setPlaylistTracksData((oldTracks) => {
@@ -50,10 +51,6 @@ export const PlaylistById = () => {
       queryKey: ["playlistTracks", { id }],
 
       queryFn: async ({ pageParam = "0" }: PlaylistByIdQueryFnProps) => {
-        if (!sdk) {
-          throw new CustomError("auth problem. please refresh login.", 402);
-        } // todo: adjust error with a pattern for all components
-
         if (!id) {
           throw new CustomError("ID is null.", 400);
         } // todo: adjust error with a pattern for all components

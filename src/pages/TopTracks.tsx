@@ -2,12 +2,11 @@ import { useState } from "react";
 import { useSpotify } from "../hooks/useSpotify";
 import { client_id, redirect_url, scopes } from "../spotify";
 import TopTracksOptions from "../components/topTracks/TopTracksOptions";
-import { Page, Track } from "@spotify/web-api-ts-sdk";
+import { Page, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { Container } from "@/components/Container";
-import { CustomError } from "@/CustomError";
 import { TopTracksHeader } from "@/components/topTracks/TopTracksHeader";
 import { TopTracksSection } from "@/components/topTracks/TopTracksSection";
 
@@ -20,7 +19,7 @@ export const TopTracks = () => {
     useState<TimeRange["value"]>("short_term");
   const [topTracks, setTopTracks] = useState<Track[]>([]);
 
-  const sdk = useSpotify(client_id, redirect_url, scopes);
+  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 
   const updateTopTracks = (newTopTracks: Track[]) => {
     setTopTracks((oldTopTracks) => [...newTopTracks, ...oldTopTracks]);
@@ -34,12 +33,8 @@ export const TopTracks = () => {
     hasNextPage,
     isFetching,
   } = useInfiniteQuery<Page<Track>>({
-    queryKey: ["top-tracks", activeRange],
+    queryKey: ["top-tracks", activeRange, topTracks.length],
     queryFn: async ({ pageParam = 0 }) => {
-      if (!sdk) {
-        throw new CustomError("Auth error, please refresh login", 401);
-      }
-
       const fetchTopTracks = await sdk.currentUser.topItems(
         "tracks",
         activeRange,
