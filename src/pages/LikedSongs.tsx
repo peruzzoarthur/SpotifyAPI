@@ -53,7 +53,7 @@ export const LikedSongs = () => {
     queryKey: ["liked-songs"],
     queryFn: async ({ pageParam = "0" }: LikedSongsQueryFnProps) => {
       const fetchLikedSongs = await sdk.currentUser.tracks.savedTracks(
-        1,
+        50,
         Number(pageParam)
       );
 

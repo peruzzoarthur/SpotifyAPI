@@ -1,7 +1,29 @@
+import { Container } from "@/components/Container";
+import { AnalogBackground } from "@/components/background/analogBackground";
+import { useAlbumById } from "@/hooks/useAlbumById";
+import { useSdk } from "@/hooks/useSdk";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+
 export const AlbumById = () => {
+  const sdk: SpotifyApi = useSdk();
+
+  const { data, error } = useAlbumById({ sdk });
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return;
+  }
+
   return (
     <>
-      <div className="bg-black bg-opacity-10">Album</div>
+      <AnalogBackground>
+        <Container>
+          <h1>{data.pages[0].items.map((t) => t.name).join(", ")}</h1>
+        </Container>
+      </AnalogBackground>
     </>
   );
 };

@@ -22,6 +22,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/pages"],
+  "include": ["src", "src/pages", "spotify-web-api-ts-sdk"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

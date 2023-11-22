@@ -45,9 +45,9 @@ export const TopTracksSection = ({
   return (
     <>
       <div className="pt-8 pb-4 min-h-640">
-        <h2 className="ml-4 text-4xl text-left text-white">
+        {/* <h2 className="ml-4 text-4xl text-left text-white">
           Input Data for Recommendations
-        </h2>
+        </h2> */}
         <div className="grid grid-flow-row-dense grid-cols-1 mt-8 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
           {topTracks.map((item, index) => (
             <div key={index}>

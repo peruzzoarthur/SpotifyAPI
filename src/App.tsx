@@ -10,6 +10,7 @@ import { LikedSongs } from "./pages/LikedSongs";
 import { PlaylistById } from "./pages/PlaylistById";
 import { TopTracks } from "./pages/TopTracks";
 import { Playlists } from "./pages/Playlists";
+import { AlbumById } from "./pages/AlbumById";
 // import { TrackById } from "./pages/TrackById";
 
 const queryClient = new QueryClient();
@@ -28,7 +29,7 @@ function App() {
             <Route path="/playlists" element={<Playlists />} />
             <Route path="/top-artists" element={<TopArtists />} />
             <Route path="/top-tracks" element={<TopTracks />} />
-            {/* <Route path="/track/:id" element={<TrackById />} /> */}
+            <Route path="/album/:id" element={<AlbumById />} />
             <Route path="/recommendation" element={<Recommendation />} />
           </Routes>
         </CartProvider>

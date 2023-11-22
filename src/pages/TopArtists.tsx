@@ -1,14 +1,11 @@
-import { useState } from "react";
-import { useSpotify } from "../hooks/useSpotify";
-import { client_id, redirect_url, scopes } from "../spotify";
-import { Artist, Page, SpotifyApi } from "@spotify/web-api-ts-sdk";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { TopArtistsHeader } from "@/components/topArtists/TopArtistsHeader";
 import { TopArtistsOptions } from "@/components/topArtists/TopArtistsOptions";
 import { TopArtistsSection } from "@/components/topArtists/TopArtistsSection";
 import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { Container } from "@/components/Container";
+import { useTopArtists } from "../hooks/useTopArtists";
+import { useState } from "react";
 
 export type TimeRange = {
   value: "short_term" | "medium_term" | "long_term";
@@ -17,13 +14,6 @@ export type TimeRange = {
 export const TopArtists = () => {
   const [activeRange, setActiveRange] =
     useState<TimeRange["value"]>("short_term");
-  const [topArtists, setTopArtists] = useState<Artist[]>([]);
-
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
-
-  const updateTopArtists = (newTopArtists: Artist[]) => {
-    setTopArtists((oldTopArtists) => [...newTopArtists, ...oldTopArtists]);
-  };
 
   const {
     data,
@@ -32,38 +22,9 @@ export const TopArtists = () => {
     isFetchingNextPage,
     hasNextPage,
     isFetching,
-  } = useInfiniteQuery<Page<Artist>>({
-    queryKey: ["top-artists", activeRange, topArtists.length],
-    queryFn: async ({ pageParam = 0 }) => {
-      const fetchTopArtists = await sdk.currentUser.topItems(
-        "artists",
-        activeRange,
-        10,
-        Number(pageParam)
-      );
-
-      setTopArtists(fetchTopArtists.items);
-
-      if (
-        topArtists.length !== 0 &&
-        topArtists.length < fetchTopArtists.total
-      ) {
-        updateTopArtists(topArtists);
-      }
-
-      return fetchTopArtists;
-    },
-    enabled: !!sdk,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-      if (lastPage?.next) {
-        const url = new URL(lastPage.next);
-        const pageParam = url.searchParams.get("offset");
-        return pageParam;
-      }
-      return;
-    },
-  });
+    topArtists,
+    setTopArtists,
+  } = useTopArtists(activeRange);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -76,8 +37,8 @@ export const TopArtists = () => {
         <Container>
           <TopArtistsOptions
             setActiveRange={setActiveRange}
-            setTopArtists={setTopArtists}
             activeRange={activeRange}
+            setTopArtists={setTopArtists}
           />
           {data && topArtists && <TopArtistsSection artists={topArtists} />}
           <LoadMoreButton

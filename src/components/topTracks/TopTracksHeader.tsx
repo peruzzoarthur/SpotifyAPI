@@ -10,7 +10,7 @@ export const TopTracksHeader: React.FC = () => {
         <h1 className="ml-3 text-6xl text-white">Top Tracks</h1>
         <div>
           <div className="mt-2 ml-4 text-2xl text-white">
-            your most viewed tracks
+            your most listened tracks
           </div>
         </div>
 
