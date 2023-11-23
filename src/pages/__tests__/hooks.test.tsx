@@ -1,4 +1,4 @@
-import { test, expect, describe, vi } from "vitest";
+import { it, expect, describe, vi } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
@@ -8,14 +8,14 @@ import { createWrapper, renderWithClient } from "@/mocks/utils";
 import { useAlbumById } from "@/hooks/useAlbumById";
 import { AlbumById } from "../AlbumById";
 
-vi.mock("@/hooks/useSpotify", async () => ({
-  useSpotify: vi.fn(() => {
+vi.mock("@/hooks/useSpotify", () => ({
+  useSpotify: () => {
     return SpotifyApi.withClientCredentials(client_id, secret, [scopes]);
-  }),
+  },
 }));
 
-describe("Album by Id", async () => {
-  test("should initialize sdk for testing and make an album call using the hook", async () => {
+describe("useAlbumById Hook Testing", async () => {
+  it("should initialize sdk for testing and make an album call using the hook", async () => {
     const wrapper = createWrapper();
     const sdk = SpotifyApi.withClientCredentials(client_id, secret, [scopes]);
     const { result } = renderHook(() => useAlbumById({ sdk }), {
@@ -25,30 +25,52 @@ describe("Album by Id", async () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     console.log(result.current.data?.pages[0].items);
   });
+});
 
-  test("should initialize sdk for testing and render <AlbumById>", async () => {
+describe("AlbumById Component Tests", async () => {
+  it("should render the component with the correct text color", async () => {
     const result = renderWithClient(<AlbumById />);
 
-    expect(
-      await result.findByText(
-        "Track A- Solo Dancer, Track B- Duete Solo Dancers, Track C-Group Dancers, Medley: Mode D-Trio and Group Dancers/Mode E- Single solos and Group Dance/ModeF-Group and Solo Dance"
-      )
-    ).toBeInTheDocument();
+    await waitFor(async () => {
+      expect(result.getAllByRole("heading")).toMatchInlineSnapshot(`
+        [
+          <h1
+            class="text-black"
+          >
+            Track A- Solo Dancer
+          </h1>,
+          <h1
+            class="text-black"
+          >
+            Track B- Duete Solo Dancers
+          </h1>,
+          <h1
+            class="text-black"
+          >
+            Track C-Group Dancers
+          </h1>,
+          <h1
+            class="text-black"
+          >
+            Medley: Mode D-Trio and Group Dancers/Mode E- Single solos and Group Dance/ModeF-Group and Solo Dance
+          </h1>,
+        ]
+      `);
+    });
   });
-
-  // test("should be able the initial text on the screen", async () => {
-  //   const wrapper = createWrapper();
-  //   const id = "asd212d1d";
-  //   waitFor (() => {})
-  //   const { debug } = renderWithClient(<AlbumById />);
-  //   const { result } = renderHook(() => useAlbumById({ sdk }), {
-  //     wrapper: wrapper,
-  //   });
-  //   console.log(id);
-  //   console.log(sdk);
-  //   debug();
-  //   await waitFor(() => {
-  //     expect(result.current.data).not.toBe(undefined);
-  //   });
-  // });
 });
+
+// expect(result.getByText("Track A- Solo Dancer")).toHaveClass(
+//   "text-black"
+// );
+// expect(result.getByText("Track B- Duete Solo Dancers")).toHaveClass(
+//   "text-black"
+// );
+// expect(result.getByText("Track C-Group Dancers")).toHaveClass(
+//   "text-black"
+// );
+// expect(
+//   result.getByText(
+//     "Medley: Mode D-Trio and Group Dancers/Mode E- Single solos and Group Dance/ModeF-Group and Solo Dance"
+//   )
+// ).toHaveClass("text-black");

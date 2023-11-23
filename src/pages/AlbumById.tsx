@@ -21,7 +21,11 @@ export const AlbumById = () => {
     <>
       <AnalogBackground>
         <Container>
-          <h1>{data.pages[0].items.map((t) => t.name).join(", ")}</h1>
+          {data.pages[0].items.map((t, index) => (
+            <h1 key={index} className="text-black">
+              {t.name}
+            </h1>
+          ))}
         </Container>
       </AnalogBackground>
     </>
