@@ -6,7 +6,7 @@ type AlbumByIdQueryFnProps = {
   pageParam: string | null | unknown;
 };
 
-export const useAlbumById = ({ sdk }: { sdk: SpotifyApi }) => {
+export const useAlbumByIdGetTracks = ({ sdk }: { sdk: SpotifyApi }) => {
   const { id } = useParams<string>();
   if (!id) {
     throw new Error("No ID provided");
@@ -20,7 +20,7 @@ export const useAlbumById = ({ sdk }: { sdk: SpotifyApi }) => {
     isFetching,
     isSuccess,
   } = useInfiniteQuery<Page<SimplifiedTrack>>({
-    queryKey: ["album-by-id", id],
+    queryKey: ["album-by-id-tracks", id],
     queryFn: async ({ pageParam = "0" }: AlbumByIdQueryFnProps) => {
       const fetchAlbumTracksData = await sdk.albums.tracks(
         id,

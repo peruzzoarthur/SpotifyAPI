@@ -9,7 +9,7 @@ import {
   SimplifiedTrack,
   SpotifyApi,
 } from "@spotify/web-api-ts-sdk";
-import { useAlbumById } from "@/hooks/useAlbumById";
+import { useAlbumByIdGetTracks } from "@/hooks/useAlbumByIdGetTracks";
 import { pagedAlbumMock } from "@/mocks/mockedResponses";
 const buildSpotifySdkMock = () =>
   ({
@@ -35,9 +35,9 @@ describe("useAlbumById", async () => {
       }),
     }));
 
-    expect(() => useAlbumById({ sdk: buildSpotifySdkMock() })).toThrowError(
-      "No ID provided"
-    );
+    expect(() =>
+      useAlbumByIdGetTracks({ sdk: buildSpotifySdkMock() })
+    ).toThrowError("No ID provided");
     vi.clearAllMocks();
     vi.resetAllMocks();
   });

@@ -10,7 +10,7 @@ import {
   SimplifiedTrack,
   SpotifyApi,
 } from "@spotify/web-api-ts-sdk";
-import { useAlbumById } from "@/hooks/useAlbumById";
+import { useAlbumByIdGetTracks } from "@/hooks/useAlbumByIdGetTracks";
 import { pagedAlbumMock } from "@/mocks/mockedResponses";
 import { createWrapper } from "@/mocks/utils";
 
@@ -23,8 +23,6 @@ const buildSpotifySdkMock = () =>
         _limit?: MaxInt<50>,
         _offset?: number
       ): Promise<Page<SimplifiedTrack>> => {
-        console.log("### tracks");
-
         return pagedAlbumMock as Page<SimplifiedTrack>;
       },
     },
@@ -43,7 +41,7 @@ describe("useAlbumById Success Cases", () => {
     vi.resetAllMocks();
     const spy = vi.spyOn(sdkMock.albums, "tracks");
 
-    renderHook(() => useAlbumById({ sdk: sdkMock }), {
+    renderHook(() => useAlbumByIdGetTracks({ sdk: sdkMock }), {
       wrapper: wrapper,
     });
 
@@ -59,9 +57,12 @@ describe("useAlbumById Success Cases", () => {
     const wrapper = createWrapper();
     const sdkMock = buildSpotifySdkMock();
 
-    const { result } = renderHook(() => useAlbumById({ sdk: sdkMock }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useAlbumByIdGetTracks({ sdk: sdkMock }),
+      {
+        wrapper,
+      }
+    );
     await waitFor(() => expect(result.current.data).toBeDefined());
     expect(result.current.data?.pages[0].items).toEqual(pagedAlbumMock.items);
     expect(result.current.error).toBeNull();
