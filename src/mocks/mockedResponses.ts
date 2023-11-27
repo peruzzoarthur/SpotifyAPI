@@ -1,5 +1,5 @@
 export const pagedAlbumMock = {
-  href: "https://api.spotify.com/v1/albums/6Sts4Yh7KsDFwq2yTWrGGV/tracks?offset=0&limit=50&locale=en-US,en;q=0.9",
+  href: "https://api.spotify.com/v1/albums/6Sts4Yh7KsDFwq2yTWrGGV/tracks?offset=0&limit=20&locale=en-US,en;q=0.5",
   items: [
     {
       artists: [
@@ -211,7 +211,7 @@ export const pagedAlbumMock = {
       is_local: false,
       name: "Track A- Solo Dancer",
       preview_url:
-        "https://p.scdn.co/mp3-preview/0f8aba22c23297b67b99bbe35f8226124fd39660?cid=97933b9989f64dbf99d1edffd9c91f0f",
+        "https://p.scdn.co/mp3-preview/0f8aba22c23297b67b99bbe35f8226124fd39660?cid=0e6abb17f0f24398b4e8010833ef1ff8",
       track_number: 1,
       type: "track",
       uri: "spotify:track:3XvcgEkQfjasB5NnY8P4QA",
@@ -426,7 +426,7 @@ export const pagedAlbumMock = {
       is_local: false,
       name: "Track B- Duete Solo Dancers",
       preview_url:
-        "https://p.scdn.co/mp3-preview/64f34cc0df76ea38f495cc73445adfe5af26435f?cid=97933b9989f64dbf99d1edffd9c91f0f",
+        "https://p.scdn.co/mp3-preview/64f34cc0df76ea38f495cc73445adfe5af26435f?cid=0e6abb17f0f24398b4e8010833ef1ff8",
       track_number: 2,
       type: "track",
       uri: "spotify:track:7K5NiBQk7QJ0qehZ4e6LmB",
@@ -641,7 +641,7 @@ export const pagedAlbumMock = {
       is_local: false,
       name: "Track C-Group Dancers",
       preview_url:
-        "https://p.scdn.co/mp3-preview/f50f7da6cf881ab507f14ca8f47577f53593f1af?cid=97933b9989f64dbf99d1edffd9c91f0f",
+        "https://p.scdn.co/mp3-preview/f50f7da6cf881ab507f14ca8f47577f53593f1af?cid=0e6abb17f0f24398b4e8010833ef1ff8",
       track_number: 3,
       type: "track",
       uri: "spotify:track:5JFk3TqqWnZenBewn7nqCW",
@@ -856,13 +856,13 @@ export const pagedAlbumMock = {
       is_local: false,
       name: "Medley: Mode D-Trio and Group Dancers/Mode E- Single solos and Group Dance/ModeF-Group and Solo Dance",
       preview_url:
-        "https://p.scdn.co/mp3-preview/63fedfb088125e1810cdb6db661c20964c92015f?cid=97933b9989f64dbf99d1edffd9c91f0f",
+        "https://p.scdn.co/mp3-preview/63fedfb088125e1810cdb6db661c20964c92015f?cid=0e6abb17f0f24398b4e8010833ef1ff8",
       track_number: 4,
       type: "track",
       uri: "spotify:track:6La6a40pMKEoxtpmruuzaP",
     },
   ],
-  limit: 50,
+  limit: 20,
   next: null,
   offset: 0,
   previous: null,
