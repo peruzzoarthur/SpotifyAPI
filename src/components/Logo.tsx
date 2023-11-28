@@ -11,7 +11,7 @@ import {
 
 function Logo() {
   return (
-    <div className="flex justify-end mt-1 mr-2">
+    <div className="flex items-center justify-end mt-1 mr-2">
       <DropdownMenu>
         <DropdownMenuTrigger>
           {" "}

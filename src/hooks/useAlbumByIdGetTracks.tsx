@@ -12,7 +12,7 @@ export const useAlbumByIdGetTracks = ({ sdk }: { sdk: SpotifyApi }) => {
     throw new Error("No ID provided");
   }
   const {
-    data,
+    data: pagedSimplifiedTracks,
     error,
     fetchNextPage,
     isFetchingNextPage,
@@ -20,7 +20,7 @@ export const useAlbumByIdGetTracks = ({ sdk }: { sdk: SpotifyApi }) => {
     isFetching,
     isSuccess,
   } = useInfiniteQuery<Page<SimplifiedTrack>>({
-    queryKey: ["album-by-id-tracks", id],
+    queryKey: ["album-by-id", "simplified-tracks", id],
     queryFn: async ({ pageParam = "0" }: AlbumByIdQueryFnProps) => {
       const fetchAlbumTracksData = await sdk.albums.tracks(
         id,
@@ -40,9 +40,11 @@ export const useAlbumByIdGetTracks = ({ sdk }: { sdk: SpotifyApi }) => {
         return pageParam;
       }
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
   return {
-    data,
+    pagedSimplifiedTracks,
     error,
     fetchNextPage,
     isFetchingNextPage,

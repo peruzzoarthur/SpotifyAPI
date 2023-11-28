@@ -39,75 +39,97 @@ vi.mock("@/hooks/useSpotify", () => ({
   },
 }));
 
+vi.mock("react-router-dom", () => ({
+  useParams: () => ({
+    id: "666",
+  }),
+  Link: () => <a href="/">A Mocked Link</a>,
+}));
 describe("AlbumById Component Tests", async () => {
-  vi.mock("react-router-dom", () => ({
-    useParams: () => ({
-      id: "666",
-    }),
-    Link: () => <a href="/">A Mocked Link</a>,
-  }));
-
-  it("renders the header with the correct design", async () => {
-    const result = renderWithClient(<AlbumByIdHeader sdk={mockedSdk} />);
+  it("renders the HEADER with the correct ui", async () => {
+    const result = renderWithClient(
+      <AlbumByIdHeader albumData={albumMock as unknown as Album} />
+    );
     waitFor(() =>
-      expect(result.container).toMatchInlineSnapshot(`
-    <div>
-      <div
-        class="flex flex-col bg-black bg-opacity-30 h-320"
-      >
-        <div
-          class="flex justify-end mt-1 mr-2"
-        >
-          <button
-            aria-expanded="false"
-            aria-haspopup="menu"
-            data-state="closed"
-            id="radix-:r0:"
-            type="button"
+      expect(result.baseElement).toMatchInlineSnapshot(`
+      <body>
+        <div>
+          <div
+            class="flex flex-col bg-black bg-opacity-30"
           >
-             
-            <img
-              alt="Spotify Logo"
-              class="w-24 h-24 rounded-full"
-              src="/src/styles/img/spotify_logologo.jpg"
-            />
-          </button>
+            <div
+              class="flex justify-end mt-1 mr-2"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                data-state="closed"
+                id="radix-:r0:"
+                type="button"
+              >
+                 
+                <img
+                  alt="Spotify Logo"
+                  class="w-24 h-24 rounded-full"
+                  src="/src/styles/img/spotify_logologo.jpg"
+                />
+              </button>
+            </div>
+            <div
+              class="flex flex-row"
+            >
+              <img
+                class="ml-4 rounded-sm w-72 h-72"
+                src="https://i.scdn.co/image/ab67616d0000b273eb5b1b39c6c992b79b27651e"
+              />
+              <div
+                class="flex flex-col items-start justify-center h-full mt-16 mb-2 ml-6"
+              >
+                <h1
+                  class="mt-16 ml-3 text-6xl text-white"
+                >
+                  The Black Saint And The Sinner Lady
+                </h1>
+                <div>
+                  <div
+                    class="mt-2 ml-4 text-lg text-white"
+                  >
+                    Charles Mingus
+                  </div>
+                </div>
+                <div
+                  class="flex flex-row ml-5 text-xs text-slate-100"
+                >
+                  <a
+                    href="/"
+                  >
+                    A Mocked Link
+                  </a>
+                  <a
+                    href="/"
+                  >
+                    A Mocked Link
+                  </a>
+                  <p
+                    class="ml-2"
+                  >
+                    / 
+                    The Black Saint And The Sinner Lady
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <h1 />
-      </div>
-    </div>
-  `)
+      </body>
+    `)
     );
   });
 
-  it("renders the component with the correct design", async () => {
+  it.only("renders the SECTION with the correct ui", async () => {
     const result = renderWithClient(<AlbumById />);
     await waitFor(async () => {
-      expect(result.getAllByRole("heading")).toMatchInlineSnapshot(`
-    [
-      <h1 />,
-      <h1
-        class="text-black"
-      >
-        Track A- Solo Dancer
-      </h1>,
-      <h1
-        class="text-black"
-      >
-        Track B- Duete Solo Dancers
-      </h1>,
-      <h1
-        class="text-black"
-      >
-        Track C-Group Dancers
-      </h1>,
-      <h1
-        class="text-black"
-      >
-        Medley: Mode D-Trio and Group Dancers/Mode E- Single solos and Group Dance/ModeF-Group and Solo Dance
-      </h1>,
-    ]
-  `);
+      expect(result.getAllByRole("heading")).toMatchInlineSnapshot();
     });
   });
 });

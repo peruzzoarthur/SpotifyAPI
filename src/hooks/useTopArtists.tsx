@@ -53,6 +53,8 @@ export const useTopArtists = (activeRange: TimeRange["value"]) => {
       }
       return;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return {

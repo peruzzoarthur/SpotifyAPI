@@ -9,13 +9,20 @@ export const useAlbumByIdGetInfo = ({ sdk }: { sdk: SpotifyApi }) => {
     throw new Error("No ID provided");
   }
 
-  const { data, error, isFetching, isSuccess } = useQuery<Album>({
+  const {
+    data: albumData,
+    error,
+    isFetching,
+    isSuccess,
+  } = useQuery<Album>({
     queryKey: ["album-by-id-info", id],
     queryFn: async () => {
       const fetchAlbumInfo = await sdk.albums.get(id);
       return fetchAlbumInfo;
     },
     enabled: !!sdk,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
-  return { data, error, isFetching, isSuccess };
+  return { albumData, error, isFetching, isSuccess };
 };

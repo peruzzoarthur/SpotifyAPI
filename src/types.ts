@@ -19,6 +19,20 @@ export type TrackProps = {
   popularity: number;
 };
 
+export type SimplifiedTrackProps = {
+  image: Image[];
+  name: string;
+  duration: number;
+  order?: number;
+  artists: string;
+  id?: string;
+  handleAddToCart?: () => void;
+  handleRemoveFromCart?: () => void;
+  handleClick?: () => void;
+  index?: number;
+  uri?: string;
+};
+
 export type ArtistProps = {
   image: Image[];
   name: string;
