@@ -11,6 +11,7 @@ import { PlaylistById } from "./pages/PlaylistById";
 import { TopTracks } from "./pages/TopTracks";
 import { Playlists } from "./pages/Playlists";
 import { AlbumById } from "./pages/AlbumById";
+import { Search } from "./pages/Search";
 // import { TrackById } from "./pages/TrackById";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ function App() {
             <Route path="/top-tracks" element={<TopTracks />} />
             <Route path="/album/:id" element={<AlbumById />} />
             <Route path="/recommendation" element={<Recommendation />} />
+            <Route path="/search" element={<Search />} />
           </Routes>
         </CartProvider>
       </QueryClientProvider>

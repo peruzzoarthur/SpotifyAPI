@@ -1,12 +1,44 @@
-import { Image } from "@spotify/web-api-ts-sdk";
+import {
+  Artist,
+  Copyright,
+  ExternalIds,
+  ExternalUrls,
+  Image,
+  Page,
+  Restrictions,
+  SimplifiedTrack,
+} from "@spotify/web-api-ts-sdk";
 import { Track } from "@spotify/web-api-ts-sdk";
 
 //  Props
 
+export type AlbumProps = {
+  artists: Artist[];
+  tracks?: Page<SimplifiedTrack>;
+  album_type?: string;
+  available_markets?: string[];
+  copyrights?: Copyright[];
+  external_ids?: ExternalIds;
+  external_urls?: ExternalUrls;
+  genres?: string[];
+  href?: string;
+  id: string;
+  images: Image[];
+  label?: string;
+  name: string;
+  popularity?: number;
+  release_date?: string;
+  release_date_precision?: string;
+  restrictions?: Restrictions;
+  total_tracks?: number;
+  type?: string;
+  uri?: string;
+};
+
 export type TrackProps = {
   image: Image[];
   name: string;
-  duration: number;
+  duration?: number;
   order?: number;
   artists: string;
   id?: string;
@@ -16,7 +48,7 @@ export type TrackProps = {
   index?: number;
   uri?: string;
   audio_features?: AudioFeatures;
-  popularity: number;
+  popularity?: number;
 };
 
 export type SimplifiedTrackProps = {

@@ -15,17 +15,13 @@ export const AlbumById: React.FC = () => {
   const { albumData } = useAlbumByIdGetInfo({ sdk });
 
   const {
-    pagedSimplifiedTracks,
     error,
     isFetching,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    ids,
   } = useAlbumByIdGetTracks({ sdk });
-
-  const ids = pagedSimplifiedTracks?.pages.flatMap((p) =>
-    p.items.map((st) => st.id)
-  );
 
   const { tracksData } = useConvertSimplifiedTrackToTrackWithAudioFeatures({
     ids,
@@ -36,16 +32,14 @@ export const AlbumById: React.FC = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!tracksData || !albumData) {
-    return <div>Loading</div>;
-  }
-
   return (
     <>
       <AnalogBackground>
         <AlbumByIdHeader albumData={albumData} />
         <Container>
-          <AlbumByIdSection albumData={albumData} tracks={tracksData} />
+          {tracksData && (
+            <AlbumByIdSection albumData={albumData} tracks={tracksData} />
+          )}
           <LoadMoreButton
             isFetching={isFetching}
             fetchNextPage={fetchNextPage}

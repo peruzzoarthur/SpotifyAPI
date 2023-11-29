@@ -2,13 +2,6 @@ import { TrackWithAudioFeatures } from "@/types";
 import { SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 import { useQuery } from "@tanstack/react-query";
 
-// type useConvertSimplifiedTrackToTrackProps = {
-//   pagedSimplifiedTracks:
-//     | InfiniteData<Page<SimplifiedTrack>, unknown>
-//     | undefined;
-//   sdk: SpotifyApi;
-// };
-
 type useConvertSimplifiedTrackToTrackProps = {
   ids: string[] | undefined;
   sdk: SpotifyApi;
@@ -24,9 +17,7 @@ export const useConvertSimplifiedTrackToTrackWithAudioFeatures = ({
       if (!ids) {
         throw new Error("Failed fetching album tracks");
       }
-      // const ids = pagedSimplifiedTracks.pages.flatMap((p) =>
-      //   p.items.map((st) => st.id)
-      // );
+
       const fetch = await sdk.tracks.get(ids);
       const fetchAudioFeatures = await sdk.tracks.audioFeatures(ids);
       const tracksWithAudioFeatures: TrackWithAudioFeatures[] = fetch.map(

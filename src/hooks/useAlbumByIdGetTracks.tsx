@@ -43,6 +43,9 @@ export const useAlbumByIdGetTracks = ({ sdk }: { sdk: SpotifyApi }) => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
+  const ids = pagedSimplifiedTracks?.pages.flatMap((p) =>
+    p.items.map((st) => st.id)
+  );
   return {
     pagedSimplifiedTracks,
     error,
@@ -51,5 +54,6 @@ export const useAlbumByIdGetTracks = ({ sdk }: { sdk: SpotifyApi }) => {
     hasNextPage,
     isFetching,
     isSuccess,
+    ids,
   };
 };
