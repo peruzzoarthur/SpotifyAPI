@@ -31,7 +31,12 @@ export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
               {playlistData.description}
             </div>
             <div className="flex flex-row mt-2 ml-4 text-xs text-white">
-              <img src={profilePicture} className="w-6 h-6 mr-1 rounded-full" />
+              {profilePicture && (
+                <img
+                  src={profilePicture}
+                  className="w-6 h-6 mr-1 rounded-full"
+                />
+              )}
               <p className="mt-1">
                 {playlistData.owner.display_name} • {playlistData.tracks.total}{" "}
                 tracks,{" "}
