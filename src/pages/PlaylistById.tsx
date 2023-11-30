@@ -19,6 +19,7 @@ import { PlaylistByIdHeader } from "@/components/playlistById/PlaylistByIdHeader
 import { PlaylistByIdTracksSection } from "@/components/playlistById/PlaylistByIdTracksSection";
 import { SelectAudioFeature } from "@/components/SelectAudioFeature";
 import { AudioFeaturesWithListOrder, TrackWithAudioFeatures } from "@/types";
+import { useGetProfilePicture } from "@/hooks/useGetProfilePicture";
 
 type PlaylistByIdQueryFnProps = {
   pageParam: string | null | unknown;
@@ -120,6 +121,11 @@ export const PlaylistById = () => {
     );
   }, [sortValue, playlistTracksData]);
 
+  const { profilePicture } = useGetProfilePicture({
+    sdk: sdk,
+    userId: playlistData?.owner.id,
+  });
+
   if (error) {
     // TODO
     return <div>Error: {error.message}</div>;
@@ -128,7 +134,12 @@ export const PlaylistById = () => {
   return (
     <>
       <AnalogBackground>
-        {playlistData && <PlaylistByIdHeader playlistData={playlistData} />}
+        {playlistData && (
+          <PlaylistByIdHeader
+            profilePicture={profilePicture}
+            playlistData={playlistData}
+          />
+        )}
         <Container className="bg-black bg-opacity-20">
           <SelectAudioFeature
             setSortValue={setSortValue}

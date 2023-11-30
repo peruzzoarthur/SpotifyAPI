@@ -20,9 +20,10 @@ export const ProfileTopArtistsSection: React.FC<
         {topArtists.map((artist, index) => (
           <div key={index} className="mb-4 mr-4">
             <ArtistCard
-              genres={artist.genres.join(",")}
+              genres={artist.genres.join(" • ")}
               image={artist.images}
               name={artist.name}
+              id={artist.id}
             />
           </div>
         ))}

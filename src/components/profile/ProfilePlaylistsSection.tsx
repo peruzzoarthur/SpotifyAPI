@@ -25,6 +25,7 @@ export const ProfilePlaylistsSection: React.FC<
               image={playlist.images}
               name={playlist.name}
               totalTracks={playlist.tracks?.total}
+              id={playlist.id}
             />
           </div>
         ))}

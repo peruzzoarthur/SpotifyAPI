@@ -35,17 +35,21 @@ export const AlbumById: React.FC = () => {
   return (
     <>
       <AnalogBackground>
-        <AlbumByIdHeader albumData={albumData} />
-        <Container>
+        {albumData && <AlbumByIdHeader albumData={albumData} />}
+        <Container className="bg-black bg-opacity-60">
           {tracksData && (
-            <AlbumByIdSection albumData={albumData} tracks={tracksData} />
+            <>
+              <AlbumByIdSection albumData={albumData} tracks={tracksData} />
+              {hasNextPage && (
+                <LoadMoreButton
+                  isFetching={isFetching}
+                  fetchNextPage={fetchNextPage}
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                />
+              )}
+            </>
           )}
-          <LoadMoreButton
-            isFetching={isFetching}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
         </Container>
       </AnalogBackground>
     </>

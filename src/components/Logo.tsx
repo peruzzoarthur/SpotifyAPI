@@ -4,25 +4,23 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  // DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 function Logo() {
   return (
-    <div className="flex items-center justify-end mt-1 mr-2">
+    <div className="flex items-center justify-end mr-2">
       <DropdownMenu>
         <DropdownMenuTrigger>
           {" "}
           <img
-            className="w-24 h-24 rounded-full"
+            className="w-16 h-16 rounded-full"
             src={logo}
             alt="Spotify Logo"
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="text-white bg-black w-300 bg-opacity-60">
-          {/* <DropdownMenuLabel className="text-xl">Links</DropdownMenuLabel> */}
           <DropdownMenuSeparator />
           <Link to={`/`}>
             <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
@@ -56,6 +54,11 @@ function Logo() {
           <Link to={`/recommendation`}>
             <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
               Recommendations Liszt
+            </DropdownMenuItem>
+          </Link>
+          <Link to={`/search`}>
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
+              Search
             </DropdownMenuItem>
           </Link>
         </DropdownMenuContent>

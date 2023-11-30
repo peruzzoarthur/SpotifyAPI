@@ -70,7 +70,7 @@ export type ArtistProps = {
   name: string;
   order?: number;
   artists?: string;
-  id?: string;
+  id: string;
   handleAddToCart?: () => void;
   handleRemoveFromCart?: () => void;
   handleClick?: () => void;
@@ -83,6 +83,7 @@ export type PlaylistProps = {
   image: Image[];
   name: string;
   totalTracks: number | undefined;
+  id: string;
 };
 
 export interface CustomError extends Error {

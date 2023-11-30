@@ -1,41 +1,43 @@
 import { ReactNode, useContext } from "react";
 import { CartContext } from "../recommendation/RecommendationContext";
-import { Track } from "@spotify/web-api-ts-sdk";
+import { Artist } from "@spotify/web-api-ts-sdk";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import logo from "../../styles/img/spotify_logologo.jpg";
-import { useToast } from "../ui/use-toast";
-import { TrackCardWithAddButton } from "../TrackCard";
+import { ArtistCardWithAddButton } from "../ArtistCard";
+import { useToast } from "@/components/ui/use-toast";
 
-interface TopTracksSectionsProps {
-  topTracks: Track[];
+type ArtistByIdRelatedArtistsSectionProps = {
+  artists: Artist[];
   children?: ReactNode;
-}
+};
 
-export const TopTracksSection = ({
-  topTracks,
+export const ArtistByIdRelatedArtistsSection = ({
+  artists,
   children,
-}: TopTracksSectionsProps) => {
+}: ArtistByIdRelatedArtistsSectionProps) => {
   const { addToCart, errorMessage, setErrorMessage, cart } =
     useContext(CartContext);
 
   const { toast } = useToast();
 
-  const toasted = (track: Track) => {
-    const existingItem = cart.find((cartItem) => cartItem.id === track.id);
+  const toasted = (artist: Artist) => {
+    const existingItem = cart.find((cartItem) => cartItem.id === artist.id);
     if (cart.length >= 5) {
       return;
     } else if (!existingItem) {
       toast({
         title: "Success! 🙌",
-        description: `Added ${track.name} to recommendation cart.`,
+        description: `Added ${artist.name} to recommendation cart.`,
         className: "bg-emerald-600 bg-opacity-60 text-white",
       });
+    } else {
+      return;
     }
   };
 
-  const handleAddToCart = (track: Track) => {
-    addToCart(track);
-    toasted(track);
+  const handleAddToCart = (artist: Artist) => {
+    addToCart(artist);
+    toasted(artist);
   };
 
   const handleErrorMessage: React.MouseEventHandler<HTMLElement> = () => {
@@ -44,20 +46,18 @@ export const TopTracksSection = ({
 
   return (
     <>
-      <div className="pt-8 pb-4 min-h-640">
-        {/* <h2 className="ml-4 text-4xl text-left text-white">
-          Input Data for Recommendations
-        </h2> */}
+      <div className="flex flex-col items-start justify-center mt-8">
+        <h2 className="ml-6 text-5xl text-left text-white">Related Artists</h2>
+
         <div className="grid grid-flow-row-dense grid-cols-1 mt-8 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
-          {topTracks.map((item, index) => (
+          {artists.map((item, index) => (
             <div key={index}>
-              <TrackCardWithAddButton
-                image={item.album.images}
+              <ArtistCardWithAddButton
+                image={item.images}
                 name={item.name}
                 handleClick={() => handleAddToCart(item)}
-                artists={item.artists.map((a) => a.name).join(", ")}
-                duration={item.duration_ms}
-                popularity={item.popularity}
+                genres={item.genres.join(" • ")}
+                id={item.id}
               />
             </div>
           ))}

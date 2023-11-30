@@ -2,13 +2,16 @@ import { Playlist } from "@spotify/web-api-ts-sdk";
 import React from "react";
 import Logo from "../Logo";
 import { Link } from "react-router-dom";
+import { formatTimeHoursMinutesSeconds } from "@/utils/format";
 
 interface PlaylistByIdHeaderProps {
   playlistData: Playlist;
+  profilePicture: string | undefined;
 }
 
 export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
   playlistData,
+  profilePicture,
 }) => {
   return (
     <div className="flex flex-col bg-black bg-opacity-30 ">
@@ -24,12 +27,24 @@ export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
             {playlistData.name}
           </h1>
           <div>
-            <div className="mt-2 ml-4 text-lg text-white">
+            <div className="mt-2 ml-4 text-sm text-white">
               {playlistData.description}
+            </div>
+            <div className="flex flex-row mt-2 ml-4 text-xs text-white">
+              <img src={profilePicture} className="w-6 h-6 mr-1 rounded-full" />
+              <p className="mt-1">
+                {playlistData.owner.display_name} • {playlistData.tracks.total}{" "}
+                tracks,{" "}
+                {formatTimeHoursMinutesSeconds(
+                  playlistData.tracks.items
+                    .map((t) => t.track.duration_ms)
+                    .reduce((acc, cv) => acc + cv, 0)
+                )}
+              </p>
             </div>
           </div>
 
-          <div className="flex flex-row ml-5 text-xs text-slate-100">
+          <div className="flex flex-row mt-5 ml-5 text-xs text-slate-100">
             <Link to={"/profile"}>
               <p className="mr-2">Profile</p>
             </Link>

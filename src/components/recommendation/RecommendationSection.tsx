@@ -1,8 +1,8 @@
 import React, { ReactNode, useContext } from "react";
 import { CartContext, CartItem } from "./RecommendationContext";
 import { Artist, Track } from "@spotify/web-api-ts-sdk";
-import { ArtistCardWithRemoveButton } from "../ArtistCardWithButton";
-import { TrackCardWithRemoveButton } from "../TrackCardWithButton";
+import { ArtistCardWithRemoveButton } from "../ArtistCard";
+import { TrackCardWithRemoveButton } from "../TrackCard";
 
 type RecommendationSectionProps = {
   children?: ReactNode;
@@ -39,10 +39,11 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
               {isArtist(item) && (
                 <ArtistCardWithRemoveButton
-                  genres={item.genres.join(", ")}
+                  genres={item.genres.join(" • ")}
                   image={item.images}
                   name={item.name}
                   handleClick={() => handleRemoveFromCart(item.id)}
+                  id={item.id}
                 />
               )}
             </div>

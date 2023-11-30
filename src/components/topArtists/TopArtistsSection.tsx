@@ -47,9 +47,6 @@ export const TopArtistsSection = ({
   return (
     <>
       <div className="pt-8 pb-4 min-h-640">
-        {/* <h2 className="ml-4 text-4xl text-left text-white">
-          Input Data for Recommendations
-        </h2> */}
         <div className="grid grid-flow-row-dense grid-cols-1 mt-8 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
           {artists.map((item, index) => (
             <div key={index}>
@@ -57,7 +54,8 @@ export const TopArtistsSection = ({
                 image={item.images}
                 name={item.name}
                 handleClick={() => handleAddToCart(item)}
-                genres={item.genres.join(", ")}
+                genres={item.genres.join(" • ")}
+                id={item.id}
               />
             </div>
           ))}

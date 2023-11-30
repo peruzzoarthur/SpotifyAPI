@@ -24,7 +24,7 @@ export const useSearch = ({
   firstRender,
 }: useSearchProps) => {
   const types: ItemTypes[] = ["artist", "album", "track"];
-  const { data } = useQuery<SearchingReturnedObject | undefined>({
+  const { data, isFetching } = useQuery<SearchingReturnedObject | undefined>({
     queryKey: ["search", searchInput, types, firstRender],
     queryFn: async () => {
       if (searchInput === undefined || firstRender === true) {
@@ -48,5 +48,5 @@ export const useSearch = ({
     },
     enabled: !!sdk,
   });
-  return { data };
+  return { data, isFetching };
 };

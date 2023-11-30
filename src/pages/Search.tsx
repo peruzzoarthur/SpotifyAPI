@@ -19,9 +19,10 @@ import { Container } from "@/components/Container";
 import { useSdk } from "@/hooks/useSdk";
 import { useState } from "react";
 import { useSearch } from "@/hooks/useSearch";
-import { ArtistCardWithAddButton } from "@/components/ArtistCard";
-import { TrackCardWithAddButton } from "@/components/TrackCardWithButton";
-import { AlbumCard } from "@/components/AlbumCard";
+import Logo from "@/components/Logo";
+import { SearchArtistsSection } from "@/components/search/SearchArtistsSection";
+import { SearchAlbumsSection } from "@/components/search/SearchAlbumsSection";
+import { SearchTracksSection } from "@/components/search/SearchTracksSection";
 
 const FormSchema = z.object({
   Search: z.string(),
@@ -53,20 +54,22 @@ export function Search() {
     setFirstRender(false);
   }
 
-  const { data } = useSearch({ searchInput, sdk, firstRender });
+  const { data, isFetching } = useSearch({ searchInput, sdk, firstRender });
 
   return (
     <AnalogBackground>
-      <Container>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex pt-2">
+      <Logo />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Container className="flex-row mb-2 bg-white bg-opacity-0">
             <FormField
               control={form.control}
               name="Search"
               render={({ field }) => (
-                <FormItem className="bg-black rounded-lg w-640 h-9 bg-opacity-70">
+                <FormItem className="relative flex flex-row h-10 mt-4 bg-black rounded-lg rounded-r-none w-640 bg-opacity-70">
                   <FormControl>
                     <Input
+                      className="rounded-r-none"
                       placeholder="Search here for albums, artists, playlists and tracks"
                       {...field}
                     />
@@ -77,51 +80,38 @@ export function Search() {
             />
             <Button
               type="submit"
-              className="bg-black rounded-l-none bg-opacity-60"
+              className="h-10 mt-4 bg-black rounded-l-none bg-opacity-60"
             >
               Submit
             </Button>
-          </form>
-        </Form>
-      </Container>
-      <h1 className="mt-2 ml-6 text-3xl text-white">Artists</h1>
-      <Container className="flex flex-row mt-2">
-        {data &&
-          data.artists.map((a, index) => (
-            <ArtistCardWithAddButton
-              key={index}
-              image={a.images}
-              name={a.name}
-              genres={a.genres.join(", ")}
-            />
-          ))}
-      </Container>
-      <h1 className="mt-2 ml-6 text-3xl text-white">Albums</h1>
-      <Container className="flex flex-row mt-2">
-        {data &&
-          data.albums.map((ab, index) => (
-            <AlbumCard
-              key={index}
-              artists={ab.artists}
-              id={ab.id}
-              images={ab.images}
-              genres={ab.genres}
-              name={ab.name}
-            />
-          ))}
-      </Container>
-      <h1 className="mt-2 ml-6 text-3xl text-white">Tracks</h1>
-      <Container className="flex flex-row mt-2">
-        {data &&
-          data.tracks.map((t, index) => (
-            <TrackCardWithAddButton
-              key={index}
-              artists={t.artists.map((a) => a.name).join(", ")}
-              name={t.name}
-              image={t.album.images}
-            />
-          ))}
-      </Container>
+          </Container>
+        </form>
+      </Form>
+      {isFetching ? (
+        <>
+          <div className="text-4xl text-white">Loading...</div>
+        </>
+      ) : (
+        <>
+          <Container className="bg-black bg-opacity-30">
+            {data && !firstRender && (
+              <SearchArtistsSection artists={data.artists} />
+            )}
+          </Container>
+
+          <Container className="bg-black bg-opacity-40">
+            {data && !firstRender && (
+              <SearchAlbumsSection albums={data.albums} />
+            )}
+          </Container>
+
+          <Container className="bg-black bg-opacity-50">
+            {data && !firstRender && (
+              <SearchTracksSection tracks={data.tracks} />
+            )}
+          </Container>
+        </>
+      )}
     </AnalogBackground>
   );
 }
