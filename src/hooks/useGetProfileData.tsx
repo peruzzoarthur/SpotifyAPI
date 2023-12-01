@@ -1,5 +1,6 @@
 import {
   Artist,
+  SavedAlbum,
   SimplifiedPlaylist,
   SpotifyApi,
   Track,
@@ -66,9 +67,30 @@ export const useGetProfileData = ({ sdk }: useGetProfileDataProps) => {
     refetchOnWindowFocus: false,
   });
 
+  const {
+    data: savedAlbums,
+    error: savedAlbumsError,
+    isFetching: savedAlbumsFetching,
+  } = useQuery<SavedAlbum[]>({
+    queryKey: ["profile", "saved-albums"],
+    queryFn: async () => {
+      const fetchSavedAlbums = (await sdk.currentUser.albums.savedAlbums(5))
+        .items;
+      return fetchSavedAlbums;
+    },
+    enabled: !!sdk,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
   return {
-    profile: { profileData, profileError, profileFetching },
-    topItems: { userTopItems, topItemsError, topItemsFetching },
-    playlists: { userPlaylists, playlistsError, playlistsFetching },
+    data: { profileData, userTopItems, userPlaylists, savedAlbums },
+    error: { profileError, topItemsError, playlistsError, savedAlbumsError },
+    state: {
+      profileFetching,
+      topItemsFetching,
+      playlistsFetching,
+      savedAlbumsFetching,
+    },
   };
 };

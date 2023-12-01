@@ -1,4 +1,4 @@
-import logo from "../styles/img/spotify_logologo.jpg";
+import logo from "../styles/img/spotify-icons-logos/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_Green.png";
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -10,18 +10,23 @@ import {
 
 function Logo() {
   return (
-    <div className="flex items-center justify-end mr-2">
+    <div className="flex flex-col items-center justify-end mt-4 mb-10 mr-2 transition-all duration-700 hover:scale-125">
       <DropdownMenu>
         <DropdownMenuTrigger>
           {" "}
           <img
-            className="w-16 h-16 rounded-full"
+            className="w-20 h-20 rounded-full"
             src={logo}
             alt="Spotify Logo"
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="text-white bg-black w-300 bg-opacity-60">
           <DropdownMenuSeparator />
+          <Link to={`/search`}>
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
+              Search
+            </DropdownMenuItem>
+          </Link>
           <Link to={`/`}>
             <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
               Profile
@@ -31,6 +36,12 @@ function Logo() {
             <DropdownMenuItem className="text-lg cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
               {" "}
               Artists
+            </DropdownMenuItem>
+          </Link>
+          <Link to={`/albums`}>
+            <DropdownMenuItem className="text-lg cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
+              {" "}
+              Albums
             </DropdownMenuItem>
           </Link>
           <Link to={`/top-tracks`}>
@@ -54,11 +65,6 @@ function Logo() {
           <Link to={`/recommendation`}>
             <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
               Recommendations Liszt
-            </DropdownMenuItem>
-          </Link>
-          <Link to={`/search`}>
-            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
-              Search
             </DropdownMenuItem>
           </Link>
         </DropdownMenuContent>
