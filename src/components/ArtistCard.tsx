@@ -82,7 +82,7 @@ export const ArtistCardWithRemoveButton: React.FC<ArtistProps> = ({
         <CardHeader>
           && (
           {image[0] && (
-            <Link to={`/artist/${id}`}>
+            <Link to={`/artist/${id}`} target="_blank">
               <img
                 src={image[0].url}
                 alt={name}

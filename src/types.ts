@@ -6,6 +6,7 @@ import {
   Image,
   Page,
   Restrictions,
+  SimplifiedArtist,
   SimplifiedTrack,
 } from "@spotify/web-api-ts-sdk";
 import { Track } from "@spotify/web-api-ts-sdk";
@@ -13,7 +14,7 @@ import { Track } from "@spotify/web-api-ts-sdk";
 //  Props
 
 export type AlbumProps = {
-  artists: Artist[];
+  artists: Artist[] | SimplifiedArtist[];
   tracks?: Page<SimplifiedTrack>;
   album_type?: string;
   available_markets?: string[];

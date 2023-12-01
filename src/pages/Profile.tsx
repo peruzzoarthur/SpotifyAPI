@@ -1,101 +1,58 @@
-// import { useState } from "react";
-import { useSpotify } from "../hooks/useSpotify";
-import {
-  Artist,
-  Track,
-  SimplifiedPlaylist,
-  SpotifyApi,
-  // SimplifiedArtist,
-} from "@spotify/web-api-ts-sdk";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
-import { client_id, redirect_url, scopes } from "../spotify";
-import { useQuery } from "@tanstack/react-query";
-import { CustomError } from "@/CustomError";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileTopArtistsSection } from "@/components/profile/ProfileTopArtistsSection";
 import { ProfileTopTracksSection } from "@/components/profile/ProfileTopTracksSection";
 import { ProfilePlaylistsSection } from "@/components/profile/ProfilePlaylistsSection";
-
-type ProfileData = {
-  userData: {
-    picture: string;
-    name: string;
-    followers: number;
-  };
-  topArtists: Artist[];
-  topTracks: Track[];
-  // topTracksArtists: Artist[];
-  playlists: SimplifiedPlaylist[];
-};
+import { useSdk } from "@/hooks/useSdk";
+import { useGetProfileData } from "@/hooks/useGetProfileData";
 
 export const Profile = () => {
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+  const sdk: SpotifyApi = useSdk();
 
-  const { data, error, isFetching } = useQuery<ProfileData>({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      try {
-        const fetchUserData = await sdk.currentUser.profile();
+  const { profile, playlists, topItems } = useGetProfileData({ sdk });
 
-        const fetchTopArtists: Artist[] = (
-          await sdk.currentUser.topItems("artists", undefined, 5)
-        ).items;
+  // if (profile.profileError || playlists.playlistsError || topItems.topItemsError) {
+  //   return <div> {profile.profileError?.message};</div>;
+  // }
 
-        const fetchTopTracks: Track[] = (
-          await sdk.currentUser.topItems("tracks", undefined, 5)
-        ).items;
-
-        // const topTracksSimpleArtists: SimplifiedArtist[] =
-        //   fetchTopTracks.map((t) => t.artists)
-        // const topTracksArtists = await sdk.artists.get(
-        //   topTracksSimpleArtists.map((a) => a.id)
-        // );
-
-        const fetchUserPlaylists: SimplifiedPlaylist[] = (
-          await sdk.currentUser.playlists.playlists(5)
-        ).items;
-
-        return {
-          userData: {
-            picture: fetchUserData?.images[1]?.url || "",
-            name: fetchUserData?.display_name || "",
-            followers: fetchUserData?.followers?.total || 0,
-          },
-          topArtists: fetchTopArtists,
-          topTracks: fetchTopTracks,
-          // topTracksArtists: topTracksArtists,
-          playlists: fetchUserPlaylists,
-        };
-      } catch (error) {
-        //TODO adjust errors
-        throw new CustomError("im a satanic sample error", 666);
-      }
-    },
-    enabled: !!sdk,
-  });
-
-  if (error) {
-    return <div> {error.message};</div>;
-  }
-
-  if (isFetching) {
+  if (
+    profile.profileFetching ||
+    playlists.playlistsFetching ||
+    topItems.topItemsFetching
+  ) {
     return <div>Loading...</div>;
   }
+
   return (
     <AnalogBackground>
-      {data && (
-        <>
-          <ProfileHeader
-            followers={data.userData.followers}
-            image={data.userData.picture}
-            name={data.userData.name}
-          />
-          <ProfileTopArtistsSection topArtists={data.topArtists} />
-          <ProfileTopTracksSection topTracks={data.topTracks} />
-          <ProfilePlaylistsSection playlists={data.playlists} />
-        </>
-      )}
+      {profile.profileData &&
+        playlists.userPlaylists &&
+        topItems.userTopItems && (
+          <>
+            <ProfileHeader
+              followers={profile.profileData.followers.total}
+              image={profile.profileData.images[1].url}
+              name={profile.profileData.display_name}
+            />
+            {topItems.userTopItems?.topArtists && (
+              <ProfileTopArtistsSection
+                topArtists={topItems.userTopItems.topArtists}
+              />
+            )}
+
+            {topItems.userTopItems?.topTracks && (
+              <ProfileTopTracksSection
+                topTracks={topItems.userTopItems.topTracks}
+              />
+            )}
+
+            {playlists.userPlaylists && (
+              <ProfilePlaylistsSection playlists={playlists.userPlaylists} />
+            )}
+          </>
+        )}
     </AnalogBackground>
   );
 };

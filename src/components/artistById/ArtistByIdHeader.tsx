@@ -10,7 +10,7 @@ type ArtistByIdProps = {
 export const ArtistByIdHeader: React.FC<ArtistByIdProps> = ({ artistData }) => {
   return (
     <>
-      <div className="flex flex-col pt-2 pb-2 bg-black bg-opacity-30">
+      <div className="flex flex-col pt-2 pb-2 bg-black bg-opacity-10">
         <Logo />
         <div className="flex flex-row">
           <Link to={artistData.uri}>
@@ -24,10 +24,10 @@ export const ArtistByIdHeader: React.FC<ArtistByIdProps> = ({ artistData }) => {
               {artistData.name}
             </h1>
             <div>
-              <div className="flex flex-col mt-2 ml-4 text-lg text-white"></div>
+              <div className="flex flex-col mt-2 ml-4 text-lg text-white">
+                {artistData.genres.join(" • ")}
+              </div>
             </div>
-
-            <div className="flex flex-row ml-5 text-xs text-slate-100"></div>
           </div>
         </div>
       </div>

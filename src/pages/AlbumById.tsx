@@ -6,6 +6,7 @@ import { AnalogBackground } from "@/components/background/analogBackground";
 import { useAlbumByIdGetInfo } from "@/hooks/useAlbumByIdGetInfo";
 import { useAlbumByIdGetTracks } from "@/hooks/useAlbumByIdGetTracks";
 import { useConvertSimplifiedTrackToTrackWithAudioFeatures } from "@/hooks/useConvertSimplifiedTrackToTrack";
+import { useGetArtistPicture } from "@/hooks/useGetArtistPicture";
 import { useSdk } from "@/hooks/useSdk";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
@@ -13,6 +14,10 @@ export const AlbumById: React.FC = () => {
   const sdk: SpotifyApi = useSdk();
 
   const { albumData } = useAlbumByIdGetInfo({ sdk });
+  const { artistPicture } = useGetArtistPicture({
+    sdk: sdk,
+    artistId: albumData?.artists[0].id,
+  });
 
   const {
     error,
@@ -35,7 +40,12 @@ export const AlbumById: React.FC = () => {
   return (
     <>
       <AnalogBackground>
-        {albumData && <AlbumByIdHeader albumData={albumData} />}
+        {albumData && (
+          <AlbumByIdHeader
+            artistPicture={artistPicture}
+            albumData={albumData}
+          />
+        )}
         <Container className="bg-black bg-opacity-60">
           {tracksData && (
             <>

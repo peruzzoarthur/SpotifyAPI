@@ -23,21 +23,28 @@ export const TrackTableRow: React.FC<TrackProps> = ({
         <TableCell className="font-medium">{order}</TableCell>
         <TableCell>
           <Link to={`${uri}`}>
-            <img className="max-h-36 max-w-36" src={image[0].url} alt={name} />
+            <img
+              className="max-h-36 max-w-36 min-w-44 min-h-44"
+              src={image[0].url}
+              alt={name}
+            />
           </Link>
         </TableCell>
         <TableCell className="font-medium">{name}</TableCell>
-
-        <TableCell title={popularity.toString()} className="hover:cursor-wait">
-          <span
-            style={{
-              fontSize: getAudioFeatureFontSize(popularity, "0/100"),
-            }}
+        {popularity && (
+          <TableCell
+            title={popularity.toString()}
+            className="hover:cursor-wait"
           >
-            🔥
-          </span>
-        </TableCell>
-
+            <span
+              style={{
+                fontSize: getAudioFeatureFontSize(popularity, "0/100"),
+              }}
+            >
+              🔥
+            </span>
+          </TableCell>
+        )}
         <TableCell className="pr-10 font-bold">{artists}</TableCell>
         {audio_features && (
           <>
@@ -171,7 +178,11 @@ export const TrackTableRow: React.FC<TrackProps> = ({
           </>
         )}
 
-        <TableCell className="text-right">{formatDuration(duration)}</TableCell>
+        {duration && (
+          <TableCell className="text-right">
+            {formatDuration(duration)}
+          </TableCell>
+        )}
 
         {handleClick && (
           <TableCell>

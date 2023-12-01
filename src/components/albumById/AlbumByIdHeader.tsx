@@ -6,10 +6,12 @@ import { formatTimeHoursMinutesSeconds } from "@/utils/format";
 
 type AlbumByIdHeaderProps = {
   albumData: Album;
+  artistPicture: string | undefined;
 };
 
 export const AlbumByIdHeader: React.FC<AlbumByIdHeaderProps> = ({
   albumData,
+  artistPicture,
 }) => {
   return (
     <>
@@ -28,11 +30,21 @@ export const AlbumByIdHeader: React.FC<AlbumByIdHeaderProps> = ({
               <div className="flex flex-col mt-2 ml-4 text-lg text-white"></div>
             </div>
 
-            <div className="flex flex-row ml-5 text-xs text-slate-100">
-              <p className="mr-2">
+            <div className="flex flex-row mt-2 ml-4 text-xs text-white">
+              {artistPicture && (
+                <img
+                  src={artistPicture}
+                  className="w-6 h-6 mr-1 rounded-full"
+                />
+              )}
+              <p className="flex flex-row mt-1 mr-2">
                 {albumData.artists.map((a, index) => (
-                  <Link key={index} to={`/artist/${a.id}`}>
-                    {a.name} •{" "}
+                  <Link
+                    className="flex flex-row mr-1"
+                    key={index}
+                    to={`/artist/${a.id}`}
+                  >
+                    <p> {a.name} • </p>
                   </Link>
                 ))}
                 {albumData.release_date.split("-")[0]} •{" "}

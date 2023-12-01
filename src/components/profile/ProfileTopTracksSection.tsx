@@ -4,7 +4,7 @@ import { TrackCard } from "../TrackCard";
 import { ShowAllButton } from "../ShowAllButton";
 
 type ProfileTopTracksSectionProps = {
-  topTracks: Track[];
+  topTracks: Track[] | undefined;
 };
 
 export const ProfileTopTracksSection: React.FC<
@@ -17,7 +17,7 @@ export const ProfileTopTracksSection: React.FC<
         <ShowAllButton url="/top-tracks" />
       </div>
       <div className="grid grid-flow-row-dense grid-cols-1 mt-8 ml-5 mr-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
-        {topTracks.map((track, index) => (
+        {topTracks?.map((track, index) => (
           <div key={index} className="mb-4 mr-4">
             <TrackCard
               artists={track.artists.map((a) => a.name).join(", ")}

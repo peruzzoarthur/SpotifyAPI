@@ -30,6 +30,7 @@ export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
             <div className="mt-2 ml-4 text-sm text-white">
               {playlistData.description}
             </div>
+
             <div className="flex flex-row mt-2 ml-4 text-xs text-white">
               {profilePicture && (
                 <img
@@ -38,8 +39,7 @@ export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
                 />
               )}
               <p className="mt-1">
-                {playlistData.owner.display_name} • {playlistData.tracks.total}{" "}
-                tracks,{" "}
+                {playlistData.owner.id} • {playlistData.tracks.total} tracks,{" "}
                 {formatTimeHoursMinutesSeconds(
                   playlistData.tracks.items
                     .map((t) => t.track.duration_ms)

@@ -1,13 +1,37 @@
 import { TrackWithAudioFeatures } from "@/types";
-import { Artist, Artists, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
-import { useQuery } from "@tanstack/react-query";
+import {
+  Artist,
+  Artists,
+  Page,
+  SimplifiedAlbum,
+  SpotifyApi,
+  Track,
+} from "@spotify/web-api-ts-sdk";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
+  const [albums, setAlbums] = useState<SimplifiedAlbum[]>([]);
+
   const { id } = useParams<string>();
   if (!id) {
     throw new Error("No ID provided");
   }
+
+  const updateAlbums = (newAlbums: SimplifiedAlbum[]) => {
+    setAlbums((oldAlbums) => {
+      if (oldAlbums) {
+        return [...oldAlbums, ...newAlbums];
+      } else {
+        return [...newAlbums];
+      }
+    });
+  };
+
+  useEffect(() => {
+    setAlbums([]);
+  }, [id]);
 
   const { data: artistData } = useQuery<Artist>({
     queryKey: ["artist-by-id", id],
@@ -56,5 +80,55 @@ export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
     refetchOnWindowFocus: false,
   });
 
-  return { artistData, relatedArtists, artistTopTracks };
+  const {
+    data: artistAlbums,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isFetching,
+  } = useInfiniteQuery<Page<SimplifiedAlbum>>({
+    queryKey: ["artist-albums", id],
+    queryFn: async ({ pageParam = 0 }) => {
+      const fetchArtistAlbums = await sdk.artists.albums(
+        id,
+        undefined,
+        undefined,
+        5,
+        Number(pageParam)
+      );
+
+      updateAlbums(fetchArtistAlbums.items);
+
+      return fetchArtistAlbums;
+    },
+    enabled: !!sdk,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (lastPage?.next) {
+        const url = new URL(lastPage.next);
+        const pageParam = url.searchParams.get("offset");
+        return pageParam;
+      }
+      return;
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    artistData,
+    relatedArtists,
+    artistTopTracks,
+    artistAlbums: {
+      data: artistAlbums,
+      error,
+      fetchNextPage,
+      isFetchingNextPage,
+      hasNextPage,
+      isFetching,
+      albums,
+      setAlbums,
+    },
+  };
 };
