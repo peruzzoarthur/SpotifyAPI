@@ -11,7 +11,7 @@ export const useConvertSimplifiedTrackToTrackWithAudioFeatures = ({
   ids,
   sdk,
 }: useConvertSimplifiedTrackToTrackProps) => {
-  const { data: tracksData } = useQuery<TrackWithAudioFeatures[] | undefined>({
+  const { data, isFetching } = useQuery<TrackWithAudioFeatures[] | undefined>({
     queryKey: ["album-by-id", "tracks", ids],
     queryFn: async () => {
       if (!ids) {
@@ -34,8 +34,14 @@ export const useConvertSimplifiedTrackToTrackWithAudioFeatures = ({
 
       return tracksWithAudioFeatures;
     },
+    enabled: !!sdk,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
-  return { tracksData };
+  return {
+    convertedToTracks: {
+      data,
+      isFetching,
+    },
+  };
 };

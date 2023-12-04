@@ -56,6 +56,15 @@ export const AlbumByIdHeader: React.FC<AlbumByIdHeaderProps> = ({
                 )}
               </p>
             </div>
+            <div className="flex flex-row mt-4 ml-5 text-xs text-slate-100">
+              <Link to={"/"}>
+                <p>Profile</p>
+              </Link>
+              <Link to={"/albums/"}>
+                <p className="ml-2">/ Albums</p>
+              </Link>
+              <p className="ml-2">/ {albumData.name}</p>
+            </div>
           </div>
         </div>
       </div>

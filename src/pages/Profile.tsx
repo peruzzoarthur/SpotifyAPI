@@ -7,11 +7,20 @@ import { ProfilePlaylistsSection } from "@/components/profile/ProfilePlaylistsSe
 import { useSdk } from "@/hooks/useSdk";
 import { useGetProfileData } from "@/hooks/useGetProfileData";
 import { ProfileSavedAlbumsSection } from "@/components/profile/ProfileSavedAlbumsSection";
+import { CreateProgress } from "@/components/Progress";
+import { Container } from "@/components/Container";
+import { useCreateProgress } from "@/hooks/useCreateProgress";
 
 export const Profile = () => {
+  const progress = useCreateProgress({
+    initialProgress: 13,
+    finalProgress: 66,
+    delay: 180,
+  });
   const sdk: SpotifyApi = useSdk();
 
   const { data, state, error } = useGetProfileData({ sdk });
+  console.log(state);
 
   if (error instanceof Error) {
     return (
@@ -23,41 +32,40 @@ export const Profile = () => {
     );
   }
 
-  if (
-    state.profileFetching ||
-    state.playlistsFetching ||
-    state.topItemsFetching
-  ) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <AnalogBackground>
-      {data.profileData && data.userPlaylists && data.userTopItems && (
-        <>
-          <ProfileHeader
-            followers={data.profileData.followers.total}
-            image={data.profileData.images[1].url}
-            name={data.profileData.display_name}
-          />
-          {data.userTopItems?.topArtists && (
-            <ProfileTopArtistsSection
-              topArtists={data.userTopItems.topArtists}
-            />
-          )}
+      {data.profileData && (
+        <ProfileHeader
+          followers={data.profileData.followers.total}
+          image={data.profileData.images[1].url}
+          name={data.profileData.display_name}
+        />
+      )}
 
-          {data.userTopItems?.topTracks && (
-            <ProfileTopTracksSection topTracks={data.userTopItems.topTracks} />
-          )}
+      {state.topItemsFetching &&
+        !data.userTopItems &&
+        !data.userPlaylists &&
+        !data.savedAlbums && (
+          <>
+            <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
+              {CreateProgress({ progress })}
+            </Container>
+          </>
+        )}
+      {data.userTopItems?.topArtists && (
+        <ProfileTopArtistsSection topArtists={data.userTopItems.topArtists} />
+      )}
 
-          {data.userPlaylists && (
-            <ProfilePlaylistsSection playlists={data.userPlaylists} />
-          )}
+      {data.userTopItems?.topTracks && (
+        <ProfileTopTracksSection topTracks={data.userTopItems.topTracks} />
+      )}
 
-          {data.savedAlbums && (
-            <ProfileSavedAlbumsSection savedAlbum={data.savedAlbums} />
-          )}
-        </>
+      {data.userPlaylists && (
+        <ProfilePlaylistsSection playlists={data.userPlaylists} />
+      )}
+
+      {data.savedAlbums && (
+        <ProfileSavedAlbumsSection savedAlbum={data.savedAlbums} />
       )}
     </AnalogBackground>
   );

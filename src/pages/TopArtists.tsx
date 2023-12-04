@@ -6,14 +6,26 @@ import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { Container } from "@/components/Container";
 import { useTopArtists } from "../hooks/useTopArtists";
 import { useState } from "react";
+import { useGetCurrentUserProfile } from "@/hooks/useGetCurrentUserProfilePicture";
+import { useSdk } from "@/hooks/useSdk";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { CreateProgress } from "@/components/Progress";
+import { useCreateProgress } from "@/hooks/useCreateProgress";
 
 export type TimeRange = {
   value: "short_term" | "medium_term" | "long_term";
 };
 
 export const TopArtists = () => {
+  const progress = useCreateProgress({
+    initialProgress: 13,
+    finalProgress: 66,
+    delay: 200,
+  });
   const [activeRange, setActiveRange] =
     useState<TimeRange["value"]>("short_term");
+
+  const sdk: SpotifyApi = useSdk();
 
   const {
     data,
@@ -24,7 +36,9 @@ export const TopArtists = () => {
     isFetching,
     topArtists,
     setTopArtists,
-  } = useTopArtists(activeRange);
+  } = useTopArtists({ activeRange, sdk });
+
+  const currentUserProfile = useGetCurrentUserProfile({ sdk });
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -33,20 +47,36 @@ export const TopArtists = () => {
   return (
     <>
       <AnalogBackground>
-        <TopArtistsHeader />
+        {currentUserProfile && (
+          <TopArtistsHeader profile={currentUserProfile} />
+        )}
+
+        {isFetching && currentUserProfile && !data && (
+          <>
+            <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
+              {CreateProgress({ progress })}
+            </Container>
+          </>
+        )}
         <Container>
-          <TopArtistsOptions
-            setActiveRange={setActiveRange}
-            activeRange={activeRange}
-            setTopArtists={setTopArtists}
-          />
-          {data && topArtists && <TopArtistsSection artists={topArtists} />}
-          <LoadMoreButton
-            isFetching={isFetching}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
+          {data && topArtists && (
+            <>
+              <TopArtistsOptions
+                setActiveRange={setActiveRange}
+                activeRange={activeRange}
+                setTopArtists={setTopArtists}
+              />
+
+              <TopArtistsSection artists={topArtists} />
+
+              <LoadMoreButton
+                isFetching={isFetching}
+                fetchNextPage={fetchNextPage}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              />
+            </>
+          )}
         </Container>
       </AnalogBackground>
     </>

@@ -1,15 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Logo from "../Logo";
 import { UserProfile } from "@spotify/web-api-ts-sdk";
+import { Link } from "react-router-dom";
 
-type TopArtistsHeaderProps = {
+type AlbumHeaderProps = {
   profile: UserProfile | undefined;
 };
 
-export const TopArtistsHeader: React.FC<TopArtistsHeaderProps> = ({
-  profile,
-}) => {
+export const AlbumHeader: React.FC<AlbumHeaderProps> = ({ profile }) => {
   return (
     <>
       <div className="flex flex-col pt-2 pb-2 bg-black bg-opacity-10">
@@ -23,15 +21,13 @@ export const TopArtistsHeader: React.FC<TopArtistsHeaderProps> = ({
             />
           )}
           <div className="flex flex-col">
-            <h1 className="mt-24 ml-6 text-6xl font-bold text-white">
-              Top artists
-            </h1>
-            <h3 className="ml-56 text-lg text-white"> your top artists</h3>
+            <h1 className="mt-24 ml-6 text-6xl font-bold text-white">Albums</h1>
+            <h3 className="ml-20 text-lg text-white"> your saved albums</h3>
             <div className="flex flex-row ml-5 text-xs text-slate-100">
               <Link to={"/"}>
                 <p>Profile</p>
               </Link>
-              <p className="ml-2">/ Top Artists</p>
+              <p className="ml-2">/ Albums</p>
             </div>
           </div>
         </div>

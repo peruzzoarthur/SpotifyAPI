@@ -10,12 +10,12 @@ import {
 
 function Logo() {
   return (
-    <div className="flex flex-col items-center justify-end mt-4 mb-10 mr-2 transition-all duration-700 hover:scale-125">
+    <div className="flex flex-col items-center justify-end pt-2 mr-2 ">
       <DropdownMenu>
         <DropdownMenuTrigger>
           {" "}
           <img
-            className="w-20 h-20 rounded-full"
+            className="w-20 h-20 transition-all duration-700 rounded-full min-h-14 min-w-14 hover:scale-125"
             src={logo}
             alt="Spotify Logo"
           />
@@ -23,47 +23,47 @@ function Logo() {
         <DropdownMenuContent className="text-white bg-black w-300 bg-opacity-60">
           <DropdownMenuSeparator />
           <Link to={`/search`}>
-            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black focus:bg-black focus:bg-opacity-60 hover:bg-opacity-60">
               Search
             </DropdownMenuItem>
           </Link>
           <Link to={`/`}>
-            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black focus:bg-black focus:bg-opacity-60 hover:bg-opacity-60">
               Profile
             </DropdownMenuItem>
           </Link>
           <Link to={`/top-artists`}>
-            <DropdownMenuItem className="text-lg cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-lg cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60">
               {" "}
               Artists
             </DropdownMenuItem>
           </Link>
           <Link to={`/albums`}>
-            <DropdownMenuItem className="text-lg cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-lg cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60">
               {" "}
               Albums
             </DropdownMenuItem>
           </Link>
           <Link to={`/top-tracks`}>
-            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60">
               {" "}
               Tracks
             </DropdownMenuItem>
           </Link>
 
           <Link to={`/playlists`}>
-            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-xl cursor-pointer font-extralight hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60">
               {" "}
               Playlists
             </DropdownMenuItem>
           </Link>
           <Link to={`/liked-songs`}>
-            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60">
               Liked Songs
             </DropdownMenuItem>
           </Link>
           <Link to={`/recommendation`}>
-            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60">
+            <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60">
               Recommendations Liszt
             </DropdownMenuItem>
           </Link>

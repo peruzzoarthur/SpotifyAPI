@@ -57,61 +57,63 @@ export function Search() {
   const { data, isFetching } = useSearch({ searchInput, sdk, firstRender });
 
   return (
-    <AnalogBackground>
-      <Logo />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Container className="flex-row mb-2 bg-white bg-opacity-0">
-            <FormField
-              control={form.control}
-              name="Search"
-              render={({ field }) => (
-                <FormItem className="relative flex flex-row h-10 mt-4 bg-black rounded-lg rounded-r-none w-640 bg-opacity-70">
-                  <FormControl>
-                    <Input
-                      className="rounded-r-none"
-                      placeholder="Search here for albums, artists, playlists and tracks"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+    <>
+      <AnalogBackground>
+        <Logo />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Container className="flex-row mb-2 bg-white bg-opacity-0">
+              <FormField
+                control={form.control}
+                name="Search"
+                render={({ field }) => (
+                  <FormItem className="relative flex flex-row h-10 mt-4 bg-black rounded-lg rounded-r-none w-640 bg-opacity-70">
+                    <FormControl>
+                      <Input
+                        className="rounded-r-none"
+                        placeholder="Search here for albums, artists, playlists and tracks"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className="h-10 mt-4 bg-black rounded-l-none bg-opacity-60"
+              >
+                Submit
+              </Button>
+            </Container>
+          </form>
+        </Form>
+        {isFetching ? (
+          <>
+            <div className="text-4xl text-white">Loading...</div>
+          </>
+        ) : (
+          <>
+            <Container className="bg-black bg-opacity-30">
+              {data && !firstRender && (
+                <SearchArtistsSection artists={data.artists} />
               )}
-            />
-            <Button
-              type="submit"
-              className="h-10 mt-4 bg-black rounded-l-none bg-opacity-60"
-            >
-              Submit
-            </Button>
-          </Container>
-        </form>
-      </Form>
-      {isFetching ? (
-        <>
-          <div className="text-4xl text-white">Loading...</div>
-        </>
-      ) : (
-        <>
-          <Container className="bg-black bg-opacity-30">
-            {data && !firstRender && (
-              <SearchArtistsSection artists={data.artists} />
-            )}
-          </Container>
+            </Container>
 
-          <Container className="bg-black bg-opacity-40">
-            {data && !firstRender && (
-              <SearchAlbumsSection albums={data.albums} />
-            )}
-          </Container>
+            <Container className="bg-black bg-opacity-40">
+              {data && !firstRender && (
+                <SearchAlbumsSection albums={data.albums} />
+              )}
+            </Container>
 
-          <Container className="bg-black bg-opacity-50">
-            {data && !firstRender && (
-              <SearchTracksSection tracks={data.tracks} />
-            )}
-          </Container>
-        </>
-      )}
-    </AnalogBackground>
+            <Container className="bg-black bg-opacity-50">
+              {data && !firstRender && (
+                <SearchTracksSection tracks={data.tracks} />
+              )}
+            </Container>
+          </>
+        )}
+      </AnalogBackground>
+    </>
   );
 }

@@ -1,58 +1,33 @@
-import { useState } from "react";
-import { useSpotify } from "../hooks/useSpotify";
-import { client_id, redirect_url, scopes } from "../spotify";
-import { Page, SimplifiedPlaylist, SpotifyApi } from "@spotify/web-api-ts-sdk";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { PlaylistsHeader } from "@/components/playlists/PlaylistsHeader";
 import { PlaylistsSection } from "@/components/playlists/PlaylistsSection";
 import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { Container } from "@/components/Container";
+import { useSdk } from "@/hooks/useSdk";
+import { useGetCurrentUserProfile } from "@/hooks/useGetCurrentUserProfilePicture";
+import { useGetPlaylists } from "@/hooks/useGetPlaylists";
+import { CreateProgress } from "@/components/Progress";
+import { useCreateProgress } from "@/hooks/useCreateProgress";
 
 export const Playlists = () => {
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
-
-  const [playlists, setPlaylists] = useState<SimplifiedPlaylist[]>([]);
-
-  const updatePlaylists = async (newPlaylists: SimplifiedPlaylist[]) => {
-    setPlaylists((oldPlaylists) =>
-      [...oldPlaylists, ...newPlaylists].slice(0, data?.pages[0].total)
-    );
-  };
+  const progress = useCreateProgress({
+    initialProgress: 13,
+    finalProgress: 66,
+    delay: 350,
+  });
+  const sdk = useSdk();
 
   const {
     data,
     error,
-    isFetchingNextPage,
     fetchNextPage,
+    isFetchingNextPage,
     hasNextPage,
     isFetching,
-  } = useInfiniteQuery<Page<SimplifiedPlaylist>>({
-    queryKey: ["playlists"],
+    playlists,
+  } = useGetPlaylists({ sdk });
 
-    queryFn: async ({ pageParam }) => {
-      const fetch = await sdk.currentUser.playlists.playlists(
-        25,
-        Number(pageParam)
-      );
-
-      await updatePlaylists(fetch.items);
-
-      return fetch;
-    },
-
-    enabled: !!sdk,
-
-    initialPageParam: 0,
-
-    getNextPageParam: (lastPage) => {
-      if (lastPage.next) {
-        const url = new URL(lastPage.next);
-        const pageParam = url.searchParams.get("offset");
-        return pageParam;
-      }
-    },
-  });
+  const currentUserProfile = useGetCurrentUserProfile({ sdk });
 
   if (error) {
     return <div>error: {error.message}</div>;
@@ -60,15 +35,26 @@ export const Playlists = () => {
 
   return (
     <AnalogBackground>
-      <PlaylistsHeader />
+      {currentUserProfile && <PlaylistsHeader profile={currentUserProfile} />}
+      {isFetching && currentUserProfile && !data && (
+        <>
+          <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
+            {CreateProgress({ progress })}
+          </Container>
+        </>
+      )}
       <Container>
-        <PlaylistsSection playlists={playlists} />
-        <LoadMoreButton
-          isFetching={isFetching}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        />
+        {data && playlists && (
+          <>
+            <PlaylistsSection playlists={playlists} />
+            <LoadMoreButton
+              isFetching={isFetching}
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          </>
+        )}
       </Container>
     </AnalogBackground>
   );

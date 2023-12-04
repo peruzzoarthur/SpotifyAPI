@@ -10,7 +10,7 @@ import { TrackTableRow } from "../TrackTableRow";
 import { TrackWithAudioFeatures } from "@/types";
 
 type AlbumByIdSectionProps = {
-  tracks: TrackWithAudioFeatures[];
+  tracks: TrackWithAudioFeatures[] | undefined;
   albumData?: Album;
 };
 

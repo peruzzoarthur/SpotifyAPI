@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useSpotify } from "./useSpotify";
-import { client_id, redirect_url, scopes } from "../spotify";
 import { Artist, Page, SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -8,8 +6,12 @@ export type TimeRange = {
   value: "short_term" | "medium_term" | "long_term";
 };
 
-export const useTopArtists = (activeRange: TimeRange["value"]) => {
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+type useTopArtistsProps = {
+  activeRange: TimeRange["value"];
+  sdk: SpotifyApi;
+};
+
+export const useTopArtists = ({ activeRange, sdk }: useTopArtistsProps) => {
   const [topArtists, setTopArtists] = useState<Artist[]>([]);
 
   const updateTopArtists = (newArtists: Artist[]) => {

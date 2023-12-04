@@ -1,8 +1,7 @@
 import { SavedTrack, Page, SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { LikedSongsHeader } from "@/components/liked-songs/LikedSongsHeader";
 import { AnalogBackground } from "@/components/background/analogBackground";
-import { useSpotify } from "@/hooks/useSpotify";
-import { client_id, redirect_url, scopes } from "@/spotify";
+
 import { useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { LoadMoreButton } from "@/components/LoadMoreButton";
@@ -11,17 +10,23 @@ import { sortOptions } from "@/components/SortOptions";
 import { LikedSongsTracksSection } from "@/components/liked-songs/LikedSongsTracksSection";
 import { Container } from "@/components/Container";
 import { AudioFeaturesWithListOrder, TrackWithAudioFeatures } from "@/types";
+import { useSdk } from "@/hooks/useSdk";
+import { useGetCurrentUserProfile } from "@/hooks/useGetCurrentUserProfilePicture";
+import { CreateProgress } from "@/components/Progress";
+import { useCreateProgress } from "@/hooks/useCreateProgress";
 
 type LikedSongsQueryFnProps = {
   pageParam: string | null | unknown;
 };
 
 export const LikedSongs = () => {
-  const sdk: SpotifyApi = useSpotify(
-    client_id,
-    redirect_url,
-    scopes
-  ) as SpotifyApi;
+  const progress = useCreateProgress({
+    initialProgress: 13,
+    finalProgress: 66,
+    delay: 800,
+  });
+
+  const sdk: SpotifyApi = useSdk();
   const [sortValue, setSortValue] =
     useState<keyof AudioFeaturesWithListOrder>("default_list_order");
   const [likedSongsData, setLikedSongsData] = useState<
@@ -114,6 +119,8 @@ export const LikedSongs = () => {
     );
   }, [sortValue, likedSongsData]);
 
+  const currentUserProfile = useGetCurrentUserProfile({ sdk });
+
   if (error) {
     // TODO
     return <div>Error: {error.message}</div>;
@@ -122,21 +129,34 @@ export const LikedSongs = () => {
   return (
     <>
       <AnalogBackground>
-        <LikedSongsHeader />
+        {currentUserProfile && (
+          <LikedSongsHeader profile={currentUserProfile} />
+        )}
+
+        {isFetching && currentUserProfile && !data && (
+          <>
+            <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
+              {CreateProgress({ progress })}
+            </Container>
+          </>
+        )}
+
         <Container className="bg-black bg-opacity-20">
-          <SelectAudioFeature
-            sortOptions={sortOptions}
-            setSortValue={setSortValue}
-          />
           {likedSongsData && data && (
-            <LikedSongsTracksSection tracks={sortedTracks} />
+            <>
+              <SelectAudioFeature
+                sortOptions={sortOptions}
+                setSortValue={setSortValue}
+              />
+              <LikedSongsTracksSection tracks={sortedTracks} />
+              <LoadMoreButton
+                isFetching={isFetching}
+                fetchNextPage={fetchNextPage}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              />
+            </>
           )}
-          <LoadMoreButton
-            isFetching={isFetching}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
         </Container>
       </AnalogBackground>
     </>

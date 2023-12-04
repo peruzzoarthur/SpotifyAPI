@@ -15,7 +15,7 @@ import {
 } from "@spotify/web-api-ts-sdk";
 
 type LoadMoreButtonProps = {
-  isFetching: boolean;
+  isFetching?: boolean;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   fetchNextPage: (

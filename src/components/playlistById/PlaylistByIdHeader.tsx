@@ -49,7 +49,7 @@ export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-row mt-5 ml-5 text-xs text-slate-100">
+          <div className="flex flex-row mt-4 mb-4 ml-5 text-xs text-slate-100">
             <Link to={"/profile"}>
               <p className="mr-2">Profile</p>
             </Link>

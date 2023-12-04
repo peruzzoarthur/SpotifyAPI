@@ -1,5 +1,6 @@
 import { Container } from "@/components/Container";
 import { LoadMoreButton } from "@/components/LoadMoreButton";
+import { CreateProgress } from "@/components/Progress";
 import { AlbumByIdHeader } from "@/components/albumById/AlbumByIdHeader";
 import { AlbumByIdSection } from "@/components/albumById/AlbumByIdSection";
 import { AnalogBackground } from "@/components/background/analogBackground";
@@ -9,8 +10,15 @@ import { useConvertSimplifiedTrackToTrackWithAudioFeatures } from "@/hooks/useCo
 import { useGetArtistPicture } from "@/hooks/useGetArtistPicture";
 import { useSdk } from "@/hooks/useSdk";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { useEffect, useState } from "react";
 
 export const AlbumById: React.FC = () => {
+  const [progress, setProgress] = useState(13);
+  useEffect(() => {
+    const timer = setTimeout(() => setProgress(66), 200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const sdk: SpotifyApi = useSdk();
 
   const { albumData } = useAlbumByIdGetInfo({ sdk });
@@ -28,10 +36,11 @@ export const AlbumById: React.FC = () => {
     ids,
   } = useAlbumByIdGetTracks({ sdk });
 
-  const { tracksData } = useConvertSimplifiedTrackToTrackWithAudioFeatures({
-    ids,
-    sdk,
-  });
+  const { convertedToTracks } =
+    useConvertSimplifiedTrackToTrackWithAudioFeatures({
+      ids,
+      sdk,
+    });
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -46,10 +55,21 @@ export const AlbumById: React.FC = () => {
             albumData={albumData}
           />
         )}
-        <Container className="bg-black bg-opacity-60">
-          {tracksData && (
+
+        {isFetching && albumData && convertedToTracks.isFetching && (
+          <>
+            <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
+              {CreateProgress({ progress })}
+            </Container>
+          </>
+        )}
+        {convertedToTracks.data && (
+          <Container className="bg-black bg-opacity-60">
             <>
-              <AlbumByIdSection albumData={albumData} tracks={tracksData} />
+              <AlbumByIdSection
+                albumData={albumData}
+                tracks={convertedToTracks.data}
+              />
               {hasNextPage && (
                 <LoadMoreButton
                   isFetching={isFetching}
@@ -59,8 +79,8 @@ export const AlbumById: React.FC = () => {
                 />
               )}
             </>
-          )}
-        </Container>
+          </Container>
+        )}
       </AnalogBackground>
     </>
   );

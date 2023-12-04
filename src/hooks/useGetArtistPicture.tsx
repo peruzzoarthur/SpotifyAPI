@@ -19,6 +19,9 @@ export const useGetArtistPicture = ({
         .url;
       return fetchArtistPicture;
     },
+    enabled: !!sdk,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
   return { artistPicture };
 };
