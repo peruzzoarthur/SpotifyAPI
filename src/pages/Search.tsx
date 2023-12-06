@@ -23,6 +23,8 @@ import Logo from "@/components/Logo";
 import { SearchArtistsSection } from "@/components/search/SearchArtistsSection";
 import { SearchAlbumsSection } from "@/components/search/SearchAlbumsSection";
 import { SearchTracksSection } from "@/components/search/SearchTracksSection";
+import { CreateProgress } from "@/components/Progress";
+import { useCreateProgress } from "@/hooks/useCreateProgress";
 
 const FormSchema = z.object({
   Search: z.string(),
@@ -31,7 +33,10 @@ const FormSchema = z.object({
 export function Search() {
   const sdk = useSdk();
   const [firstRender, setFirstRender] = useState<boolean>(true);
+  const [newSearch, setNewSearch] = useState<boolean>(false);
+
   const [searchInput, setSearchInput] = useState<string>("not-a-valid-string");
+
   // FORM CFG
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -39,6 +44,13 @@ export function Search() {
     defaultValues: {
       Search: "",
     },
+  });
+
+  const { progress } = useCreateProgress({
+    // initialProgress: 13,
+    // finalProgress: 66,
+    delay: 1000,
+    conditional: newSearch,
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -52,14 +64,21 @@ export function Search() {
     });
     setSearchInput(data.Search);
     setFirstRender(false);
+    setNewSearch(true);
   }
 
-  const { data, isFetching } = useSearch({ searchInput, sdk, firstRender });
+  const { data, isFetching } = useSearch({
+    searchInput,
+    sdk,
+    firstRender,
+    setNewSearch,
+  });
 
   return (
     <>
       <AnalogBackground>
         <Logo />
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Container className="flex-row mb-2 bg-white bg-opacity-0">
@@ -88,9 +107,11 @@ export function Search() {
             </Container>
           </form>
         </Form>
-        {isFetching ? (
+        {isFetching && !firstRender && newSearch ? (
           <>
-            <div className="text-4xl text-white">Loading...</div>
+            <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
+              {CreateProgress({ progress })}
+            </Container>
           </>
         ) : (
           <>

@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 
 type CreateProgressDemoProps = {
   progress: number;
+  setProgress?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const CreateProgress = ({

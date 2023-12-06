@@ -10,9 +10,9 @@ import { CreateProgress } from "@/components/Progress";
 import { useCreateProgress } from "@/hooks/useCreateProgress";
 
 export const Playlists = () => {
-  const progress = useCreateProgress({
-    initialProgress: 13,
-    finalProgress: 66,
+  const { progress } = useCreateProgress({
+    // initialProgress: 13,
+    // finalProgress: 66,
     delay: 350,
   });
   const sdk = useSdk();

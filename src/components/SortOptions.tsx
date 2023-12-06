@@ -3,13 +3,13 @@ export const sortOptions = [
   "danceability",
   "energy",
   "instrumentalness",
-  "key",
+  // "key",
   "liveness",
   "loudness",
-  "mode",
+  // "mode",
   "speechiness",
-  "tempo",
-  "time_signature",
+  // "tempo",
+  // "time_signature",
   "valence",
 ];
 

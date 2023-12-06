@@ -12,9 +12,7 @@ import { Container } from "@/components/Container";
 import { useCreateProgress } from "@/hooks/useCreateProgress";
 
 export const Profile = () => {
-  const progress = useCreateProgress({
-    initialProgress: 13,
-    finalProgress: 66,
+  const { progress } = useCreateProgress({
     delay: 180,
   });
   const sdk: SpotifyApi = useSdk();

@@ -13,9 +13,7 @@ import { useCreateProgress } from "@/hooks/useCreateProgress";
 import { CreateProgress } from "@/components/Progress";
 
 export const TopTracks = () => {
-  const progress = useCreateProgress({
-    initialProgress: 13,
-    finalProgress: 66,
+  const { progress } = useCreateProgress({
     delay: 220,
   });
 

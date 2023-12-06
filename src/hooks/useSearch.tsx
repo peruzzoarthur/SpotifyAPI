@@ -11,6 +11,7 @@ type useSearchProps = {
   searchInput: string | undefined;
   sdk: SpotifyApi;
   firstRender: boolean;
+  setNewSearch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type SearchingReturnedObject = {
@@ -22,6 +23,7 @@ export const useSearch = ({
   searchInput,
   sdk,
   firstRender,
+  setNewSearch,
 }: useSearchProps) => {
   const types: ItemTypes[] = ["artist", "album", "track"];
   const { data, isFetching } = useQuery<SearchingReturnedObject | undefined>({
@@ -33,7 +35,7 @@ export const useSearch = ({
       const search = await sdk.search(searchInput, types, undefined, 5);
 
       if (!search.artists || !search.albums || !search.tracks) {
-        throw new Error("Failed fetching");
+        throw new Error("Failed searching");
       }
       const artistIds = search.artists.items.map((a) => a.id);
       const artists = await sdk.artists.get(artistIds);
@@ -44,9 +46,12 @@ export const useSearch = ({
       const tracksIds = search.tracks.items.map((t) => t.id);
       const tracks = await sdk.tracks.get(tracksIds);
 
+      setNewSearch(false);
+
       return { artists, albums, tracks };
     },
     enabled: !!sdk,
   });
+
   return { data, isFetching };
 };

@@ -33,7 +33,7 @@ export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
     setAlbums([]);
   }, [id]);
 
-  const { data: artistData } = useQuery<Artist>({
+  const { data: artistData, isFetching: isFetchingArtist } = useQuery<Artist>({
     queryKey: ["artist-by-id", id],
     queryFn: async () => {
       const fetchArtistData = await sdk.artists.get(id);
@@ -44,18 +44,21 @@ export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
     refetchOnWindowFocus: false,
   });
 
-  const { data: relatedArtists } = useQuery<Artists>({
-    queryKey: ["related-artists-by-id", id],
-    queryFn: async () => {
-      const fetchRelatedArtistsData = await sdk.artists.relatedArtists(id);
-      return fetchRelatedArtistsData;
-    },
-    enabled: !!sdk,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data: relatedArtistsData, isFetching: isFetchingRelatedArtists } =
+    useQuery<Artists>({
+      queryKey: ["related-artists-by-id", id],
+      queryFn: async () => {
+        const fetchRelatedArtistsData = await sdk.artists.relatedArtists(id);
+        return fetchRelatedArtistsData;
+      },
+      enabled: !!sdk,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    });
 
-  const { data: artistTopTracks } = useQuery<TrackWithAudioFeatures[]>({
+  const { data: artistTopTracks, isFetching: isFetchingTopTracks } = useQuery<
+    TrackWithAudioFeatures[]
+  >({
     queryKey: ["artist-top-tracks-by-id", id],
     queryFn: async () => {
       const fetchTopTracksData = await sdk.artists.topTracks(id, "BR");
@@ -86,7 +89,7 @@ export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-    isFetching,
+    isFetching: isFetchingAlbums,
   } = useInfiniteQuery<Page<SimplifiedAlbum>>({
     queryKey: ["artist-albums", id],
     queryFn: async ({ pageParam = 0 }) => {
@@ -117,16 +120,26 @@ export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
   });
 
   return {
-    artistData,
-    relatedArtists,
-    artistTopTracks,
+    artist: {
+      artistData,
+      isFetchingArtist,
+    },
+    relatedArtists: {
+      relatedArtistsData,
+      isFetchingRelatedArtists,
+    },
+    topTracks: {
+      artistTopTracks,
+      isFetchingTopTracks,
+    },
+
     artistAlbums: {
       data: artistAlbums,
       error,
       fetchNextPage,
       isFetchingNextPage,
       hasNextPage,
-      isFetching,
+      isFetchingAlbums,
       albums,
       setAlbums,
     },

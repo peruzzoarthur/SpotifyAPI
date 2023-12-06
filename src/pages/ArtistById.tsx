@@ -13,20 +13,21 @@ import React from "react";
 export const ArtistById: React.FC = () => {
   const sdk: SpotifyApi = useSdk();
 
-  const { artistData, relatedArtists, artistTopTracks, artistAlbums } =
-    useArtistById({
-      sdk,
-    });
+  const { artist, relatedArtists, topTracks, artistAlbums } = useArtistById({
+    sdk,
+  });
 
   return (
     <>
       <AnalogBackground>
-        {artistData && <ArtistByIdHeader artistData={artistData} />}
+        {artist.artistData && (
+          <ArtistByIdHeader artistData={artist.artistData} />
+        )}
 
-        {artistTopTracks && (
+        {topTracks.artistTopTracks && (
           <>
             <Container className="bg-black bg-opacity-30">
-              <ArtistByIdTopTracksSection tracks={artistTopTracks} />
+              <ArtistByIdTopTracksSection tracks={topTracks.artistTopTracks} />
             </Container>
           </>
         )}
@@ -38,16 +39,18 @@ export const ArtistById: React.FC = () => {
                 <LoadMoreButton
                   fetchNextPage={artistAlbums.fetchNextPage}
                   hasNextPage={artistAlbums.hasNextPage}
-                  isFetching={artistAlbums.isFetching}
+                  isFetching={artistAlbums.isFetchingAlbums}
                   isFetchingNextPage={artistAlbums.isFetchingNextPage}
                 />
               </ArtistByIdAlbumsSection>
             </Container>
           </>
         )}
-        {relatedArtists && (
+        {relatedArtists.relatedArtistsData && (
           <Container className="bg-black bg-opacity-50">
-            <ArtistByIdRelatedArtistsSection artists={relatedArtists.artists} />
+            <ArtistByIdRelatedArtistsSection
+              artists={relatedArtists.relatedArtistsData?.artists}
+            />
           </Container>
         )}
       </AnalogBackground>

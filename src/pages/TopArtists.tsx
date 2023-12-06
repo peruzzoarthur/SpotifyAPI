@@ -17,9 +17,7 @@ export type TimeRange = {
 };
 
 export const TopArtists = () => {
-  const progress = useCreateProgress({
-    initialProgress: 13,
-    finalProgress: 66,
+  const { progress } = useCreateProgress({
     delay: 200,
   });
   const [activeRange, setActiveRange] =
