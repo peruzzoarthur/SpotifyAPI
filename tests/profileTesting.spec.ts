@@ -5,8 +5,7 @@ test("test", async ({ page }) => {
   await page.waitForTimeout(3000);
 
   await page.getByTestId("login-username").click();
-  await page.getByTestId("login-username").fill("sp3rzo@gmail.com");
-  await page.getByTestId("login-password").fill("thisIsATestAcc");
+
   await page.waitForTimeout(3000);
 
   await page.getByTestId("login-password").press("Enter");
