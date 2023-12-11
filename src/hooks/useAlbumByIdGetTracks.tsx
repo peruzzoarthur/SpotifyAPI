@@ -24,7 +24,7 @@ export const useAlbumByIdGetTracks = ({ sdk }: { sdk: SpotifyApi }) => {
     queryFn: async ({ pageParam = "0" }: AlbumByIdQueryFnProps) => {
       const fetchAlbumTracksData = await sdk.albums.tracks(
         id,
-        undefined,
+        "BR",
         50,
         Number(pageParam)
       );

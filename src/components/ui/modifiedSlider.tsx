@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 
 export const ModifiedSlider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,

@@ -1,9 +1,12 @@
 import { Profile } from "./Profile";
 import { Login } from "./Login";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useSdk } from "@/hooks/useSdk";
 
 export const Home = () => {
-  const { data, error, isFetching } = useUserProfile();
+  const sdk = useSdk();
+
+  const { data, error, isFetching } = useUserProfile({ sdk });
 
   if (error) {
     return (

@@ -14,6 +14,7 @@ import { AlbumById } from "./pages/AlbumById";
 import { Search } from "./pages/Search";
 import { ArtistById } from "./pages/ArtistById";
 import { Albums } from "./pages/Albums";
+import { Login } from "./pages/Login";
 // import { TrackById } from "./pages/TrackById";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ function App() {
         <CartProvider>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/liked-songs" element={<LikedSongs />} />
             <Route path="/playlist/:id" element={<PlaylistById />} />
             <Route path="/playlists" element={<Playlists />} />

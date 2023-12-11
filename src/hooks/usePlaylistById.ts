@@ -1,4 +1,3 @@
-import { CustomError } from "@/CustomError";
 import { AudioFeaturesWithListOrder, TrackWithAudioFeatures } from "@/types";
 import {
   Page,
@@ -50,7 +49,7 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
 
     queryFn: async ({ pageParam = "0" }: PlaylistByIdQueryFnProps) => {
       if (!id) {
-        throw new CustomError("ID is null.", 400);
+        throw new Error("No ID provided");
       } // todo: adjust error with a pattern for all components
 
       // fetch data about the playlist, in order to be displayed as info [header]

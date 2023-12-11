@@ -18,7 +18,6 @@ export const Profile = () => {
   const sdk: SpotifyApi = useSdk();
 
   const { data, state, error } = useGetProfileData({ sdk });
-  console.log(state);
 
   if (error instanceof Error) {
     return (

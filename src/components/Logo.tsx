@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout } from "@/utils/logout";
 
 function Logo() {
   return (
@@ -65,6 +66,14 @@ function Logo() {
           <Link to={`/recommendation`}>
             <DropdownMenuItem className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60">
               Recommendations Liszt
+            </DropdownMenuItem>
+          </Link>
+          <Link to={`/`}>
+            <DropdownMenuItem
+              onClick={() => logout()}
+              className="text-xl cursor-pointer hover:bg-black hover:bg-opacity-60 focus:bg-black focus:bg-opacity-60"
+            >
+              Logout
             </DropdownMenuItem>
           </Link>
         </DropdownMenuContent>

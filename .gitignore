@@ -26,3 +26,7 @@ dist-ssr
 
 src/old_spotify.ts
 src/old_spotify2.ts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

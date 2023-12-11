@@ -63,8 +63,12 @@ describe("useAlbumById Success Cases", () => {
         wrapper,
       }
     );
-    await waitFor(() => expect(result.current.data).toBeDefined());
-    expect(result.current.data?.pages[0].items).toEqual(pagedAlbumMock.items);
+    await waitFor(() =>
+      expect(result.current.pagedSimplifiedTracks).toBeDefined()
+    );
+    expect(result.current.pagedSimplifiedTracks?.pages[0].items).toEqual(
+      pagedAlbumMock.items
+    );
     expect(result.current.error).toBeNull();
     expect(result.current.fetchNextPage).toBeInstanceOf(Function);
     expect(result.current.isFetchingNextPage).toBe(false);

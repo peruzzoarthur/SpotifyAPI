@@ -1,11 +1,12 @@
-import { client_id, redirect_url, scopes } from "@/spotify";
-import { useSpotify } from "./useSpotify";
 import { SpotifyApi, UserProfile } from "@spotify/web-api-ts-sdk";
 import { useQuery } from "@tanstack/react-query";
 import { SpotifyError } from "@/CustomError";
 
-export const useUserProfile = () => {
-  const sdk = useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
+type useUserProfileProps = {
+  sdk: SpotifyApi;
+};
+
+export const useUserProfile = ({ sdk }: useUserProfileProps) => {
   const { data, error, isFetching } = useQuery<UserProfile, SpotifyError>({
     queryKey: ["home"],
     queryFn: async () => {
@@ -14,6 +15,8 @@ export const useUserProfile = () => {
     },
     enabled: !!sdk,
     throwOnError: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   return { data, error, isFetching };
