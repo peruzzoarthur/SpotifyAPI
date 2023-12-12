@@ -21,7 +21,7 @@ export const PlaylistById = () => {
 
   const {
     query,
-    playlistData,
+    playlistInfo,
     setSortValue,
     sortedTracks,
     playlistTracksData,
@@ -29,7 +29,7 @@ export const PlaylistById = () => {
 
   const { profilePicture } = useGetProfilePicture({
     sdk: sdk,
-    userId: playlistData?.owner.id,
+    userId: playlistInfo?.owner.id,
   });
 
   if (query.error) {
@@ -40,14 +40,14 @@ export const PlaylistById = () => {
   return (
     <>
       <AnalogBackground>
-        {playlistData && profilePicture && (
+        {playlistInfo && profilePicture && (
           <PlaylistByIdHeader
             profilePicture={profilePicture}
-            playlistData={playlistData}
+            playlistData={playlistInfo}
           />
         )}
 
-        {query.isFetching && playlistData && profilePicture && !query.data && (
+        {query.isFetching && playlistInfo && profilePicture && !query.data && (
           <>
             <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
               {CreateProgress({ progress })}

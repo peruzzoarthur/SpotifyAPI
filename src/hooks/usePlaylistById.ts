@@ -25,7 +25,7 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
   const [playlistTracksData, setPlaylistTracksData] = useState<
     TrackWithAudioFeatures[] | undefined
   >();
-  const [playlistData, setPlaylistData] = useState<Playlist>();
+  // const [playlistData, setPlaylistData] = useState<Playlist>();
 
   const updateTracks = (newTracks: TrackWithAudioFeatures[]) => {
     setPlaylistTracksData((oldTracks) => {
@@ -43,11 +43,14 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
       if (!id) {
         throw new Error("No ID provided");
       }
-
+      // fetch data about the playlist, in order to be displayed as info [header]
       const fetchPlaylistData = await sdk.playlists.getPlaylist(id);
-      setPlaylistData(fetchPlaylistData);
       return fetchPlaylistData;
+      // setPlaylistTracksData(fetchPlaylistData)
     },
+    enabled: !!sdk,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const {
@@ -64,8 +67,6 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
       if (!id) {
         throw new Error("No ID provided");
       } // todo: adjust error with a pattern for all components
-
-      // fetch data about the playlist, in order to be displayed as info [header]
 
       // fetch the playlisted tracks
       const playlist = await sdk.playlists.getPlaylistItems(
@@ -140,7 +141,7 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
       isFetching,
     },
     sortedTracks,
-    playlistData,
+    // playlistData,
     playlistInfo,
     setSortValue,
     playlistTracksData,

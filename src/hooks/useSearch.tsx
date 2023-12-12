@@ -25,6 +25,9 @@ export const useSearch = ({
   firstRender,
   setNewSearch,
 }: useSearchProps) => {
+  function filterTracksById(trackArray: Track[], idArray: string[]) {
+    return trackArray.filter((track) => idArray.includes(track.id.toString()));
+  }
   const types: ItemTypes[] = ["artist", "album", "track"];
   const { data, isFetching } = useQuery<SearchingReturnedObject | undefined>({
     queryKey: ["search", searchInput, types, firstRender],
@@ -44,7 +47,10 @@ export const useSearch = ({
       const albums = await sdk.albums.get(albumsIds);
 
       const tracksIds = search.tracks.items.map((t) => t.id);
-      const tracks = await sdk.tracks.get(tracksIds);
+      console.log(tracksIds);
+      const fetchTracks = await sdk.tracks.get(tracksIds);
+      console.log(fetchTracks);
+      const tracks = filterTracksById(fetchTracks, tracksIds);
 
       setNewSearch(false);
 
