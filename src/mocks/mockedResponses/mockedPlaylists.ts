@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-const playlist_79yWS04x9R6quKSPpW8Ynm_info = {
+export const playlist_info = {
   collaborative: false,
   external_urls: {
     spotify: "https://open.spotify.com/playlist/79yWS04x9R6quKSPpW8Ynm",
@@ -9487,7 +9487,7 @@ const playlist_79yWS04x9R6quKSPpW8Ynm_info = {
     ],
   },
 };
-const playlist_79yWS04x9R6quKSPpW8Ynm_tracks = {
+export const playlist_tracks = {
   href: "https://api.spotify.com/v1/playlists/79yWS04x9R6quKSPpW8Ynm/tracks?offset=0&limit=50&locale=en-US,en;q=0.9",
   items: [
     {
@@ -18900,7 +18900,7 @@ const playlist_79yWS04x9R6quKSPpW8Ynm_tracks = {
   total: 20,
 };
 
-const playlist_2vFRh5TUw5mE3aBaf8cUap_info = {
+export const playlist_2vFRh5TUw5mE3aBaf8cUap_info = {
   collaborative: false,
   external_urls: {
     spotify: "https://open.spotify.com/playlist/2vFRh5TUw5mE3aBaf8cUap",
@@ -27084,7 +27084,7 @@ const playlist_2vFRh5TUw5mE3aBaf8cUap_info = {
     ],
   },
 };
-const playlist_2vFRh5TUw5mE3aBaf8cUap_tracks = {
+export const playlist_2vFRh5TUw5mE3aBaf8cUap_tracks = {
   href: "https://api.spotify.com/v1/playlists/2vFRh5TUw5mE3aBaf8cUap/tracks?offset=0&limit=50&locale=en-US,en;q=0.9",
   items: [
     {
@@ -35196,7 +35196,6 @@ const playlist_2vFRh5TUw5mE3aBaf8cUap_tracks = {
   previous: null,
   total: 20,
 };
-
 const playlist_6ReZs9su40oyK0NZCLM5V6_info = {
   collaborative: false,
   external_urls: {
@@ -51033,13 +51032,5 @@ const playlist_6ReZs9su40oyK0NZCLM5V6_tracks = {
   total: 20,
 };
 
-export const mockedPlaylistInfo = {
-  playlist_2vFRh5TUw5mE3aBaf8cUap_info,
-  playlist_79yWS04x9R6quKSPpW8Ynm_info,
-  playlist_6ReZs9su40oyK0NZCLM5V6_info,
-};
-export const mockedPlaylistTracks = {
-  playlist_2vFRh5TUw5mE3aBaf8cUap_tracks,
-  playlist_79yWS04x9R6quKSPpW8Ynm_tracks,
-  playlist_6ReZs9su40oyK0NZCLM5V6_tracks,
-};
+export const mockedPlaylistInfo = playlist_2vFRh5TUw5mE3aBaf8cUap_info;
+export const mockedPlaylistTracks = playlist_2vFRh5TUw5mE3aBaf8cUap_tracks;

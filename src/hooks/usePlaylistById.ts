@@ -6,7 +6,7 @@ import {
   SpotifyApi,
   Track,
 } from "@spotify/web-api-ts-sdk";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -37,6 +37,19 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
     });
   };
 
+  const { data: playlistInfo } = useQuery<Playlist>({
+    queryKey: ["playlistInfo", { id }],
+    queryFn: async () => {
+      if (!id) {
+        throw new Error("No ID provided");
+      }
+
+      const fetchPlaylistData = await sdk.playlists.getPlaylist(id);
+      setPlaylistData(fetchPlaylistData);
+      return fetchPlaylistData;
+    },
+  });
+
   const {
     data,
     error,
@@ -53,8 +66,6 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
       } // todo: adjust error with a pattern for all components
 
       // fetch data about the playlist, in order to be displayed as info [header]
-      const fetchPlaylistData = await sdk.playlists.getPlaylist(id);
-      setPlaylistData(fetchPlaylistData);
 
       // fetch the playlisted tracks
       const playlist = await sdk.playlists.getPlaylistItems(
@@ -130,6 +141,7 @@ export const usePlaylistById = ({ sdk }: usePlaylistByIdProps) => {
     },
     sortedTracks,
     playlistData,
+    playlistInfo,
     setSortValue,
     playlistTracksData,
   };

@@ -25,6 +25,10 @@ import {
 import {
   mockedPlaylistInfo,
   mockedPlaylistTracks,
+  playlist_2vFRh5TUw5mE3aBaf8cUap_info,
+  playlist_2vFRh5TUw5mE3aBaf8cUap_tracks,
+  playlist_info,
+  playlist_tracks,
 } from "./mockedResponses/mockedPlaylists";
 
 export const handlers = [
@@ -105,66 +109,21 @@ export const handlers = [
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Playlists
 
-  http.get(
-    "https://api.spotify.com/v1/playlists/2vFRh5TUw5mE3aBaf8cUap",
-    () => {
-      console.log("Mocked playlist");
-      HttpResponse.json(mockedPlaylistInfo);
-    }
-  ),
-  http.get(
-    "https://api.spotify.com/v1/playlists/2vFRh5TUw5mE3aBaf8cUap/tracks",
-    () => {
-      console.log("Mocked playlist tracks");
-      HttpResponse.json(mockedPlaylistTracks);
-    }
-  ),
-
-  http.get(
-    "https://api.spotify.com/v1/playlists/79yWS04x9R6quKSPpW8Ynm",
-    () => {
-      console.log("Mocked playlist");
-      HttpResponse.json(mockedPlaylistInfo);
-    }
-  ),
-  http.get(
-    "https://api.spotify.com/v1/playlists/79yWS04x9R6quKSPpW8Ynm/tracks",
-    () => {
-      console.log("Mocked playlist tracks");
-      HttpResponse.json(mockedPlaylistTracks);
-    }
-  ),
-
-  http.get(
-    "https://api.spotify.com/v1/playlists/6ReZs9su40oyK0NZCLM5V6",
-    () => {
-      console.log("Mocked playlist");
-      HttpResponse.json(mockedPlaylistInfo);
-    }
-  ),
-  http.get(
-    "https://api.spotify.com/v1/playlists/6ReZs9su40oyK0NZCLM5V6/tracks",
-    () => {
-      console.log("Mocked playlist tracks");
-      HttpResponse.json(mockedPlaylistTracks);
-    }
-  ),
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // http.post("https://accounts.spotify.com/api/token", () => {
-  //   console.log("any tokens?");
-  //   return HttpResponse.json({
-  //     access_token:
-  //       "BQBGuxGClOybhE-vG8anNClZE2UlXdHJ0ZEVzBAlGNuz36Gd9dC_XTxyzoHj_4cLzlWDxgyivmoSwduKE2h5kZoUc9LW_ep1iR5EI-1n6ifUxb5oY_rJV9VguMLZVHZvTEZB62mlya0bDyjg5SID0ZEFteikUdmVdCVZ1iex-R4_iFie0YABZi8lvxejPSGBzld12s3WsjlTJ252tG-YfTSr2OFRrKm4ePoIsCTaEyu1vCV6WWCJoWw9inFKUtRxM3IySAIMZmEaXuUgJtSx",
-  //     token_type: "Bearer",
-  //     expires_in: 3600,
-  //     refresh_token:
-  //       "AQBLPU0lnQ1ZKMCOo5pEQn2ZGa1dKhIF5dCkBw5gQyfak0hAxV3PNPxdEfdasB-KWBeu4uzL_sQsQ9677wfDdEGgRu2uGfdKWaTg8uZXXYLnBUaS0a48R6xXZWEL4iMYy0M",
-  //     scope:
-  //       "playlist-read-private user-library-read playlist-modify-private playlist-modify-public user-read-email user-read-private user-top-read",
-  //   });
-  // }),
+  http.post("https://accounts.spotify.com/api/token", () => {
+    console.log("any tokens?");
+    return HttpResponse.json({
+      access_token:
+        "BQBGuxGClOybhE-vG8anNClZE2UlXdHJ0ZEVzBAlGNuz36Gd9dC_XTxyzoHj_4cLzlWDxgyivmoSwduKE2h5kZoUc9LW_ep1iR5EI-1n6ifUxb5oY_rJV9VguMLZVHZvTEZB62mlya0bDyjg5SID0ZEFteikUdmVdCVZ1iex-R4_iFie0YABZi8lvxejPSGBzld12s3WsjlTJ252tG-YfTSr2OFRrKm4ePoIsCTaEyu1vCV6WWCJoWw9inFKUtRxM3IySAIMZmEaXuUgJtSx",
+      token_type: "Bearer",
+      expires_in: 3600,
+      refresh_token:
+        "AQBLPU0lnQ1ZKMCOo5pEQn2ZGa1dKhIF5dCkBw5gQyfak0hAxV3PNPxdEfdasB-KWBeu4uzL_sQsQ9677wfDdEGgRu2uGfdKWaTg8uZXXYLnBUaS0a48R6xXZWEL4iMYy0M",
+      scope:
+        "playlist-read-private user-library-read playlist-modify-private playlist-modify-public user-read-email user-read-private user-top-read",
+    });
+  }),
 
   http.get("https://api.spotify.com/v1/me/tracks?offset=0&limit=50", () => {
     return HttpResponse.json(likedSongs.likedSongsFirstFetch);
@@ -193,4 +152,20 @@ export const handlers = [
       uri: "spotify:user:sp3ruzzo",
     });
   }),
+
+  http.get(
+    "https://api.spotify.com/v1/playlists/4UwLge8JqEjxMpm8coNvSH",
+    () => {
+      console.log("Playlist Mock");
+      HttpResponse.json(playlist_info);
+    }
+  ),
+
+  http.get(
+    "https://api.spotify.com/v1/playlists/4UwLge8JqEjxMpm8coNvSH/tracks",
+    () => {
+      console.log("Playlist Tracks Mock");
+      HttpResponse.json({ data: "im not ok" });
+    }
+  ),
 ];
