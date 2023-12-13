@@ -11,10 +11,6 @@ export const useConvertSimplifiedTrackToTrackWithAudioFeatures = ({
   ids,
   sdk,
 }: useConvertSimplifiedTrackToTrackProps) => {
-  function filterTracksById(trackArray: Track[], idArray: string[]) {
-    return trackArray.filter((track) => idArray.includes(track.id.toString()));
-  }
-
   const { data, isFetching } = useQuery<TrackWithAudioFeatures[] | undefined>({
     queryKey: ["album-by-id", "tracks", ids],
     queryFn: async () => {
@@ -23,10 +19,9 @@ export const useConvertSimplifiedTrackToTrackWithAudioFeatures = ({
       }
 
       const fetch = await sdk.tracks.get(ids);
-      const checkedTracks = filterTracksById(fetch, ids);
       const fetchAudioFeatures = await sdk.tracks.audioFeatures(ids);
-      const tracksWithAudioFeatures: TrackWithAudioFeatures[] =
-        checkedTracks.map((t) => {
+      const tracksWithAudioFeatures: TrackWithAudioFeatures[] = fetch.map(
+        (t) => {
           const correspondingAudioFeature = fetchAudioFeatures.find(
             (audioFeature) => audioFeature.id === t.id
           );
@@ -34,7 +29,8 @@ export const useConvertSimplifiedTrackToTrackWithAudioFeatures = ({
             ...(t as Track),
             audio_features: correspondingAudioFeature,
           };
-        });
+        }
+      );
 
       return tracksWithAudioFeatures;
     },

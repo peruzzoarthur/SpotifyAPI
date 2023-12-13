@@ -37,7 +37,7 @@ export const AlbumByIdHeader: React.FC<AlbumByIdHeaderProps> = ({
                   className="w-6 h-6 mr-1 rounded-full"
                 />
               )}
-              <p className="flex flex-row mt-1 mr-2">
+              <div className="flex flex-row mt-1 mr-2">
                 {albumData.artists.map((a, index) => (
                   <Link
                     className="flex flex-row mr-1"
@@ -54,7 +54,7 @@ export const AlbumByIdHeader: React.FC<AlbumByIdHeaderProps> = ({
                     .map((t) => t.duration_ms)
                     .reduce((acc, cv) => acc + cv, 0)
                 )}
-              </p>
+              </div>
             </div>
             <div className="flex flex-row mt-4 ml-5 text-xs text-slate-100">
               <Link to={"/"}>

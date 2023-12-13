@@ -8,8 +8,8 @@ import {
   userSaveAlbumsMock,
 } from "./mockedResponses";
 import { audioFeaturesMock } from "./mockedResponses/tracksAudioFeatures";
-import { likedSongs } from "./mockedResponses/likedSongs";
 import { allMockedTracks } from "./mockedResponses/tracksRoute";
+import { excludeItemFromArray } from "@/utils/excludeItemFromArray";
 
 export const handlers = [
   http.get("https://api.spotify.com/v1/me/top/artists", () => {
@@ -39,10 +39,6 @@ export const handlers = [
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  http.get("https://api.spotify.com/v1/me/tracks?offset=0&limit=50", () => {
-    return HttpResponse.json(likedSongs.likedSongsFirstFetch);
-  }),
-
   http.get("https://api.spotify.com/v1/users/sp3ruzzo", () => {
     console.log("Got your profile...");
     return HttpResponse.json({
@@ -68,11 +64,24 @@ export const handlers = [
     });
   }),
 
-  http.get(
-    "https://api.spotify.com/v1/tracks?ids=3XvcgEkQfjasB5NnY8P4QA,7K5NiBQk7QJ0qehZ4e6LmB,5JFk3TqqWnZenBewn7nqCW,6La6a40pMKEoxtpmruuzaP",
-    () => {
-      console.log("AlbumById --- tracksMock");
-      return HttpResponse.json(allMockedTracks);
+  http.get("https://api.spotify.com/v1/tracks", ({ request }) => {
+    const url = new URL(request.url);
+    console.log(url);
+    const ids1Line = url.searchParams.getAll("ids");
+    const singleLineIds = ids1Line[0];
+    const ids = singleLineIds.split(",");
+    console.log(ids);
+    console.log("Tracks --- tracks Mock");
+
+    const checkMockedTracks = allMockedTracks.tracks.filter((track) =>
+      ids.includes(track.id)
+    );
+    if (checkMockedTracks.length > 0) {
+      return HttpResponse.json({
+        tracks: checkMockedTracks,
+      });
+    } else {
+      return;
     }
-  ),
+  }),
 ];
