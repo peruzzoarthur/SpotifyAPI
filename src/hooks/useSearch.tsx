@@ -14,7 +14,7 @@ type useSearchProps = {
   setNewSearch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type SearchingReturnedObject = {
+export type SearchingReturnedObject = {
   artists: Artist[];
   albums: Album[];
   tracks: Track[];

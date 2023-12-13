@@ -1,16 +1,18 @@
 import { setupWorker } from "msw/browser";
-import { handlers } from "./handlers";
+import { tracksHandlers } from "./handlers/tracksHandlers";
 import { playlistHandlers } from "./handlers/playlistHandlers";
 import { albumHandlers } from "./handlers/albumHandlers";
 import { searchHandlers } from "./handlers/searchHandlers";
 import { likeSongsHandlers } from "./handlers/likedSongsHandlers";
-// import { tokenHandler } from "./handlers/tokenHandler";
+import { tokenHandler } from "./handlers/tokenHandler";
+import { meHandlers } from "./handlers/meHandlers";
 
 export const worker = setupWorker(
-  ...handlers,
   ...playlistHandlers,
-  // ...tokenHandler,
+  ...tokenHandler,
   ...albumHandlers,
   ...searchHandlers,
-  ...likeSongsHandlers
+  ...likeSongsHandlers,
+  ...meHandlers,
+  ...tracksHandlers
 );

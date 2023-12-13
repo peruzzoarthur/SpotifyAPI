@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
 import {
   profileMock,
   topArtistsMock,
   topTracksMock,
   userPlaylistsMock,
   userSaveAlbumsMock,
-} from "./mockedResponses";
-import { audioFeaturesMock } from "./mockedResponses/tracksAudioFeatures";
-import { allMockedTracks } from "./mockedResponses/tracksRoute";
-import { excludeItemFromArray } from "@/utils/excludeItemFromArray";
+} from "../mockedResponses";
+import { audioFeaturesMock } from "../mockedResponses/tracksAudioFeatures";
 
-export const handlers = [
+export const meHandlers = [
   http.get("https://api.spotify.com/v1/me/top/artists", () => {
     return HttpResponse.json(topArtistsMock);
   }),
@@ -37,8 +34,6 @@ export const handlers = [
     return HttpResponse.json(audioFeaturesMock);
   }),
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   http.get("https://api.spotify.com/v1/users/sp3ruzzo", () => {
     console.log("Got your profile...");
     return HttpResponse.json({
@@ -62,26 +57,5 @@ export const handlers = [
       type: "user",
       uri: "spotify:user:sp3ruzzo",
     });
-  }),
-
-  http.get("https://api.spotify.com/v1/tracks", ({ request }) => {
-    const url = new URL(request.url);
-    console.log(url);
-    const ids1Line = url.searchParams.getAll("ids");
-    const singleLineIds = ids1Line[0];
-    const ids = singleLineIds.split(",");
-    console.log(ids);
-    console.log("Tracks --- tracks Mock");
-
-    const checkMockedTracks = allMockedTracks.tracks.filter((track) =>
-      ids.includes(track.id)
-    );
-    if (checkMockedTracks.length > 0) {
-      return HttpResponse.json({
-        tracks: checkMockedTracks,
-      });
-    } else {
-      return;
-    }
   }),
 ];
