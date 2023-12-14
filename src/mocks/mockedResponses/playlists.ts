@@ -3729,7 +3729,7 @@ export const playlistsFourthFetch: Page<SimplifiedPlaylist> = {
   items: [
     {
       collaborative: false,
-      description: "Created with Coldzapp Spotify API",
+      description: "Created with Coldz@pp Spotify API",
       external_urls: {
         spotify: "https://open.spotify.com/playlist/67kf7DDWBnhuNh9E7OExuB",
       },
