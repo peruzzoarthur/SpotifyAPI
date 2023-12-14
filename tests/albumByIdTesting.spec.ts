@@ -15,6 +15,7 @@ test("test", async ({ page }) => {
   // });
 
   await page.goto("http://localhost:5173/album/6Sts4Yh7KsDFwq2yTWrGGV");
+  await page.waitForTimeout(3000);
 
   await expect(page.getByRole("heading")).toContainText(
     "The Black Saint And The Sinner Lady"
@@ -25,6 +26,7 @@ test("test", async ({ page }) => {
   await expect(page.getByRole("heading")).toContainText(
     "The Black Saint And The Sinner Lady"
   );
+
   await expect(page.locator(".w-6").first()).toBeVisible();
   await expect(page.getByRole("main")).toContainText("Charles Mingus •");
   await expect(page.getByRole("main")).toContainText(

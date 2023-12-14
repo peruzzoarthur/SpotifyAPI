@@ -32,16 +32,16 @@ export const searchHandlers = [
     ({ request }) => {
       const url = new URL(request.url);
       const searchInput = url.search.toLocaleLowerCase();
-      console.log("Searching Artists...");
       console.log(searchInput);
+      console.log("Searching Artists...");
       if (
         searchInput ===
-        "?ids=22wz7m8sxp5thdruny3gxt%2c36qjpde2go2kgarlehcdtp%2c4ngfozcl9ml67xzm0xzivc%2c4y2caf3w4wz81gixwjbxrf%2c4k808gbkuvgztpnenhtje2"
+        "?ids=22wz7m8sxp5thdruny3gxt%2c36qjpde2go2kgarlehcdtp%2c4ngfozcl9ml67xzm0xzivc%2c3ft0q1e2a8wz3mboompmi9%2c4y2caf3w4wz81gixwjbxrf"
       ) {
         return HttpResponse.json({ artists: searchTheDoorsMock.artists });
       } else if (
         searchInput ===
-        "?ids=2112wz7m8sxp5thdruny3gxt%2c4ngfozcl9ml67xzm0xzivc%2c36qjpde2go2kgarlehcdtp%2c3ft0q1e2a8wz3mboompmi9%2c4y2caf3w4wz81gixwjbxrf"
+        "?ids=2qsynagsdaqzj3u9hgdzjd%2c6bh2lormtpjy3x9dyrghvj%2c2vawvc8sucfkrxejdok7ee%2c1tsg4aumsmt1tcq2nhpov9%2c6lspz3xk0tmspfu70fkqny"
       ) {
         return HttpResponse.json({ artists: searchBobMarleyMock.artists });
       } else {
@@ -56,7 +56,7 @@ export const searchHandlers = [
     const searchInput = url.search.toLocaleLowerCase();
     if (
       searchInput ===
-      "?ids=1yzir5finfolzpgksvpliy%2c1jwmehn3ggal6isoylfwbn%2c7ikutic9uwuvngygptqnhs%2c6v5ivmmy1ivwtbfnqoifsf%2c6aflokpjjff652jevcsozx"
+      "?ids=1jwmehn3ggal6isoylfwbn%2c1yzir5finfolzpgksvpliy%2c6v5ivmmy1ivwtbfnqoifsf%2c7ikutic9uwuvngygptqnhs%2c6aflokpjjff652jevcsozx"
     ) {
       console.log("Artists Mocked response...");
       return HttpResponse.json({
@@ -64,7 +64,7 @@ export const searchHandlers = [
       });
     } else if (
       searchInput ===
-      "?ids=1jwmehn3ggal6isoylfwbn%2c1yzir5finfolzpgksvpliy%2c7ikutic9uwuvngygptqnhs%2c6v5ivmmy1ivwtbfnqoifsf%2c6aflokpjjff652jevcsozx"
+      "?ids=4jkeipwuutjlx9usnydhzn%2c2mbbv0ad6b4ydhmzlzay7s%2c4efdm5bjlaf1xx3snjutfe%2c09df7muzbqwbdygve0t30r%2c321q9p7pelvzcfawxml7vx"
     ) {
       console.log("Albums Mocked response...");
       return HttpResponse.json({

@@ -28,11 +28,11 @@ test("test", async ({ page }) => {
   await page.getByRole("button", { name: "Spotify Logo" }).click();
   await page.locator("html").click();
   await page
-    .getByRole("row", { name: "1 Slightest Right Slightest" })
+    .getByRole("row", { name: "8 Slightest Right Slightest" })
     .getByRole("button")
     .click();
   await page
-    .getByRole("row", { name: "1 Slightest Right Slightest" })
+    .getByRole("row", { name: "8 Slightest Right Slightest" })
     .getByRole("button")
     .click();
   await page.getByText("Click to close message.").click();
