@@ -1,5 +1,5 @@
 import { HttpResponse, http } from "msw";
-import { profileMock, userSaveAlbumsMock } from "../mockedResponses";
+import { profileMock } from "../mockedResponses";
 import {
   longTermTopArtistsFirstRequest,
   longTermTopArtistsSecondRequest,
@@ -25,6 +25,11 @@ import {
   playlistsThirdFetch,
   profileFetchFivePlaylists,
 } from "../mockedResponses/playlists";
+import {
+  profileFetchFiveAlbums,
+  userAlbumsFirstRequest,
+  userAlbumsSecondRequest,
+} from "../mockedResponses/userAlbums";
 
 export const meHandlers = [
   http.get("https://api.spotify.com/v1/me", () => {
@@ -36,25 +41,25 @@ export const meHandlers = [
 
     if (search === "?limit=5") {
       console.log("Profile top artists :)");
-      return HttpResponse.json(profileFetchFiveArtists);
+      return HttpResponse.json(JSON.parse(profileFetchFiveArtists));
     } else if (search === "?time_range=short_term&limit=10&offset=0") {
       console.log("Short term -> first fetch - artists");
-      return HttpResponse.json(shortTermTopArtistsFirstRequest);
+      return HttpResponse.json(JSON.parse(shortTermTopArtistsFirstRequest));
     } else if (search === "?time_range=short_term&limit=10&offset=10") {
       console.log("Short term -> second fetch - artists");
-      return HttpResponse.json(shortTermTopArtistsSecondRequest);
+      return HttpResponse.json(JSON.parse(shortTermTopArtistsSecondRequest));
     } else if (search === "?time_range=medium_term&limit=10&offset=0") {
       console.log("Medium term -> first fetch - artists");
-      return HttpResponse.json(mediumTermTopArtistsFirstRequest);
+      return HttpResponse.json(JSON.parse(mediumTermTopArtistsFirstRequest));
     } else if (search === "?time_range=medium_term&limit=10&offset=10") {
       console.log("Medium term -> second fetch - artists");
-      return HttpResponse.json(mediumTermTopArtistsSecondRequest);
+      return HttpResponse.json(JSON.parse(mediumTermTopArtistsSecondRequest));
     } else if (search === "?time_range=long_term&limit=10&offset=0") {
       console.log("Long term -> first fetch - artists");
-      return HttpResponse.json(longTermTopArtistsFirstRequest);
+      return HttpResponse.json(JSON.parse(longTermTopArtistsFirstRequest));
     } else if (search === "?time_range=long_term&limit=10&offset=10") {
       console.log("Long term -> second fetch - artists");
-      return HttpResponse.json(longTermTopArtistsSecondRequest);
+      return HttpResponse.json(JSON.parse(longTermTopArtistsSecondRequest));
     }
   }),
 
@@ -63,25 +68,25 @@ export const meHandlers = [
     const search = url.search;
     if (search === "?limit=5") {
       console.log("Profile top tracks :)");
-      return HttpResponse.json(profileFetchFiveTracks);
+      return HttpResponse.json(JSON.parse(profileFetchFiveTracks));
     } else if (search === "?time_range=short_term&limit=10&offset=0") {
       console.log("Short term -> first fetch - tracks");
-      return HttpResponse.json(shortTermTopTracksFirstRequest);
+      return HttpResponse.json(JSON.parse(shortTermTopTracksFirstRequest));
     } else if (search === "?time_range=short_term&limit=10&offset=10") {
       console.log("Short term -> second fetch - tracks");
-      return HttpResponse.json(shortTermTopTracksSecondRequest);
+      return HttpResponse.json(JSON.parse(shortTermTopTracksSecondRequest));
     } else if (search === "?time_range=medium_term&limit=10&offset=0") {
       console.log("Medium term -> first fetch - tracks");
-      return HttpResponse.json(mediumTermTopTracksFirstRequest);
+      return HttpResponse.json(JSON.parse(mediumTermTopTracksFirstRequest));
     } else if (search === "?time_range=medium_term&limit=10&offset=10") {
       console.log("Medium term -> second fetch - tracks");
-      return HttpResponse.json(mediumTermTopTracksSecondRequest);
+      return HttpResponse.json(JSON.parse(mediumTermTopTracksSecondRequest));
     } else if (search === "?time_range=long_term&limit=10&offset=0") {
       console.log("Long term -> first fetch - tracks");
-      return HttpResponse.json(longTermTopTracksFirstRequest);
+      return HttpResponse.json(JSON.parse(longTermTopTracksFirstRequest));
     } else if (search === "?time_range=long_term&limit=10&offset=10") {
       console.log("Long term -> second fetch - tracks");
-      return HttpResponse.json(longTermTopTracksSecondRequest);
+      return HttpResponse.json(JSON.parse(longTermTopTracksSecondRequest));
     }
   }),
 
@@ -90,20 +95,29 @@ export const meHandlers = [
     const search = url.search;
     console.log(search);
     if (search === "?limit=5") {
-      return HttpResponse.json(profileFetchFivePlaylists);
+      return HttpResponse.json(JSON.parse(profileFetchFivePlaylists));
     } else if (search === "?limit=25&offset=0") {
-      return HttpResponse.json(playlistsFirstFetch);
+      return HttpResponse.json(JSON.parse(playlistsFirstFetch));
     } else if (search === "?limit=25&offset=25") {
-      return HttpResponse.json(playlistsSecondFetch);
+      return HttpResponse.json(JSON.parse(playlistsSecondFetch));
     } else if (search === "?limit=25&offset=50") {
-      return HttpResponse.json(playlistsThirdFetch);
+      return HttpResponse.json(JSON.parse(playlistsThirdFetch));
     } else if (search === "?limit=25&offset=75") {
-      return HttpResponse.json(playlistsFourthFetch);
+      return HttpResponse.json(JSON.parse(playlistsFourthFetch));
     }
   }),
 
-  http.get("https://api.spotify.com/v1/me/albums", () => {
-    return HttpResponse.json(userSaveAlbumsMock);
+  http.get("https://api.spotify.com/v1/me/albums", ({ request }) => {
+    const url = new URL(request.url);
+    const search = url.search;
+    console.log(search);
+    if (search === "?limit=5") {
+      return HttpResponse.json(JSON.parse(profileFetchFiveAlbums));
+    } else if (search === "?limit=50&offset=0") {
+      return HttpResponse.json(JSON.parse(userAlbumsFirstRequest));
+    } else if (search === "?limit=50&offset=50") {
+      return HttpResponse.json(JSON.parse(userAlbumsSecondRequest));
+    }
   }),
 
   http.get("https://api.spotify.com/v1/users/sp3ruzzo", () => {

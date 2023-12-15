@@ -4,9 +4,9 @@ test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:5173/");
   // await page.waitForTimeout(3000);
 
-  await page.addInitScript({
-    path: "./tests/preload.ts",
-  });
+  // await page.addInitScript({
+  //   path: "./tests/preload.ts",
+  // });
 });
 
 test("test", async ({ page }) => {
@@ -49,7 +49,7 @@ test("test", async ({ page }) => {
 
   await page.getByRole("button", { name: "Spotify Logo" }).click();
   await page.getByRole("link", { name: "Tracks" }).click();
-  await page.getByRole("button", { name: "Add" }).first().click();
+  await page.getByRole("button", { name: "Add" }).nth(2).click();
   await page.getByRole("button", { name: "Add" }).nth(3).click();
   await page.getByText("Click to close message.").click();
   await page.getByRole("button", { name: "Spotify Logo" }).click();
@@ -61,6 +61,6 @@ test("test", async ({ page }) => {
   await expect(
     page.getByRole("img", { name: "Slightest Right" })
   ).toBeVisible();
-  await page.getByRole("img", { name: "Champagne Shots" }).click();
+  await page.getByRole("img", { name: "PIRANHA" }).click();
   await page.getByRole("img", { name: "I Know You Know" }).click();
 });

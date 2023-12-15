@@ -11,11 +11,11 @@ export const likeSongsHandlers = [
     if (url.search === "?limit=50&offset=0") {
       console.log("mOck LikED?");
 
-      return HttpResponse.json(likedSongsFirstFetch);
+      return HttpResponse.json(JSON.parse(likedSongsFirstFetch));
     } else if (url.search === "?limit=50&offset=10") {
       console.log("Load more please?");
 
-      return HttpResponse.json(likedSongsSecondFetch);
+      return HttpResponse.json(JSON.parse(likedSongsSecondFetch));
     } else {
       console.log("Calling with spotify api");
       return;

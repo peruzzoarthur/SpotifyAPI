@@ -4,9 +4,9 @@ test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:5173/");
   // await page.waitForTimeout(3000);
 
-  await page.addInitScript({
-    path: "./tests/preload.ts",
-  });
+  // await page.addInitScript({
+  //   path: "./tests/preload.ts",
+  // });
 });
 
 test("liked songs functionality", async ({ page }) => {

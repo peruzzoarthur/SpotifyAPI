@@ -1,6 +1,4 @@
-import { SearchingReturnedObject } from "@/hooks/useSearch";
-
-export const searchTheDoorsMock = {
+export const searchTheDoorsMock = JSON.stringify({
   artists: [
     {
       external_urls: {
@@ -462,9 +460,9 @@ export const searchTheDoorsMock = {
       uri: "spotify:album:6AFLOkpJjFF652jevcSOZX",
     },
   ],
-};
+});
 
-export const searchBobMarleyMock = {
+export const searchBobMarleyMock = JSON.stringify({
   artists: [
     {
       external_urls: {
@@ -924,9 +922,9 @@ export const searchBobMarleyMock = {
       uri: "spotify:album:321q9p7PELvzcFAWxml7VX",
     },
   ],
-};
+});
 
-export const searchQueryTheDoorsMock: SearchingReturnedObject = {
+export const searchQueryTheDoorsMock = JSON.stringify({
   albums: {
     href: "https://api.spotify.com/v1/search?query=the+doors&type=album&locale=en-US%2Cen%3Bq%3D0.5&offset=0&limit=5",
     items: [
@@ -4465,8 +4463,9 @@ export const searchQueryTheDoorsMock: SearchingReturnedObject = {
     previous: null,
     total: 1000,
   },
-};
-export const searchQueryBobMarleyMock: SearchingReturnedObject = {
+});
+
+export const searchQueryBobMarleyMock = JSON.stringify({
   albums: {
     href: "https://api.spotify.com/v1/search?query=bob+marley&type=album&locale=en-US%2Cen%3Bq%3D0.5&offset=0&limit=5",
     items: [
@@ -7873,4 +7872,4 @@ export const searchQueryBobMarleyMock: SearchingReturnedObject = {
     previous: null,
     total: 1000,
   },
-};
+});

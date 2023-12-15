@@ -1,6 +1,4 @@
-import { Artists, Page } from "@spotify/web-api-ts-sdk";
-
-export const profileFetchFiveArtists: Page<Artists> = {
+export const profileFetchFiveArtists = JSON.stringify({
   items: [
     {
       external_urls: {
@@ -187,9 +185,9 @@ export const profileFetchFiveArtists: Page<Artists> = {
   href: "https://api.spotify.com/v1/me/top/artists?limit=5&offset=0",
   next: "https://api.spotify.com/v1/me/top/artists?limit=5&offset=5",
   previous: null,
-};
+});
 
-export const shortTermTopArtistsFirstRequest: Page<Artists> = {
+export const shortTermTopArtistsFirstRequest = JSON.stringify({
   items: [
     {
       external_urls: {
@@ -546,9 +544,9 @@ export const shortTermTopArtistsFirstRequest: Page<Artists> = {
   href: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=0&time_range=short_term",
   next: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=10&time_range=short_term",
   previous: null,
-};
+});
 
-export const shortTermTopArtistsSecondRequest: Page<Artists> = {
+export const shortTermTopArtistsSecondRequest = JSON.stringify({
   items: [
     {
       external_urls: {
@@ -904,9 +902,9 @@ export const shortTermTopArtistsSecondRequest: Page<Artists> = {
   next: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=20&time_range=short_term",
   previous:
     "https://api.spotify.com/v1/me/top/artists?limit=10&offset=0&time_range=short_term",
-};
+});
 
-export const mediumTermTopArtistsFirstRequest: Page<Artists> = {
+export const mediumTermTopArtistsFirstRequest = JSON.stringify({
   items: [
     {
       external_urls: {
@@ -1258,9 +1256,9 @@ export const mediumTermTopArtistsFirstRequest: Page<Artists> = {
   href: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=0",
   next: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=10",
   previous: null,
-};
+});
 
-export const mediumTermTopArtistsSecondRequest: Page<Artists> = {
+export const mediumTermTopArtistsSecondRequest = JSON.stringify({
   items: [
     {
       external_urls: {
@@ -1603,9 +1601,9 @@ export const mediumTermTopArtistsSecondRequest: Page<Artists> = {
   href: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=10",
   next: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=20",
   previous: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=0",
-};
+});
 
-export const longTermTopArtistsFirstRequest: Page<Artists> = {
+export const longTermTopArtistsFirstRequest = JSON.stringify({
   items: [
     {
       external_urls: {
@@ -1961,9 +1959,9 @@ export const longTermTopArtistsFirstRequest: Page<Artists> = {
   href: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=0&time_range=long_term",
   next: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=10&time_range=long_term",
   previous: null,
-};
+});
 
-export const longTermTopArtistsSecondRequest: Page<Artists> = {
+export const longTermTopArtistsSecondRequest = JSON.stringify({
   items: [
     {
       external_urls: {
@@ -2339,4 +2337,4 @@ export const longTermTopArtistsSecondRequest: Page<Artists> = {
   next: "https://api.spotify.com/v1/me/top/artists?limit=10&offset=20&time_range=long_term",
   previous:
     "https://api.spotify.com/v1/me/top/artists?limit=10&offset=0&time_range=long_term",
-};
+});

@@ -1,6 +1,4 @@
-import { Page, SavedTrack } from "@spotify/web-api-ts-sdk";
-
-export const likedSongsFirstFetch: Page<SavedTrack> = {
+export const likedSongsFirstFetch = JSON.stringify({
   href: "https://api.spotify.com/v1/me/tracks?offset=0&limit=10&locale=en-US,en;q=0.5",
   items: [
     {
@@ -3808,9 +3806,9 @@ export const likedSongsFirstFetch: Page<SavedTrack> = {
   offset: 0,
   previous: null,
   total: 3804,
-};
+});
 
-export const likedSongsSecondFetch: Page<SavedTrack> = {
+export const likedSongsSecondFetch = JSON.stringify({
   href: "https://api.spotify.com/v1/me/tracks?offset=10&limit=10&locale=en-US,en;q=0.5",
   items: [
     {
@@ -8375,4 +8373,4 @@ export const likedSongsSecondFetch: Page<SavedTrack> = {
   previous:
     "https://api.spotify.com/v1/me/tracks?offset=0&limit=10&locale=en-US,en;q=0.5",
   total: 3804,
-};
+});

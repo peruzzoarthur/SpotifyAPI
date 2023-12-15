@@ -63,7 +63,7 @@ export const AlbumByIdSection: React.FC<AlbumByIdSectionProps> = ({
           )}
           <TrackTableHeader />
           <TableBody>
-            {tracks.map((track, index) => (
+            {tracks?.map((track, index) => (
               <TrackTableRow
                 key={index}
                 artists={track.artists.map((a) => a.name).join(", ")}

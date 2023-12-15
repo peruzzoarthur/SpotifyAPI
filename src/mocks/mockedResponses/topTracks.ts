@@ -1,6 +1,4 @@
-import { Tracks, Page } from "@spotify/web-api-ts-sdk";
-
-export const profileFetchFiveTracks: Page<Tracks> = {
+export const profileFetchFiveTracks = JSON.stringify({
   items: [
     {
       album: {
@@ -1229,9 +1227,9 @@ export const profileFetchFiveTracks: Page<Tracks> = {
   href: "https://api.spotify.com/v1/me/top/tracks?limit=5&offset=0",
   next: "https://api.spotify.com/v1/me/top/tracks?limit=5&offset=5",
   previous: null,
-};
+});
 
-export const shortTermTopTracksFirstRequest: Page<Tracks> = {
+export const shortTermTopTracksFirstRequest = JSON.stringify({
   items: [
     {
       album: {
@@ -3720,9 +3718,9 @@ export const shortTermTopTracksFirstRequest: Page<Tracks> = {
   href: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=0&time_range=short_term",
   next: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=10&time_range=short_term",
   previous: null,
-};
+});
 
-export const shortTermTopTracksSecondRequest: Page<Tracks> = {
+export const shortTermTopTracksSecondRequest = JSON.stringify({
   items: [
     {
       album: {
@@ -6196,9 +6194,9 @@ export const shortTermTopTracksSecondRequest: Page<Tracks> = {
   next: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=20&time_range=short_term",
   previous:
     "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=0&time_range=short_term",
-};
+});
 
-export const mediumTermTopTracksFirstRequest: Page<Tracks> = {
+export const mediumTermTopTracksFirstRequest = JSON.stringify({
   items: [
     {
       album: {
@@ -8677,9 +8675,9 @@ export const mediumTermTopTracksFirstRequest: Page<Tracks> = {
   href: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=0",
   next: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=10",
   previous: null,
-};
+});
 
-export const mediumTermTopTracksSecondRequest: Page<Tracks> = {
+export const mediumTermTopTracksSecondRequest = JSON.stringify({
   items: [
     {
       album: {
@@ -10766,9 +10764,9 @@ export const mediumTermTopTracksSecondRequest: Page<Tracks> = {
   href: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=10",
   next: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=20",
   previous: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=0",
-};
+});
 
-export const longTermTopTracksFirstRequest: Page<Tracks> = {
+export const longTermTopTracksFirstRequest = JSON.stringify({
   items: [
     {
       album: {
@@ -12871,9 +12869,9 @@ export const longTermTopTracksFirstRequest: Page<Tracks> = {
   href: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=0&time_range=long_term",
   next: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=10&time_range=long_term",
   previous: null,
-};
+});
 
-export const longTermTopTracksSecondRequest: Page<Tracks> = {
+export const longTermTopTracksSecondRequest = JSON.stringify({
   items: [
     {
       album: {
@@ -14684,4 +14682,4 @@ export const longTermTopTracksSecondRequest: Page<Tracks> = {
   next: "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=20&time_range=long_term",
   previous:
     "https://api.spotify.com/v1/me/top/tracks?limit=10&offset=0&time_range=long_term",
-};
+});

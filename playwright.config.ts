@@ -24,23 +24,78 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: "http://localhost:5173",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
     // screenshot: "on",
     // video: "on",
+    viewport: { width: 1920, height: 1080 },
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      use: {
+        ...devices["Desktop Firefox"],
+        viewport: { width: 1920, height: 1080 },
+        storageState: {
+          cookies: [],
+          origins: [
+            {
+              origin: "http://localhost:5173",
+              localStorage: [
+                {
+                  name: "spotify-sdk:AuthorizationCodeWithPKCEStrategy:token",
+                  value: JSON.stringify({
+                    access_token:
+                      "BQBGuxGClOybhE-vG8anNClZE2UlXdHJ0ZEVzBAlGNuz36Gd9dC_XTxyzoHj_4cLzlWDxgyivmoSwduKE2h5kZoUc9LW_ep1iR5EI-1n6ifUxb5oY_rJV9VguMLZVHZvTEZB62mlya0bDyjg5SID0ZEFteikUdmVdCVZ1iex-R4_iFie0YABZi8lvxejPSGBzld12s3WsjlTJ252tG-YfTSr2OFRrKm4ePoIsCTaEyu1vCV6WWCJoWw9inFKUtRxM3IySAIMZmEaXuUgJtSx",
+                    token_type: "Bearer",
+                    expires_in: 3600,
+                    refresh_token:
+                      "AQBLPU0lnQ1ZKMCOo5pEQn2ZGa1dKhIF5dCkBw5gQyfak0hAxV3PNPxdEfdasB-KWBeu4uzL_sQsQ9677wfDdEGgRu2uGfdKWaTg8uZXXYLnBUaS0a48R6xXZWEL4iMYy0M",
+                    scope:
+                      "playlist-read-private user-library-read playlist-modify-private playlist-modify-public user-read-email user-read-private user-top-read",
+                    expires: 1702560094173,
+                  }),
+                },
+              ],
+            },
+          ],
+        },
+      },
     },
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+        storageState: {
+          cookies: [],
+          origins: [
+            {
+              origin: "http://localhost:5173",
+              localStorage: [
+                {
+                  name: "spotify-sdk:AuthorizationCodeWithPKCEStrategy:token",
+                  value: JSON.stringify({
+                    access_token:
+                      "BQBGuxGClOybhE-vG8anNClZE2UlXdHJ0ZEVzBAlGNuz36Gd9dC_XTxyzoHj_4cLzlWDxgyivmoSwduKE2h5kZoUc9LW_ep1iR5EI-1n6ifUxb5oY_rJV9VguMLZVHZvTEZB62mlya0bDyjg5SID0ZEFteikUdmVdCVZ1iex-R4_iFie0YABZi8lvxejPSGBzld12s3WsjlTJ252tG-YfTSr2OFRrKm4ePoIsCTaEyu1vCV6WWCJoWw9inFKUtRxM3IySAIMZmEaXuUgJtSx",
+                    token_type: "Bearer",
+                    expires_in: 3600,
+                    refresh_token:
+                      "AQBLPU0lnQ1ZKMCOo5pEQn2ZGa1dKhIF5dCkBw5gQyfak0hAxV3PNPxdEfdasB-KWBeu4uzL_sQsQ9677wfDdEGgRu2uGfdKWaTg8uZXXYLnBUaS0a48R6xXZWEL4iMYy0M",
+                    scope:
+                      "playlist-read-private user-library-read playlist-modify-private playlist-modify-public user-read-email user-read-private user-top-read",
+                    expires: 1702560094173,
+                  }),
+                },
+              ],
+            },
+          ],
+        },
+      },
     },
 
     // {

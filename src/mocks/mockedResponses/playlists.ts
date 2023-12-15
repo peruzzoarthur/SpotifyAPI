@@ -1,6 +1,4 @@
-import { Page, SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
-
-export const profileFetchFivePlaylists: Page<SimplifiedPlaylist> = {
+export const profileFetchFivePlaylists = JSON.stringify({
   href: "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=0&limit=5",
   items: [
     {
@@ -240,9 +238,9 @@ export const profileFetchFivePlaylists: Page<SimplifiedPlaylist> = {
   offset: 0,
   previous: null,
   total: 153,
-};
+});
 
-export const playlistsFirstFetch: Page<SimplifiedPlaylist> = {
+export const playlistsFirstFetch = JSON.stringify({
   href: "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=0&limit=25",
   items: [
     {
@@ -1398,9 +1396,9 @@ export const playlistsFirstFetch: Page<SimplifiedPlaylist> = {
   offset: 0,
   previous: null,
   total: 153,
-};
+});
 
-export const playlistsSecondFetch: Page<SimplifiedPlaylist> = {
+export const playlistsSecondFetch = JSON.stringify({
   href: "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=25&limit=25",
   items: [
     {
@@ -2560,9 +2558,9 @@ export const playlistsSecondFetch: Page<SimplifiedPlaylist> = {
   previous:
     "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=0&limit=25",
   total: 153,
-};
+});
 
-export const playlistsThirdFetch: Page<SimplifiedPlaylist> = {
+export const playlistsThirdFetch = JSON.stringify({
   href: "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=50&limit=25",
   items: [
     {
@@ -3722,9 +3720,9 @@ export const playlistsThirdFetch: Page<SimplifiedPlaylist> = {
   previous:
     "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=25&limit=25",
   total: 153,
-};
+});
 
-export const playlistsFourthFetch: Page<SimplifiedPlaylist> = {
+export const playlistsFourthFetch = JSON.stringify({
   href: "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=75&limit=25",
   items: [
     {
@@ -4802,4 +4800,4 @@ export const playlistsFourthFetch: Page<SimplifiedPlaylist> = {
   previous:
     "https://api.spotify.com/v1/users/sp3ruzzo/playlists?offset=50&limit=25",
   total: 153,
-};
+});
