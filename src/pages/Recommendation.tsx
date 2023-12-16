@@ -99,7 +99,7 @@ export const Recommendation = (): React.JSX.Element => {
     const randomCoolPlaylistName = uniqueNamesGenerator(randomStringConfig);
 
     // get the username for calling createPlaylist
-    const username = (await sdk.currentUser.profile()).display_name;
+    const username = (await sdk.currentUser.profile()).id;
 
     // create playlist with random name and added seeds to description...
     const createPlaylist = await sdk.playlists.createPlaylist(username, {
