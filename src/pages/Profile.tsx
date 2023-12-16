@@ -31,7 +31,7 @@ export const Profile = () => {
 
   return (
     <AnalogBackground>
-      {data.profileData && (
+      {data.profileData && data.profileData.images[1].url && (
         <ProfileHeader
           followers={data.profileData.followers.total}
           image={data.profileData.images[1].url}
