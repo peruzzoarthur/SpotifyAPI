@@ -1,5 +1,6 @@
 import {
   client_id,
+  redirect_url,
   // redirect_url,
   scopes,
   // secret,
@@ -11,11 +12,7 @@ import {
 import { useSpotify } from "./useSpotify";
 
 export const useSdk = () => {
-  return useSpotify(
-    client_id,
-    "https://spotifyapi.up.railway.app/",
-    scopes
-  ) as SpotifyApi;
+  return useSpotify(client_id, redirect_url, scopes) as SpotifyApi;
 };
 
 //

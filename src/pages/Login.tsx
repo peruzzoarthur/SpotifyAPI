@@ -1,5 +1,5 @@
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
-import { client_id, scopes, callback } from "../spotify";
+import { client_id, scopes, callback, redirect_url } from "../spotify";
 import { Button } from "@/components/ui/button";
 import { AnalogBackground } from "@/components/background/analogBackground";
 import { Container } from "@/components/Container";
@@ -8,7 +8,7 @@ export const Login = () => {
   const handleLogin = async () => {
     await SpotifyApi.performUserAuthorization(
       client_id,
-      "https://spotifyapi.up.railway.app/",
+      redirect_url,
       [scopes],
       callback
     );
