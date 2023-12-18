@@ -16,7 +16,7 @@ function Logo() {
         <DropdownMenuTrigger>
           {" "}
           <img
-            className="w-20 h-20 transition-all duration-700 rounded-full min-h-14 min-w-14 hover:scale-125"
+            className="transition-all duration-700 rounded-full  w-14 h-14 lg:w-20 lg:h-20 min-h-14 min-w-14 hover:scale-125"
             src={logo}
             alt="Spotify Logo"
           />

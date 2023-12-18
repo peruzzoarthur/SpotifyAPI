@@ -13,11 +13,11 @@ export const ProfileTopArtistsSection: React.FC<
   return (
     <>
       <div className="flex flex-row items-start justify-between mt-6">
-        <h2 className="justify-start ml-12 text-5xl text-left text-white">
+        <h2 className="justify-start ml-6 text-4xl text-left text-white lg:ml-12 sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl">
           Top Artists
         </h2>
         <ShowAllButton
-          className="mt-4 mr-12 bg-black hover:bg-opacity-60"
+          className="mt-1 mr-6 bg-black lg:mt-4 lg:mr-12 hover:bg-opacity-60"
           url="/top-artists"
         />
       </div>

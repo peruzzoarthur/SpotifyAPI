@@ -22,30 +22,19 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             <img
               src={placeholderImage}
               alt={name}
-              className="w-56 h-56 ml-4 rounded-full opacity-80"
+              className="ml-4 rounded-full opacity-80 sm:w-32 sm:h-32 md:w-44 md:h-44 lg:w-56 lg:h-56 xl:w-56 xl:h-56"
             />
           ) : (
             <img
               src={image}
               alt={name}
-              className="w-56 h-56 ml-4 rounded-full"
+              className="w-32 h-32 ml-4 rounded-full opacity-80 sm:w-32 sm:h-32 md:w-44 md:h-44 lg:w-56 lg:h-56 xl:w-56 xl:h-56"
             />
           )}
-          {/* {image === undefined && (
-            <img
-              src={placeholderImage}
-              alt={name}
-              className="w-56 h-56 ml-4 rounded-full"
-            />
-          )} */}
-          {/* {image !== undefined && (
-            <img
-              src={image}
-              alt={name}
-              className="w-56 h-56 ml-4 rounded-full"
-            />
-          )} */}
-          <h1 className="mt-16 ml-6 text-6xl font-bold text-white">{name}</h1>
+
+          <h1 className="mt-16 ml-6 text-4xl font-bold text-white md:text-5xl lg:text-6xl xl:text-6xl sm:text-4xl ">
+            {name}
+          </h1>
           <div>
             {/* <div className="mt-2 ml-4 text-2xl text-white">{followers}</div> */}
           </div>
