@@ -24,7 +24,14 @@ export const Login = () => {
           >
             Login
           </Button>
-          ;
+          <button
+            type="button"
+            onClick={() => {
+              throw new Error("Sentry Test Error");
+            }}
+          >
+            Break the world
+          </button>
         </Container>
       </AnalogBackground>
     </>

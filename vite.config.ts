@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
@@ -8,15 +9,24 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), eslint()],
+  plugins: [react(), eslint(), sentryVitePlugin({
+    org: "sp3rzo",
+    project: "javascript-react"
+  })],
+
   test: {
     globals: true,
     environment: "jsdom",
     setupFiles: ["./src/setup-tests"],
   },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
+
+  build: {
+    sourcemap: true
+  }
 });
