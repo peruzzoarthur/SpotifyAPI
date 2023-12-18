@@ -42,6 +42,15 @@ export const TopArtistsHeader: React.FC<TopArtistsHeaderProps> = ({
             </div>
           </div>
         </div>
+        <button
+          type="button"
+          className="text-white bg-black"
+          onClick={() => {
+            throw new Error("Sentry Test Error");
+          }}
+        >
+          Break the world
+        </button>
       </div>
     </>
   );
