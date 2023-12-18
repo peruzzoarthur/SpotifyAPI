@@ -40,14 +40,14 @@ export const PlaylistById = () => {
   return (
     <>
       <AnalogBackground>
-        {playlistInfo && profilePicture && (
+        {playlistInfo && (
           <PlaylistByIdHeader
             profilePicture={profilePicture}
             playlistData={playlistInfo}
           />
         )}
 
-        {query.isFetching && playlistInfo && profilePicture && !query.data && (
+        {query.isFetching && playlistInfo && !query.data && (
           <>
             <Container className="flex items-center justify-center bg-white bg-opacity-0 h-200">
               {CreateProgress({ progress })}

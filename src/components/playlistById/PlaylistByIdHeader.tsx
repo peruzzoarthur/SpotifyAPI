@@ -3,10 +3,11 @@ import React from "react";
 import Logo from "../Logo";
 import { Link } from "react-router-dom";
 import { formatTimeHoursMinutesSeconds } from "@/utils/format";
+import placeholderImage from "@/styles/img/profilePlaceholder.jpg";
 
 interface PlaylistByIdHeaderProps {
   playlistData: Playlist;
-  profilePicture: string | undefined;
+  profilePicture: string | undefined | null;
 }
 
 export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
@@ -32,7 +33,12 @@ export const PlaylistByIdHeader: React.FC<PlaylistByIdHeaderProps> = ({
             </div>
 
             <div className="flex flex-row mt-2 ml-4 text-xs text-white">
-              {profilePicture && (
+              {!profilePicture ? (
+                <img
+                  src={placeholderImage}
+                  className="w-6 h-6 mr-1 rounded-full"
+                />
+              ) : (
                 <img
                   src={profilePicture}
                   className="w-6 h-6 mr-1 rounded-full"

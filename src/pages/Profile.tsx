@@ -31,19 +31,11 @@ export const Profile = () => {
 
   return (
     <AnalogBackground>
-      {data.profileData && data.profileData.images[1] ? (
+      {data.profileData && (
         <ProfileHeader
           followers={data.profileData.followers.total}
-          image={data.profileData.images[1].url}
+          image={data.profileData.images[1]?.url}
           name={data.profileData.display_name}
-        />
-      ) : (
-        <ProfileHeader
-          followers={666}
-          image={
-            "https://i.scdn.co/image/ab67757000003b82dc3b6eb0f878421bf88a5539"
-          }
-          name={"Xoan"}
         />
       )}
 

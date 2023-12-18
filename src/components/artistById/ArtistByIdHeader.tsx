@@ -15,7 +15,7 @@ export const ArtistByIdHeader: React.FC<ArtistByIdProps> = ({ artistData }) => {
         <div className="flex flex-row">
           <Link to={artistData.uri}>
             <img
-              src={artistData.images[0].url}
+              src={artistData.images[0]?.url}
               className="ml-4 rounded-sm w-72 h-72"
             />
           </Link>
