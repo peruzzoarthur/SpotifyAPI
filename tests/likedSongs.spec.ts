@@ -15,9 +15,7 @@ test("liked songs functionality", async ({ page }) => {
   await page.getByRole("link", { name: "Search" }).click();
   await page.getByRole("button", { name: "Spotify Logo" }).click();
   await page.getByRole("link", { name: "Liked Songs" }).click();
-  await expect(
-    page.getByRole("img", { name: "your-profile-picture" })
-  ).toBeVisible();
+  await expect(page.getByRole("img", { name: "MoCK3d" })).toBeVisible();
   await expect(page.locator("h1")).toContainText("Liked Songs");
   await expect(page.locator("h3")).toContainText("your liked songs 💚");
   await expect(page.getByRole("main")).toContainText("Profile");

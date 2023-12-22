@@ -4,17 +4,17 @@ import { playlistHandlers } from "./handlers/playlistHandlers";
 import { albumHandlers } from "./handlers/albumHandlers";
 import { searchHandlers } from "./handlers/searchHandlers";
 import { likeSongsHandlers } from "./handlers/likedSongsHandlers";
-// import { tokenHandler } from "./handlers/tokenHandler";
-// import { meHandlers } from "./handlers/meHandlers";
+import { tokenHandler } from "./handlers/tokenHandler";
+import { meHandlers } from "./handlers/meHandlers";
 import { audioFeaturesHandlers } from "./handlers/audioFeaturesHandlers";
 
 export const worker = setupWorker(
   ...playlistHandlers,
-  // ...tokenHandler,
+  ...tokenHandler,
   ...albumHandlers,
   ...searchHandlers,
   ...likeSongsHandlers,
-  // ...meHandlers,
+  ...meHandlers,
   ...tracksHandlers,
   ...audioFeaturesHandlers
 );

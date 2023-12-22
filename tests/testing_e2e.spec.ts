@@ -53,7 +53,7 @@ test("test", async ({ page }) => {
   await page.getByRole("button", { name: "Add" }).nth(3).click();
   await page.getByText("Click to close message.").click();
   await page.getByRole("button", { name: "Spotify Logo" }).click();
-  await page.getByRole("link", { name: "Recommendations Liszt" }).click();
+  await page.getByRole("link", { name: "Recommendations List" }).click();
   await expect(page.getByRole("link", { name: "The Doors" })).toBeVisible();
   await expect(
     page.getByRole("img", { name: "People Are Strange" })
