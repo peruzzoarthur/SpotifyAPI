@@ -8,14 +8,19 @@ import {
 export function useSpotify(
   clientId: string,
   redirectUrl: string,
-  scopes: string[],
+  scopes: string,
   config?: SdkOptions
 ) {
   const [sdk, setSdk] = useState<SpotifyApi | null>(null);
-  const { current: activeScopes } = useRef(scopes);
+  const { current: activeScopes } = useRef([scopes]);
 
   useEffect(() => {
     (async () => {
+      console.log(activeScopes);
+      if (!activeScopes) {
+        console.error("Please login.");
+        return;
+      }
       const auth = new AuthorizationCodeWithPKCEStrategy(
         clientId,
         redirectUrl,
