@@ -16,7 +16,6 @@ export function useSpotify(
 
   useEffect(() => {
     (async () => {
-      console.log(activeScopes);
       if (!activeScopes) {
         console.error("Please login.");
         return;
