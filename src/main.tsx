@@ -11,7 +11,7 @@ Sentry.init({
     new Sentry.BrowserTracing({
       // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
       tracePropagationTargets: [
-        "localhost",
+        // "localhost",
         "https://spotifyapi.up.railway.app/",
       ],
     }),
