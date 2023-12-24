@@ -7,6 +7,7 @@ import { likeSongsHandlers } from "./handlers/likedSongsHandlers";
 import { tokenHandler } from "./handlers/tokenHandler";
 import { meHandlers } from "./handlers/meHandlers";
 import { audioFeaturesHandlers } from "./handlers/audioFeaturesHandlers";
+import { recHandlers } from "./handlers/recHandlers";
 
 export const worker = setupWorker(
   ...playlistHandlers,
@@ -16,5 +17,6 @@ export const worker = setupWorker(
   ...likeSongsHandlers,
   ...meHandlers,
   ...tracksHandlers,
-  ...audioFeaturesHandlers
+  ...audioFeaturesHandlers,
+  ...recHandlers
 );
