@@ -8,7 +8,7 @@ import {
   Track,
 } from "@spotify/web-api-ts-sdk";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
@@ -29,9 +29,9 @@ export const useArtistById = ({ sdk }: { sdk: SpotifyApi }) => {
     });
   };
 
-  // useEffect(() => {
-  //   setAlbums([]);
-  // }, [id]);
+  useEffect(() => {
+    setAlbums([]);
+  }, [id]);
 
   const { data: artistData, isFetching: isFetchingArtist } = useQuery<Artist>({
     queryKey: ["artist-by-id", id],
