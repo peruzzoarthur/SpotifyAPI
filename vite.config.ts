@@ -9,16 +9,21 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), eslint(), sentryVitePlugin({
-    org: "sp3rzo",
-    project: "javascript-react"
-  })],
+  plugins: [
+    react(),
+    eslint(),
+    sentryVitePlugin({
+      org: "sp3rzo",
+      project: "javascript-react",
+    }),
+  ],
 
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./src/setup-tests"],
-  },
+  base: "/SpotifyAPI/",
+  // test: {
+  //   globals: true,
+  //   environment: "jsdom",
+  //   setupFiles: ["./src/setup-tests"],
+  // },
 
   resolve: {
     alias: {
@@ -27,6 +32,6 @@ export default defineConfig({
   },
 
   build: {
-    sourcemap: true
-  }
+    sourcemap: true,
+  },
 });
