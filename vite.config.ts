@@ -18,7 +18,6 @@ export default defineConfig({
     }),
   ],
 
-  base: "/SpotifyAPI/",
   // test: {
   //   globals: true,
   //   environment: "jsdom",
